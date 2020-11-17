@@ -1,3 +1,35 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Flytekart</string>
+
+    <string name="password">Password</string>
+    <string name="cnf_password">Confirm password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="email">Email</string>
+
+    <string name="nav_drawer_open">Open Nav Drawer</string>
+    <string name="nav_drawer_close">Close Nav Drawer</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="str_forgot_password">Forgot Password?</string>
+    <string name="str_do_not_have_an_account">Don\'t have an account? Sign up</string>
+    <string name="str_already_have_an_account">Already have an account? Sign in</string>
+
+    <string name="create_organisation">Create Organisation</string>
+    <string name="add_stores">Add Stores</string>
+    <string name="add_products">Add Products</string>
+
+    <string name="str_username">Username</string>
+    <string name="str_shop_management">Shop Management</string>
+    <string name="str_general_settings">General Settings</string>
+    <string name="str_delivery_areas">Delivery Areas</string>
+    <string name="str_product_management">Product Management</string>
+    <string name="str_products">Products</string>
+    <string name="str_categories">Categories</string>
 </resources>

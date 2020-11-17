@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/download" />
+    <item android:drawable="@color/transparent80" />
+    <!--<item android:drawable="@color/colorPrimary" />-->
+    <!-- TODO Need to enable this and show the logo -->
+    <!-- TODO Need to think of a splash screen with an image -->
+    <!--<item
+        android:width="192dp"
+        android:height="144dp"
+        android:drawable="@drawable/felogon"
+        android:gravity="center" />-->
+</layer-list>

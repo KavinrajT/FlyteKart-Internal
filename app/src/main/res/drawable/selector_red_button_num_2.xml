@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/colorPrimary" />
+            <corners android:radius="2dp" />
+            <padding android:top="20dp" />
+        </shape>
+    </item>
+    <item>
+        <bitmap
+            android:gravity="center_vertical|top"
+            android:src="@drawable/ic_number_2" />
+
+    </item>
+
+</layer-list>
+
