@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "285554868947",
+    "project_id": "flytekart-1218c",
+    "storage_bucket": "flytekart-1218c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285554868947:android:d011beb2fa2d425e83ca26",
+        "android_client_info": {
+          "package_name": "com.flytekart.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285554868947-vo5s60atb12ch9abv89qunijq2fv77n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx9C68TSR1tGsKUS_Vvgm5WGAyb7YhmI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285554868947-vo5s60atb12ch9abv89qunijq2fv77n5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

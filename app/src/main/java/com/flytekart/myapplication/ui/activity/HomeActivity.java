@@ -1,18 +1,31 @@
 package com.flytekart.myapplication.ui.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.flytekart.myapplication.R;
+import com.flytekart.myapplication.models.Organisation;
+import com.flytekart.myapplication.models.Product;
+import com.flytekart.myapplication.models.Store;
+import com.flytekart.myapplication.utils.Constants;
+import com.flytekart.myapplication.utils.Utilities;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-public class HomeActivity extends AppCompatActivity {
+import java.util.List;
 
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
+public class HomeActivity extends BaseActivity {
+
+    private Button btnCreateOrg;
+    private Button btnCreateStore;
+    private Button btnCreateProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,13 +35,92 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
+        btnCreateOrg = findViewById(R.id.btn_create_org);
+        btnCreateStore = findViewById(R.id.btn_add_stores);
+        btnCreateProduct = findViewById(R.id.btn_add_products);
+        Button btnClearAll = findViewById(R.id.btn_clear_all);
 
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
-        toggle.syncState();
+        btnCreateOrg.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, CreateOrgActivity.class);
+            startActivityForResult(intent, Constants.CREATE_ORG_ACTIVITY_REQUEST_CODE);
+        });
 
-        drawerLayout.addDrawerListener(toggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        btnCreateStore.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
+            startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
+        });
+
+        btnCreateProduct.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, ProductListActivity.class);
+            startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
+        });
+
+        btnClearAll.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(Constants.SHARED_PREF_KEY_ORGANISATION);
+            editor.remove(Constants.SHARED_PREF_KEY_STORES);
+            editor.remove(Constants.SHARED_PREF_KEY_PRODUCTS);
+            editor.apply();
+            setData();
+        });
+
+        setData();
+    }
+
+    private void setData() {
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+
+        String orgJsonStr = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ORGANISATION, null);
+        Organisation organisation = gson.fromJson(orgJsonStr, Organisation.class);
+        if (organisation != null) {
+            setButtonBackground(btnCreateOrg, R.drawable.selector_green_button_done);
+            if (TextUtils.equals(organisation.getStoreType(),
+                    getResources().getStringArray(R.array.store_type_array)[0])) {
+                setButtonBackground(btnCreateStore, R.drawable.selector_green_button_done);
+            } else {
+                btnCreateStore.setEnabled(true);
+            }
+        } else {
+            setButtonBackground(btnCreateOrg, R.drawable.selector_red_button_num_1);
+            btnCreateOrg.setEnabled(true);
+            btnCreateStore.setEnabled(false);
+            btnCreateProduct.setEnabled(false);
+            return;
+        }
+
+        String storesJsonStr = sharedPreferences.getString(Constants.SHARED_PREF_KEY_STORES, null);
+        List<Store> stores = gson.fromJson(storesJsonStr, new TypeToken<List<Store>>() {
+        }.getType());
+        if (stores != null && !stores.isEmpty()) {
+            setButtonBackground(btnCreateStore, R.drawable.selector_green_button_done);
+            btnCreateProduct.setEnabled(true);
+        } else {
+            setButtonBackground(btnCreateStore, R.drawable.selector_red_button_num_2);
+            btnCreateStore.setEnabled(true);
+            btnCreateProduct.setEnabled(false);
+            return;
+        }
+
+        String productsJsonStr = sharedPreferences.getString(Constants.SHARED_PREF_KEY_PRODUCTS, null);
+        List<Product> products = gson.fromJson(productsJsonStr, new TypeToken<List<Product>>() {
+        }.getType());
+        if (products != null && !products.isEmpty()) {
+            setButtonBackground(btnCreateProduct, R.drawable.selector_green_button_done);
+        } else {
+            setButtonBackground(btnCreateProduct, R.drawable.selector_red_button_num_3);
+            btnCreateProduct.setEnabled(true);
+        }
+    }
+
+    private void setButtonBackground(View view, int drawable) {
+        view.setBackground(ResourcesCompat.getDrawable(getResources(), drawable, getTheme()));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        setData();
     }
 }
