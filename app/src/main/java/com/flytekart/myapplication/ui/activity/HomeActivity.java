@@ -51,7 +51,7 @@ public class HomeActivity extends BaseActivity {
         });
 
         btnCreateProduct.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, ProductListActivity.class);
+            Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
             startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
         });
 

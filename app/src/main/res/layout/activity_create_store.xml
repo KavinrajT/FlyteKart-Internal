@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.StoreListActivity">
+    tools:context=".ui.activity.CreateStoreActivity">
 
     <com.flytekart.myapplication.ui.views.TitleBarLayout
         android:id="@+id/titleBar"
@@ -16,8 +16,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/titleBar"
         android:orientation="vertical"
-        android:padding="30dp"
-        tools:context=".ui.activity.CreateOrgActivity">
+        android:padding="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"

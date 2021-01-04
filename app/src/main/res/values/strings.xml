@@ -67,6 +67,10 @@
     <string name="err_enter_description">Please enter description.</string>
     <string name="err_enter_quantity">Please enter quantity.</string>
 
+    <string name="err_enter_category_name">Please enter category name.</string>
+    <string name="err_enter_sub_category_name">Please enter sub category name.</string>
+    <string name="err_enter_is_active">Please enter is active field.</string>
+
     <string name="str_organisation_info">Organisation info</string>
     <string name="str_organisation_name">Organisation Name</string>
     <string name="str_store_type">Store Type :</string>
@@ -93,5 +97,12 @@
     <string name="str_show_advanced_inventory">Show Advanced Inventory</string>
     <string name="str_create_product">Create Product</string>
     <string name="str_no_records_found">No records found.</string>
+    <string name="category_info">Category Info</string>
+    <string name="category_name">Category Name</string>
+    <string name="is_active">Is Active?</string>
+    <string name="sub_category_info">Sub Category Info</string>
+    <string name="sub_category_name">Sub Category Name</string>
+    <string name="create_sub_category">Create Sub Category</string>
+    <string name="create_category">Create Category</string>
 
 </resources>
