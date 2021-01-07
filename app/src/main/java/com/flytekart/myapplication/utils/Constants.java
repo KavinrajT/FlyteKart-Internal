@@ -11,8 +11,9 @@ public class Constants {
     public static final String SHARED_PREF_KEY_CATEGORIES = "key_categories";
     public static final String SHARED_PREF_KEY_SUB_CATEGORIES = "key_sub_categories";
 
-    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    public static final int TIMEOUT = 60;
 
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     public static final int CREATE_ORG_ACTIVITY_REQUEST_CODE = 101;
     public static final int MAPS_ACTIVITY_REQUEST_CODE = 102;
     public static final int STORE_LIST_ACTIVITY_REQUEST_CODE = 201;
