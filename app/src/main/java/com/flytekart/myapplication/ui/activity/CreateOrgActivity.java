@@ -15,12 +15,23 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.flytekart.myapplication.MyApplication;
 import com.flytekart.myapplication.R;
+import com.flytekart.myapplication.models.ApiCallResponse;
 import com.flytekart.myapplication.models.Organisation;
 import com.flytekart.myapplication.utils.Constants;
+import com.flytekart.myapplication.utils.Logger;
 import com.flytekart.myapplication.utils.Utilities;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateOrgActivity extends AppCompatActivity {
 
@@ -90,13 +101,15 @@ public class CreateOrgActivity extends AppCompatActivity {
                 return;
             }
 
-            Gson gson = new Gson();
+            /*Gson gson = new Gson();
             String orgJsonStr = gson.toJson(organisation);
             SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Constants.SHARED_PREF_KEY_ORGANISATION, orgJsonStr);
             editor.apply();
-            finish();
+            finish();*/
+
+            createOrganisation(organisation);
         });
 
         ArrayAdapter<CharSequence> storeSpAdapter = ArrayAdapter.createFromResource(this,
@@ -145,5 +158,45 @@ public class CreateOrgActivity extends AppCompatActivity {
             tvLocation.setVisibility(View.VISIBLE);
             tvLocation.setText(strAddress);
         }
+    }
+
+
+    private void createOrganisation(Organisation organisation) {
+        SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+        String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
+        Call<ApiCallResponse> loginCall = MyApplication.getApiService().createOrganisation(accessToken, organisation);
+        loginCall.enqueue(new Callback<ApiCallResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<ApiCallResponse> call, @NotNull Response<ApiCallResponse> response) {
+                Logger.i("create Org API call response received.");
+                ApiCallResponse apiCallResponse = null;
+                Logger.i("create Org API call response received.");
+                if (response.isSuccessful() && response.body() != null) {
+                    apiCallResponse = response.body();
+                    // Get dropdown data and go to next screen.
+                    Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (apiCallResponse.isSuccess()) {
+                        Logger.i("create Org API call success.");
+                        finish();
+                    }
+                } else if (response.errorBody() != null) {
+                    try {
+                        apiCallResponse = new Gson().fromJson(
+                                response.errorBody().string(), ApiCallResponse.class);
+                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Logger.e("create Org API call  response status code : " + response.code());
+                // populateFragment();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ApiCallResponse> call, @NotNull Throwable t) {
+                Logger.i("Organisation List API call failure.");
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

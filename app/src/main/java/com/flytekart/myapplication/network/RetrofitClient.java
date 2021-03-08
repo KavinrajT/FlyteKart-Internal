@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     //TODO Add base URL
-    private static final String BASE_URL = "";
+    private static final String BASE_URL = "https://aqueous-depths-69529.herokuapp.com/";
     private ApiService apiService;
 
     private final Gson gson;

@@ -25,13 +25,20 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (!isAppLoadCancelled) {
                 SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
-                boolean isUserLoggedIn = sharedPreferences.getBoolean(Constants.IS_USER_LOGGED_IN, false);
-                if (isUserLoggedIn) {
-                    Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(homeIntent);
+                String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
+                if (!accessToken.isEmpty()) {
+                    boolean isUserLoggedInMainAccount = sharedPreferences.getBoolean
+                            (Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
+                    if (isUserLoggedInMainAccount) {
+                        Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
+                        startActivity(homeIntent);
+                    } else {
+                        Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
+                        startActivity(homeIntent);
+                    }
                 } else {
-                    Intent introIntent = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(introIntent);
+                    Intent loginIntent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

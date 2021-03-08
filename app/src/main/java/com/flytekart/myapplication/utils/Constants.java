@@ -3,8 +3,8 @@ package com.flytekart.myapplication.utils;
 public class Constants {
 
     public static final String IS_USER_LOGGED_IN = "isUserLoggedIn";
-    public static final String ACCESS_TOKEN = "accessToken";
-
+    public static final String SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN = "isMainAccountLoggedIn";
+    public static final String SHARED_PREF_KEY_ACCESS_TOKEN = "accessToken";
     public static final String SHARED_PREF_KEY_ORGANISATION = "key_organisation";
     public static final String SHARED_PREF_KEY_STORES = "key_stores";
     public static final String SHARED_PREF_KEY_PRODUCTS = "key_products";
@@ -21,6 +21,8 @@ public class Constants {
     public static final int ADD_PRODUCT_ACTIVITY_REQUEST_CODE = 301;
     public static final int ADD_CATEGORY_ACTIVITY_REQUEST_CODE = 401;
     public static final int ADD_SUB_CATEGORY_ACTIVITY_REQUEST_CODE = 501;
+
+    public static final String API_TOKEN_TAG = "Authorization";
 
 
 }

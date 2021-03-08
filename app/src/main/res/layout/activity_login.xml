@@ -33,21 +33,75 @@
         android:paddingEnd="15dp"
         android:paddingBottom="5dp">
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/iv_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/til_email"
             android:layout_alignBottom="@id/til_email"
             android:padding="@dimen/padding_15"
-            android:src="@drawable/ic_username" />
+            android:src="@drawable/ic_username" />-->
+
+        <LinearLayout
+            android:id="@+id/ll_account_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_account_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Account " />
+
+            <Spinner
+                android:id="@+id/sp_login_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/ll_account_type"
+            android:background="@color/grey_light" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/client_code"
+                android:inputType="text"
+                android:paddingStart="@dimen/padding_15"
+                android:paddingTop="@dimen/padding_15"
+                android:paddingEnd="@dimen/padding_15"
+                android:paddingBottom="@dimen/padding_15" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/divider_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/til_client_code"
+            android:background="@color/grey_light" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/iv_email"
-            android:layout_toRightOf="@id/iv_email"
+            android:layout_below="@id/divider_2"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -64,28 +118,26 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/divider_3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/til_email"
             android:background="@color/grey_light" />
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/iv_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/til_password"
             android:layout_alignBottom="@+id/til_password"
             android:padding="@dimen/padding_15"
-            android:src="@drawable/ic_password" />
+            android:src="@drawable/ic_password" />-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider"
-            android:layout_toEndOf="@id/iv_email"
-            android:layout_toRightOf="@id/iv_email"
+            android:layout_below="@id/divider_3"
             app:hintEnabled="false"
             app:passwordToggleTint="@color/dark_grey">
 
