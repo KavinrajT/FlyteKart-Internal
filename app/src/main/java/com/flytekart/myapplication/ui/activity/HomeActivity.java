@@ -20,9 +20,9 @@ import androidx.fragment.app.FragmentManager;
 import com.flytekart.myapplication.MyApplication;
 import com.flytekart.myapplication.R;
 import com.flytekart.myapplication.models.ApiCallResponse;
+import com.flytekart.myapplication.models.BaseResponse;
 import com.flytekart.myapplication.models.MenuModel;
 import com.flytekart.myapplication.models.Organisation;
-import com.flytekart.myapplication.models.OrganisationResponse;
 import com.flytekart.myapplication.ui.adapters.MenuExpandableListAdapter;
 import com.flytekart.myapplication.ui.fragment.OrganisationListFragment;
 import com.flytekart.myapplication.utils.Constants;
@@ -153,14 +153,13 @@ public class HomeActivity extends BaseActivity {
     private void getAllOrganisations() {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
-        Call<OrganisationResponse> loginCall = MyApplication.getApiService().getAllOrganisation(accessToken);
-        loginCall.enqueue(new Callback<OrganisationResponse>() {
+        Call<BaseResponse<Organisation>> loginCall = MyApplication.getApiService().getAllOrganisations(accessToken);
+        loginCall.enqueue(new Callback<BaseResponse<Organisation>>() {
             @Override
-            public void onResponse(@NotNull Call<OrganisationResponse> call, @NotNull Response<OrganisationResponse> response) {
+            public void onResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
                 Logger.i("Client Login API call response received.");
                 if (response.isSuccessful() && response.body() != null) {
-                    OrganisationResponse organisationResponse = response.body();
-                    organisations = organisationResponse.getOrganisations();
+                    organisations = response.body().getBody();
                     Toast.makeText(getApplicationContext(), "Organisation List API call successful.", Toast.LENGTH_SHORT).show();
                 } else if (response.errorBody() != null) {
                     try {
@@ -176,7 +175,7 @@ public class HomeActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<OrganisationResponse> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Throwable t) {
                 Logger.i("Organisation List API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }

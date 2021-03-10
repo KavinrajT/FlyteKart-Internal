@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.flytekart.myapplication.MyApplication;
 import com.flytekart.myapplication.R;
 import com.flytekart.myapplication.models.ApiCallResponse;
+import com.flytekart.myapplication.models.BaseResponse;
 import com.flytekart.myapplication.models.Organisation;
 import com.flytekart.myapplication.utils.Constants;
 import com.flytekart.myapplication.utils.Logger;
@@ -164,24 +165,23 @@ public class CreateOrgActivity extends AppCompatActivity {
     private void createOrganisation(Organisation organisation) {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
-        Call<ApiCallResponse> loginCall = MyApplication.getApiService().createOrganisation(accessToken, organisation);
-        loginCall.enqueue(new Callback<ApiCallResponse>() {
+        Call<BaseResponse<Organisation>> loginCall = MyApplication.getApiService().createOrganisation(accessToken, organisation);
+        loginCall.enqueue(new Callback<BaseResponse<Organisation>>() {
             @Override
-            public void onResponse(@NotNull Call<ApiCallResponse> call, @NotNull Response<ApiCallResponse> response) {
+            public void onResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
                 Logger.i("create Org API call response received.");
-                ApiCallResponse apiCallResponse = null;
                 Logger.i("create Org API call response received.");
                 if (response.isSuccessful() && response.body() != null) {
-                    apiCallResponse = response.body();
+                    BaseResponse<Organisation> orgResponse = response.body();
                     // Get dropdown data and go to next screen.
-                    Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    if (apiCallResponse.isSuccess()) {
+                    Toast.makeText(getApplicationContext(), orgResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (orgResponse.isSuccess()) {
                         Logger.i("create Org API call success.");
                         finish();
                     }
                 } else if (response.errorBody() != null) {
                     try {
-                        apiCallResponse = new Gson().fromJson(
+                        ApiCallResponse apiCallResponse = new Gson().fromJson(
                                 response.errorBody().string(), ApiCallResponse.class);
                         Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
@@ -193,7 +193,7 @@ public class CreateOrgActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<ApiCallResponse> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Throwable t) {
                 Logger.i("Organisation List API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }

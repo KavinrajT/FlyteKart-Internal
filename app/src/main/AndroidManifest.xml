@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.flytekart.myapplication" >
+    package="com.flytekart.myapplication">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -18,15 +18,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication" >
-        <activity android:name=".ui.activity.ChagePasswordActivity" >
-        </activity>
+        android:theme="@style/Theme.MyApplication">
         <activity
             android:name=".ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:noHistory="true"
             android:theme="@style/SplashTheme"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateAlwaysHidden|stateHidden" >
+            android:windowSoftInputMode="adjustPan|adjustResize|stateAlwaysHidden|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,6 +33,10 @@
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
+            android:theme="@style/AppTheme.TranslucentStatusBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ChangePasswordActivity"
             android:theme="@style/AppTheme.TranslucentStatusBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
