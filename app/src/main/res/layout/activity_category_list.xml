@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.CategoryListActivity">
 
-    <com.flytekart.myapplication.ui.views.TitleBarLayout
+    <com.flytekart.ui.views.TitleBarLayout
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
