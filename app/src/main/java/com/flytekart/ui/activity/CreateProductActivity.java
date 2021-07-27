@@ -39,6 +39,8 @@ public class CreateProductActivity extends AppCompatActivity {
     private SwitchCompat swAdvancedInventory;
     private Button btnCreateProduct;
 
+    private Product product;
+
     private boolean isInStock;
 
     @Override
@@ -47,7 +49,12 @@ public class CreateProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_product);
 
         titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("ADD PRODUCT");
+        product = getIntent().getParcelableExtra(Constants.PRODUCT);
+        if (product == null) {
+            titleBarLayout.setTitleText("ADD PRODUCT");
+        } else {
+            titleBarLayout.setTitleText("EDIT PRODUCT");
+        }
         titleBarLayout.removeRightImg();
 
         etProductName = findViewById(R.id.et_product_name);
@@ -72,33 +79,33 @@ public class CreateProductActivity extends AppCompatActivity {
                 return;
             }
             if (etPrice.getText() != null && !etPrice.getText().toString().isEmpty()) {
-                product.setPrice(Double.valueOf(etPrice.getText().toString()));
+                //product.setPrice(Double.valueOf(etPrice.getText().toString()));
             } else {
                 showErrorToast(R.string.err_enter_price);
                 return;
             }
             if (etOriginalPrice.getText() != null && !etOriginalPrice.getText().toString().isEmpty()) {
-                product.setOriginalPrice(Double.valueOf(etOriginalPrice.getText().toString()));
+                //product.setOriginalPrice(Double.valueOf(etOriginalPrice.getText().toString()));
             } else {
                 showErrorToast(R.string.err_enter_original_price);
                 return;
             }
             if (etDescription.getText() != null && !etDescription.getText().toString().isEmpty()) {
-                product.setDescription(etDescription.getText().toString());
+                //product.setDescription(etDescription.getText().toString());
             } else {
                 showErrorToast(R.string.err_enter_description);
                 return;
             }
             if (etQuantity.getText() != null && !etQuantity.getText().toString().isEmpty()) {
-                product.setQuantity(Double.valueOf(etQuantity.getText().toString()));
+                //product.setQuantity(Double.valueOf(etQuantity.getText().toString()));
             } else {
                 showErrorToast(R.string.err_enter_quantity);
                 return;
             }
 
-            product.setInStock(isInStock);
-            product.setShowAdvanceOption(swAdvancedOptions.isChecked());
-            product.setShowAdvanceInventory(swAdvancedInventory.isChecked());
+            //product.setInStock(isInStock);
+            //product.setShowAdvanceOption(swAdvancedOptions.isChecked());
+            //product.setShowAdvanceInventory(swAdvancedInventory.isChecked());
 
             Gson gson = new Gson();
             SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
@@ -133,9 +140,21 @@ public class CreateProductActivity extends AppCompatActivity {
 
             }
         });
+
+        if (product != null) {
+            setProductData();
+        }
     }
 
     private void showErrorToast(int messageStr) {
         Toast.makeText(getApplicationContext(), messageStr, Toast.LENGTH_SHORT).show();
+    }
+
+    private void setProductData() {
+        etProductName.setText(product.getName());
+        //etPrice.setText(String.valueOf(product.getPrice()));
+        //etOriginalPrice.setText(String.valueOf(product.getOriginalPrice()));
+        //etDescription.setText(product.getDescription());
+        //etQuantity.setText(String.valueOf(product.getQuantity()));
     }
 }

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.R;
 import com.flytekart.models.Organisation;
-import com.flytekart.models.Store;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class OrganisationRecyclerListAdapter extends RecyclerView.Adapter<Organi
     @Override
     public OrganisationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_store, parent, false);
+                .inflate(R.layout.list_item_store, parent, false);
         return new OrganisationViewHolder(view);
     }
 

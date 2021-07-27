@@ -1,14 +1,19 @@
 package com.flytekart.network;
 
-import com.flytekart.models.ApiCallResponse;
-import com.flytekart.models.BaseResponse;
+import com.flytekart.models.OrderResponse;
+import com.flytekart.models.Product;
+import com.flytekart.models.request.LoginRequest;
+import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.Category;
-import com.flytekart.models.LoginResponse;
+import com.flytekart.models.response.LoginResponse;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.Store;
 import com.flytekart.models.User;
 import com.flytekart.utils.Constants;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -26,12 +31,12 @@ public interface ApiService {
 
     @POST("/api/auth/signin/")
     Call<LoginResponse> mainLogin(
-            @Body JsonObject body);
+            @Body LoginRequest loginRequest);
 
     @POST("/api/auth/employeesignin")
     Call<LoginResponse> clientLogin(
             @Query("clientId") String clientId,
-            @Body JsonObject body);
+            @Body LoginRequest loginRequest);
 
     @POST("/api/auth/changePassword")
     Call<ApiCallResponse> changePasswordMainUser(
@@ -65,10 +70,9 @@ public interface ApiService {
             @Body Organisation organisation);
 
     @GET("/api/stores/")
-    Call<BaseResponse<Store>> getStoresByOrg(
+    Call<BaseResponse<List<Store>>> getStoresByOrg(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
-            @Query("clientId") String clientId,
-            @Query("organisationId") String organisationId);
+            @Query("clientId") String clientId);
 
     @GET("/api/stores/")
     Call<BaseResponse<Store>> getStore(
@@ -83,7 +87,7 @@ public interface ApiService {
             @Body Store store);
 
     @GET("/api/categories/")
-    Call<BaseResponse<Category>> getAllCategories(
+    Call<BaseResponse<List<Category>>> getAllCategories(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId);
 
@@ -98,5 +102,33 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body Category category);
+
+    @GET("/api/products/")
+    Call<BaseResponse<List<Product>>> getProductsByCategoryId(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("categoryId") String categoryId);
+
+    @GET("/api/orders/getByStoreId/{storeId}")
+    Call<BaseResponse<List<OrderResponse>>> getOrdersByStoreId(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("storeId") String storeId,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/orders/getByUserId/{userId}")
+    Call<BaseResponse<List<OrderResponse>>> getOrdersByUserId(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("userId") String userId,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/orders/get/{orderId}")
+    Call<BaseResponse<OrderResponse>> getOrderById(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("orderId") String orderId,
+            @Query("clientId") String clientId);
 }
 

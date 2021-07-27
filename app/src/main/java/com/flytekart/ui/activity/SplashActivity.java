@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
                     boolean isUserLoggedInMainAccount = sharedPreferences.getBoolean
                             (Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
                     if (isUserLoggedInMainAccount) {
-                        Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
+                        Intent homeIntent = new Intent(SplashActivity.this, MainHomeActivity.class);
                         startActivity(homeIntent);
                     } else {
                         Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);

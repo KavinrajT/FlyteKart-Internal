@@ -13,11 +13,11 @@ import com.flytekart.models.Category;
 
 import java.util.List;
 
-public class CategoryRecyclerListAdapter extends RecyclerView.Adapter<CategoryRecyclerListAdapter.CategoryViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
 
     private List<Category> categories;
 
-    public CategoryRecyclerListAdapter(List<Category> categories) {
+    public CategoriesAdapter(List<Category> categories) {
         this.categories = categories;
     }
 
@@ -25,15 +25,18 @@ public class CategoryRecyclerListAdapter extends RecyclerView.Adapter<CategoryRe
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_store, parent, false);
+                .inflate(R.layout.list_item_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = categories.get(position);
-        if (category != null) {
-            holder.getTextView().setText(category.getName());
+        holder.getTvCategoryName().setText(category.getName());
+        if (category.isIsActive()) {
+            holder.getTvCategoryStatus().setText(R.string.active);
+        } else {
+            holder.getTvCategoryStatus().setText(R.string.inactive);
         }
     }
 
@@ -43,15 +46,21 @@ public class CategoryRecyclerListAdapter extends RecyclerView.Adapter<CategoryRe
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final TextView tvCategoryName;
+        private final TextView tvCategoryStatus;
 
         public CategoryViewHolder(View view) {
             super(view);
-            textView = view.findViewById(R.id.tv_store_name);
+            tvCategoryName = view.findViewById(R.id.tv_category_name);
+            tvCategoryStatus = view.findViewById(R.id.tv_category_status);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getTvCategoryName() {
+            return tvCategoryName;
+        }
+
+        public TextView getTvCategoryStatus() {
+            return tvCategoryStatus;
         }
     }
 }

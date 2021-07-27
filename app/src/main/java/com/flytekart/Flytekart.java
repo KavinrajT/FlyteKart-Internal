@@ -33,7 +33,7 @@ public class Flytekart extends Application {
 
     public static ApiService getApiService() {
         if (retrofitClient == null) {
-            retrofitClient = new RetrofitClient(instance.getApplicationContext());
+            retrofitClient = new RetrofitClient();
         }
         return retrofitClient.getApiService();
     }

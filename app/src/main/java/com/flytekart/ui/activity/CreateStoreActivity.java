@@ -67,13 +67,13 @@ public class CreateStoreActivity extends AppCompatActivity {
                 return;
             }
             if (strAddress != null) {
-                store.setAddress(strAddress);
+                //store.setAddress(strAddress);
             } else {
                 showErrorToast(R.string.err_add_address);
                 return;
             }
             if (etGstNo.getText() != null && !etGstNo.getText().toString().isEmpty()) {
-                store.setGstNo(etGstNo.getText().toString());
+                store.setTaxNumber(etGstNo.getText().toString());
             } else {
                 showErrorToast(R.string.err_enter_gst_no);
                 return;

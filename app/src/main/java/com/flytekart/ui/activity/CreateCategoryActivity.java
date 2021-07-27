@@ -13,10 +13,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.R;
-import com.flytekart.models.Category;
 import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Utilities;
+import com.flytekart.models.Category;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -57,7 +57,7 @@ public class CreateCategoryActivity extends AppCompatActivity {
                 return;
             }
             if (strIsActive != null) {
-                category.setActive(strIsActive.equals("yes"));
+                category.setIsActive(strIsActive.equals("yes"));
             } else {
                 showErrorToast(R.string.err_enter_is_active);
                 return;

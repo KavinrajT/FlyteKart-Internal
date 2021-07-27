@@ -63,6 +63,18 @@
             android:name=".ui.activity.StoreListActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".ui.activity.StoreActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.OrdersListActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.OrderDetailsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.CustomerDetailsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".ui.activity.ProductListActivity"
             android:theme="@style/AppTheme" />
         <activity

@@ -9,8 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.ApiCallResponse;
+import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.User;
 import com.flytekart.utils.Logger;
 import com.google.android.material.textfield.TextInputEditText;
@@ -99,9 +100,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp(String name, String username, String email, String phoneNumber, String password) {
         User user = new User(name, username, email, phoneNumber, password);
-        Call<ApiCallResponse> loginCall = com.flytekart.Flytekart.getApiService().signUp(user);
+        Call<ApiCallResponse> signUpCall = Flytekart.getApiService().signUp(user);
         tvSignUp.setEnabled(false);
-        loginCall.enqueue(new Callback<ApiCallResponse>() {
+        signUpCall.enqueue(new Callback<ApiCallResponse>() {
             @Override
             public void onResponse(@NotNull Call<ApiCallResponse> call, @NotNull Response<ApiCallResponse> response) {
                 ApiCallResponse apiCallResponse = null;

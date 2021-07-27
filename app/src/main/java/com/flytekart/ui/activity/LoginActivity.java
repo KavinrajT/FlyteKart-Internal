@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.ApiCallResponse;
-import com.flytekart.models.LoginResponse;
+import com.flytekart.models.request.LoginRequest;
+import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.LoginResponse;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -44,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String loginType;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +68,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 loginType = getResources().getStringArray(R.array.login_type_array)[position];
-                if (TextUtils.equals(loginType, "Main Account")) {
+                if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
                     tilClientCode.setVisibility(View.GONE);
-                } else if (TextUtils.equals(loginType, "Client Account")) {
+                } else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_CLIENT_ACCOUNT)) {
                     tilClientCode.setVisibility(View.VISIBLE);
                 }
             }
@@ -79,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         spLoginType.setSelection(0);
-        loginType = "Main Account";
+        loginType = Constants.LOGIN_TYPE_MAIN_ACCOUNT;
         tilClientCode.setVisibility(View.GONE);
 
         tvSignUp.setOnClickListener(view -> {
@@ -95,28 +98,30 @@ public class LoginActivity extends AppCompatActivity {
 
             if (loginType == null) {
                 Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
-            } else if (TextUtils.equals(loginType, "Main Account")) {
+            } else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
                 if (usernameOrEmail.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
                 } else {
                     mainLogin(usernameOrEmail, password);
                 }
-            } else if (TextUtils.equals(loginType, "Client Account")) {
+            } else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_CLIENT_ACCOUNT)) {
                 if (usernameOrEmail.isEmpty() || clientId.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
                 } else {
                     clientLogin(clientId, usernameOrEmail, password);
-
                 }
             }
         });
     }
 
     private void mainLogin(String usernameOrEmail, String password) {
-        JsonObject loginJson = new JsonObject();
+        /*JsonObject loginJson = new JsonObject();
         loginJson.addProperty("usernameOrEmail", usernameOrEmail);
-        loginJson.addProperty("password", password);
-        Call<LoginResponse> loginCall = com.flytekart.Flytekart.getApiService().mainLogin(loginJson);
+        loginJson.addProperty("password", password);*/
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsernameOrEmail(usernameOrEmail);
+        loginRequest.setPassword(password);
+        Call<LoginResponse> loginCall = Flytekart.getApiService().mainLogin(loginRequest);
         tvSignUp.setEnabled(false);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -132,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
                     editor.apply();
                     Logger.i("Main Login API call success.");
-                    Intent mainIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                    Intent mainIntent = new Intent(LoginActivity.this, MainHomeActivity.class);
                     startActivity(mainIntent);
                     finish();
 
@@ -157,10 +162,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void clientLogin(String clientId, String usernameOrEmail, String password) {
-        JsonObject loginJson = new JsonObject();
+        /*JsonObject loginJson = new JsonObject();
         loginJson.addProperty("usernameOrEmail", usernameOrEmail);
-        loginJson.addProperty("password", password);
-        Call<LoginResponse> loginCall = com.flytekart.Flytekart.getApiService().clientLogin(clientId, loginJson);
+        loginJson.addProperty("password", password);*/
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsernameOrEmail(usernameOrEmail);
+        loginRequest.setPassword(password);
+        Call<LoginResponse> loginCall = com.flytekart.Flytekart.getApiService().clientLogin(clientId, loginRequest);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
@@ -173,12 +181,12 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
                     editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
+                    editor.putString(Constants.SHARED_PREF_KEY_CLIENT_ID, clientId);
                     editor.apply();
                     Logger.i("Client Login API call success.");
                     Intent mainIntent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(mainIntent);
                     finish();
-
                 } else if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(

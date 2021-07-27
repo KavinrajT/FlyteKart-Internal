@@ -16,8 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.R;
-import com.flytekart.models.ApiCallResponse;
-import com.flytekart.models.BaseResponse;
+import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.Organisation;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -173,8 +173,8 @@ public class CreateOrgActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     BaseResponse<Organisation> orgResponse = response.body();
                     // Get dropdown data and go to next screen.
-                    Toast.makeText(getApplicationContext(), orgResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    if (orgResponse.isSuccess()) {
+                    Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+                    if (orgResponse.getApiError() != null) {
                         Logger.i("create Org API call success.");
                         finish();
                     }

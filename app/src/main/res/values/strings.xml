@@ -37,6 +37,11 @@
     <string name="str_product_management">Product Management</string>
     <string name="str_products">Products</string>
     <string name="str_categories">Categories</string>
+    <string name="stores">Stores</string>
+    <string name="categories_products">Categories &amp; products</string>
+    <string name="orderResponses">Orders</string>
+    <string name="change_password">Change password</string>
+    <string name="sign_out">Sign out</string>
 
     <string-array name="store_type_array">
         <item>Single store</item>
@@ -119,6 +124,14 @@
     <string name="loading">Loading...</string>
     <string name="enter_all_details">Please enter all user details before proceeding.</string>
     <string name="confirm_password_correctly">Conform your password correctly before proceeding.</string>
+    <string name="account">Account</string>
+    <string name="store_name">Store name</string>
+    <string name="store_address">Store address</string>
+    <string name="summary">Summary</string>
+    <string name="store_details">Store details</string>
+    <string name="quantity_label">Quantity:</string>
+    <string name="active">Active</string>
+    <string name="inactive">Inactive</string>
 
 
 </resources>

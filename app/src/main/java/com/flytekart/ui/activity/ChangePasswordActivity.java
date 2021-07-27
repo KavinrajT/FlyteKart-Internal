@@ -7,7 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.R;
-import com.flytekart.models.ApiCallResponse;
+import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;

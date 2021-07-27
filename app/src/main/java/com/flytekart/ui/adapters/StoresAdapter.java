@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.R;
 import com.flytekart.models.Store;
+import com.flytekart.utils.Utilities;
 
 import java.util.List;
 
-public class StoreRecyclerListAdapter extends RecyclerView.Adapter<StoreRecyclerListAdapter.StoreViewHolder> {
+public class StoresAdapter extends RecyclerView.Adapter<StoresAdapter.StoreViewHolder> {
 
     private List<Store> stores;
 
-    public StoreRecyclerListAdapter(List<Store> stores) {
+    public StoresAdapter(List<Store> stores) {
         this.stores = stores;
     }
 
@@ -25,16 +26,16 @@ public class StoreRecyclerListAdapter extends RecyclerView.Adapter<StoreRecycler
     @Override
     public StoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_store, parent, false);
+                .inflate(R.layout.list_item_store, parent, false);
         return new StoreViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull StoreViewHolder holder, int position) {
         Store store = stores.get(position);
-        if (store != null) {
-            holder.getTextView().setText(store.getName());
-        }
+        holder.tvStoreName.setText(store.getName());
+        String addressString = Utilities.getAddressString(store.getAddress());
+        holder.tvStoreAddress.setText(addressString);
     }
 
     @Override
@@ -43,15 +44,13 @@ public class StoreRecyclerListAdapter extends RecyclerView.Adapter<StoreRecycler
     }
 
     public static class StoreViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private TextView tvStoreName;
+        private TextView tvStoreAddress;
 
         public StoreViewHolder(View view) {
             super(view);
-            textView = view.findViewById(R.id.tv_store_name);
-        }
-
-        public TextView getTextView() {
-            return textView;
+            tvStoreName = view.findViewById(R.id.tv_store_name);
+            tvStoreAddress = view.findViewById(R.id.tv_store_address);
         }
     }
 }

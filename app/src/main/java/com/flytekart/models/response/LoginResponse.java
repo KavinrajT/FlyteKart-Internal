@@ -1,4 +1,4 @@
-package com.flytekart.models;
+package com.flytekart.models.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

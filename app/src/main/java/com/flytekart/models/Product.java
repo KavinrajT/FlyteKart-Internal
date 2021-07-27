@@ -1,15 +1,84 @@
 package com.flytekart.models;
 
-public class Product {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    private String name;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class Product implements Parcelable {
+
+    /*private String name;
     private Double price;
     private Double originalPrice;
     private String description;
     private Double quantity;
     private boolean isInStock;
     private boolean showAdvanceOption;
-    private boolean showAdvanceInventory;
+    private boolean showAdvanceInventory;*/
+
+    @SerializedName("createdAt")
+    @Expose
+    private String createdAt;
+    @SerializedName("lastUpdatedAt")
+    @Expose
+    private String lastUpdatedAt;
+    @SerializedName("deletedAt")
+    @Expose
+    private String deletedAt;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("categoryId")
+    @Expose
+    private String categoryId;
+    @SerializedName("createdBy")
+    @Expose
+    private String createdBy;
+    @SerializedName("lastUpdatedBy")
+    @Expose
+    private String lastUpdatedBy;
+    @SerializedName("deletedBy")
+    @Expose
+    private String deletedBy;
+    @SerializedName("isActive")
+    @Expose
+    private boolean isActive;
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getLastUpdatedAt() {
+        return lastUpdatedAt;
+    }
+
+    public void setLastUpdatedAt(String lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
+    }
+
+    public String getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(String deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -19,59 +88,103 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
-        return price;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Double getOriginalPrice() {
-        return originalPrice;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setOriginalPrice(Double originalPrice) {
-        this.originalPrice = originalPrice;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public String getDescription() {
-        return description;
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public Double getQuantity() {
-        return quantity;
+    public String getDeletedBy() {
+        return deletedBy;
     }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
+    public void setDeletedBy(String deletedBy) {
+        this.deletedBy = deletedBy;
     }
 
-    public boolean isInStock() {
-        return isInStock;
+    public boolean isIsActive() {
+        return isActive;
     }
 
-    public void setInStock(boolean inStock) {
-        this.isInStock = inStock;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
-    public boolean isShowAdvanceOption() {
-        return showAdvanceOption;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setShowAdvanceOption(boolean showAdvanceOption) {
-        this.showAdvanceOption = showAdvanceOption;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.createdAt);
+        dest.writeString(this.lastUpdatedAt);
+        dest.writeString(this.deletedAt);
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.categoryId);
+        dest.writeString(this.createdBy);
+        dest.writeString(this.lastUpdatedBy);
+        dest.writeString(this.deletedBy);
+        dest.writeByte(this.isActive ? (byte) 1 : (byte) 0);
     }
 
-    public boolean isShowAdvanceInventory() {
-        return showAdvanceInventory;
+    public void readFromParcel(Parcel source) {
+        this.createdAt = source.readString();
+        this.lastUpdatedAt = source.readString();
+        this.deletedAt = source.readString();
+        this.id = source.readString();
+        this.name = source.readString();
+        this.categoryId = source.readString();
+        this.createdBy = source.readString();
+        this.lastUpdatedBy = source.readString();
+        this.deletedBy = source.readString();
+        this.isActive = source.readByte() != 0;
     }
 
-    public void setShowAdvanceInventory(boolean showAdvanceInventory) {
-        this.showAdvanceInventory = showAdvanceInventory;
+    public Product() {
     }
+
+    protected Product(Parcel in) {
+        this.createdAt = in.readString();
+        this.lastUpdatedAt = in.readString();
+        this.deletedAt = in.readString();
+        this.id = in.readString();
+        this.name = in.readString();
+        this.categoryId = in.readString();
+        this.createdBy = in.readString();
+        this.lastUpdatedBy = in.readString();
+        this.deletedBy = in.readString();
+        this.isActive = in.readByte() != 0;
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel source) {
+            return new Product(source);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 }

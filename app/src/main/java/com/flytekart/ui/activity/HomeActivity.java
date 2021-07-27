@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,16 +15,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.flytekart.R;
-import com.flytekart.models.ApiCallResponse;
-import com.flytekart.models.BaseResponse;
 import com.flytekart.models.MenuModel;
 import com.flytekart.models.Organisation;
+import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseResponse;
 import com.flytekart.ui.adapters.MenuExpandableListAdapter;
-import com.flytekart.ui.fragment.OrganisationListFragment;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -52,7 +50,7 @@ public class HomeActivity extends BaseActivity {
     private CharSequence mTitle;
     ActionBarDrawerToggle drawerToggle;
 
-    private List<Organisation> organisations;
+    private Organisation organisation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,32 +69,66 @@ public class HomeActivity extends BaseActivity {
         expandableListAdapter = new MenuExpandableListAdapter(this, headerList, childList);
         expandableListView.setAdapter(expandableListAdapter);
         expandableListView.setOnItemClickListener(new DrawerItemClickListener());
+        expandableListView.setOnGroupClickListener(new GroupClickListener());
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerListener(drawerToggle);
         setupDrawerToggle();
 
-        getAllOrganisations();
+        //getAllOrganisations();
     }
 
 
     private void prepareMenuData() {
-        headerList.add(new MenuModel("Change Password", true, true, null));
-        headerList.add(new MenuModel("Sign Out", true, true, null));
+        headerList.add(new MenuModel(getString(R.string.stores), true, true, null));
+        headerList.add(new MenuModel(getString(R.string.categories_products), true, true, null));
+        headerList.add(new MenuModel(getString(R.string.orderResponses), true, true, null));
+        headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
+        headerList.add(new MenuModel(getString(R.string.sign_out), true, true, null));
+    }
+
+    private class GroupClickListener implements ExpandableListView.OnGroupClickListener {
+
+        @Override
+        public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+            MenuModel menuModel = headerList.get(groupPosition);
+            if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.stores))) {
+                Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
+                startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
+                Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
+                startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
+
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
+                SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
+                editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
+                editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
+                editor.remove(Constants.SHARED_PREF_KEY_CLIENT_ID);
+                editor.apply();
+                finish();
+                // TODO Open login screen
+            }
+            return false;
+        }
     }
 
     private class DrawerItemClickListener implements ExpandableListView.OnItemClickListener {
-
-
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (position > 0) {
                 MenuModel menuModel = headerList.get(position);
-                if (TextUtils.equals(menuModel.getMenuName(), "Change Password")) {
+                if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.stores))) {
+                    Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
+                    startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
+                } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
+                    Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
+                    startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
+                } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
-                } else if (TextUtils.equals(menuModel.getMenuName(), "Sign Out")) {
+                } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
                     SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
-                    editor.putBoolean(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
-                    editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
+                    editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
+                    editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
                     editor.apply();
                     finish();
                 }
@@ -106,7 +138,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void populateFragment() {
-        Fragment fragment = OrganisationListFragment.newInstance(organisations);
+        /*Fragment fragment = OrganisationListFragment.newInstance(organisations);
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -116,7 +148,8 @@ public class HomeActivity extends BaseActivity {
 
         } else {
             Log.e("MainActivity", "Error in creating fragment");
-        }
+        }*/
+        Log.e("MainActivity", "In populateFragment");
     }
 
 
@@ -151,15 +184,16 @@ public class HomeActivity extends BaseActivity {
 
     private void getAllOrganisations() {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
-        String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
-        Call<BaseResponse<Organisation>> loginCall = com.flytekart.Flytekart.getApiService().getAllOrganisations(accessToken);
-        loginCall.enqueue(new Callback<BaseResponse<Organisation>>() {
+        String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
+        String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        Call<BaseResponse<Organisation>> organisationCall = com.flytekart.Flytekart.getApiService().getOrganisation(accessToken, clientId);
+        organisationCall.enqueue(new Callback<BaseResponse<Organisation>>() {
             @Override
             public void onResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
                 Logger.i("Client Login API call response received.");
                 if (response.isSuccessful() && response.body() != null) {
-                    organisations = response.body().getBody();
-                    Toast.makeText(getApplicationContext(), "Organisation List API call successful.", Toast.LENGTH_SHORT).show();
+                    organisation = response.body().getBody();
+                    Toast.makeText(getApplicationContext(), "Organisation API call successful.", Toast.LENGTH_SHORT).show();
                 } else if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(

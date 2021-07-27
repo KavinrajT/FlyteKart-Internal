@@ -25,7 +25,7 @@ public class SubCategoryRecyclerListAdapter extends RecyclerView.Adapter<SubCate
     @Override
     public SubCategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_store, parent, false);
+                .inflate(R.layout.list_item_store, parent, false);
         return new SubCategoryViewHolder(view);
     }
 
