@@ -71,7 +71,7 @@ public class HomeActivity extends BaseActivity {
         expandableListView.setOnItemClickListener(new DrawerItemClickListener());
         expandableListView.setOnGroupClickListener(new GroupClickListener());
         drawerLayout = findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerListener(drawerToggle);
+        drawerLayout.addDrawerListener(drawerToggle);
         setupDrawerToggle();
 
         //getAllOrganisations();
@@ -115,25 +115,22 @@ public class HomeActivity extends BaseActivity {
     private class DrawerItemClickListener implements ExpandableListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (position > 0) {
-                MenuModel menuModel = headerList.get(position);
-                if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.stores))) {
-                    Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
-                    startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
-                } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
-                    Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
-                    startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
-                } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
+            MenuModel menuModel = headerList.get(position);
+            if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.stores))) {
+                Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
+                startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
+                Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
+                startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
-                } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
-                    SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
-                    editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
-                    editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
-                    editor.apply();
-                    finish();
-                }
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
+                SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
+                editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
+                editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
+                editor.apply();
+                finish();
             }
-
         }
     }
 

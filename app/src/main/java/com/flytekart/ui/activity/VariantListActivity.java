@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -19,17 +18,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.Category;
 import com.flytekart.models.Product;
+import com.flytekart.models.Variant;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
-import com.flytekart.ui.adapters.ProductsAdapter;
+import com.flytekart.ui.adapters.VariantsAdapter;
 import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,34 +38,34 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProductListActivity extends AppCompatActivity implements TitleBarLayout.TitleBarIconClickListener {
+public class VariantListActivity extends AppCompatActivity {
 
     private LinearLayout llNoRecordsFound;
-    private RecyclerView rvProductList;
-    private ProductsAdapter adapter;
-    private LinearLayoutManager productsLayoutManager;
-    private Category category;
-    private List<Product> products;
+    private RecyclerView rvVariantList;
+    private VariantsAdapter adapter;
+    private LinearLayoutManager variantsLayoutManager;
+    private Product product;
+    private List<Variant> variants;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_list);
+        setContentView(R.layout.activity_variant_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Products");
+        getSupportActionBar().setTitle("Variants");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
-        rvProductList = findViewById(R.id.rv_product_list);
-        rvProductList.setHasFixedSize(true);
-        productsLayoutManager = new LinearLayoutManager(this);
-        rvProductList.setLayoutManager(productsLayoutManager);
-        rvProductList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvVariantList = findViewById(R.id.rv_product_list);
+        rvVariantList.setHasFixedSize(true);
+        variantsLayoutManager = new LinearLayoutManager(this);
+        rvVariantList.setLayoutManager(variantsLayoutManager);
+        rvVariantList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        category = getIntent().getParcelableExtra(Constants.CATEGORY);
+        product = getIntent().getParcelableExtra(Constants.PRODUCT);
 
         getData();
         setListeners();
@@ -88,14 +86,14 @@ public class ProductListActivity extends AppCompatActivity implements TitleBarLa
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
-        Call<BaseResponse<List<Product>>> getProductsCall = Flytekart.getApiService().getProductsByCategoryId(accessToken, clientId, category.getId());
-        getProductsCall.enqueue(new Callback<BaseResponse<List<Product>>>() {
+        Call<BaseResponse<List<Variant>>> getVariantsCall = Flytekart.getApiService().getVariantsByProductId(accessToken, product.getId(), clientId);
+        getVariantsCall.enqueue(new Callback<BaseResponse<List<Variant>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<Product>>> call, @NotNull Response<BaseResponse<List<Product>>> response) {
-                Logger.i("Categories list response received.");
+            public void onResponse(@NotNull Call<BaseResponse<List<Variant>>> call, @NotNull Response<BaseResponse<List<Variant>>> response) {
+                Logger.i("Variants list response received.");
                 if (response.isSuccessful() && response.body() != null) {
-                    products = response.body().getBody();
-                    setProductsData();
+                    variants = response.body().getBody();
+                    setVariantsData();
                 } else if (response.body().getApiError() != null || response.errorBody() != null) {
                     // TODO Need to write this properly
                     try {
@@ -106,33 +104,34 @@ public class ProductListActivity extends AppCompatActivity implements TitleBarLa
                         e.printStackTrace();
                     }
                 }
-                Logger.e("Categories List API call response status code : " + response.code());
+                Logger.e("Variants List API call response status code : " + response.code());
                 //populateFragment();
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<Product>>> call, @NotNull Throwable t) {
-                Logger.i("Categories List API call failure.");
+            public void onFailure(@NotNull Call<BaseResponse<List<Variant>>> call, @NotNull Throwable t) {
+                Logger.i("Variants List API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void setProductsData() {
-        if (products == null || products.isEmpty()) {
-            rvProductList.setVisibility(View.GONE);
+    private void setVariantsData() {
+        if (variants == null || variants.isEmpty()) {
+            rvVariantList.setVisibility(View.GONE);
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(ProductListActivity.this, CreateProductActivity.class);
-                startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
+                Intent intent = new Intent(VariantListActivity.this, CreateVariantActivity.class);
+                intent.putExtra(Constants.PRODUCT, product);
+                startActivityForResult(intent, Constants.ADD_VARIANT_ACTIVITY_REQUEST_CODE);
             });
 
         } else {
             llNoRecordsFound.setVisibility(View.GONE);
-            rvProductList.setVisibility(View.VISIBLE);
+            rvVariantList.setVisibility(View.VISIBLE);
 
-            adapter = new ProductsAdapter(products);
-            rvProductList.setAdapter(adapter);
+            adapter = new VariantsAdapter(variants);
+            rvVariantList.setAdapter(adapter);
         }
     }
 
@@ -146,13 +145,13 @@ public class ProductListActivity extends AppCompatActivity implements TitleBarLa
 
         });
 
-        rvProductList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        rvVariantList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int pos = rv.getChildAdapterPosition(child);
-                    onProductClicked(products.get(pos));
+                    onVariantClicked(variants.get(pos));
                 }
                 return false;
             }
@@ -170,18 +169,13 @@ public class ProductListActivity extends AppCompatActivity implements TitleBarLa
     }
 
     /**
-     * Open product details
-     * @param product
+     * Open variant details
+     * @param variant
      */
-    private void onProductClicked(Product product) {
-        Intent itemIntent = new Intent(this, CreateProductActivity.class);
+    private void onVariantClicked(Variant variant) {
+        Intent itemIntent = new Intent(this, CreateVariantActivity.class);
+        itemIntent.putExtra(Constants.VARIANT, variant);
         itemIntent.putExtra(Constants.PRODUCT, product);
-        startActivity(itemIntent);
-    }
-
-    @Override
-    public void onTitleBarRightIconClicked(View view) {
-        Intent intent = new Intent(ProductListActivity.this, CreateProductActivity.class);
-        startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(itemIntent, Constants.ADD_VARIANT_ACTIVITY_REQUEST_CODE);
     }
 }

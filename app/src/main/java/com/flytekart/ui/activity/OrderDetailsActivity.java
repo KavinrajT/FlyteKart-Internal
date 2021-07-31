@@ -4,9 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
@@ -24,7 +21,6 @@ import com.flytekart.models.OrderResponse;
 import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
-import com.flytekart.ui.adapters.OrdersAdapter;
 import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -148,7 +144,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements TitleBarL
             TextView tvItemPrice = v.findViewById(R.id.tv_item_price);
 
             tvItemName.setText(orderItem.getStoreVariant().getVariant().getProduct().getName());
-            tvVariantName.setText(orderItem.getStoreVariant().getVariant().getDescription());
+            tvVariantName.setText(orderItem.getStoreVariant().getVariant().getName());
             tvQuantity.setText(String.valueOf(orderItem.getQuantity()));
             tvItemPrice.setText(Utilities.getFormattedMoney(orderItem.getTotalPrice()));
 

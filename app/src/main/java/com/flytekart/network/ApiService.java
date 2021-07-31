@@ -2,6 +2,8 @@ package com.flytekart.network;
 
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Product;
+import com.flytekart.models.Variant;
+import com.flytekart.models.VariantAttributeValue;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
@@ -129,6 +131,30 @@ public interface ApiService {
     Call<BaseResponse<OrderResponse>> getOrderById(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Path("orderId") String orderId,
+            @Query("clientId") String clientId);
+
+    @GET("/api/products/{id}")
+    Call<BaseResponse<Product>> getProductById(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("id") String id,
+            @Query("clientId") String clientId);
+
+    @GET("/api/variants/getByProductId/{productId}")
+    Call<BaseResponse<List<Variant>>> getVariantsByProductId(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("productId") String productId,
+            @Query("clientId") String clientId);
+
+    @GET("/api/variants/{id}")
+    Call<BaseResponse<Variant>> getVariantById(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("id") String id,
+            @Query("clientId") String clientId);
+
+    @GET("/api/variantAttributeValues/getByVariantId/{variantId}")
+    Call<BaseResponse<List<VariantAttributeValue>>> getAttributeValuesByVariantId(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("variantId") String variantId,
             @Query("clientId") String clientId);
 }
 

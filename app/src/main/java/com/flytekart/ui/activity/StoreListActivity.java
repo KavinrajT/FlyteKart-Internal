@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,9 +48,14 @@ public class StoreListActivity extends AppCompatActivity implements TitleBarLayo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_list);
 
-        TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
+        /*TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
         titleBarLayout.setTitleText("Stores");
-        titleBarLayout.setOnIconClickListener(this);
+        titleBarLayout.setOnIconClickListener(this);*/
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Stores");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
         rvStoresList = findViewById(R.id.rv_stores_list);
@@ -59,6 +66,16 @@ public class StoreListActivity extends AppCompatActivity implements TitleBarLayo
         getData();
         setListeners();
         //setData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getData() {

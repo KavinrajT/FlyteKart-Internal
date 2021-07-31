@@ -5,31 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.CreateProductActivity">
 
-    <com.flytekart.ui.views.TitleBarLayout
+    <LinearLayout
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:orientation="vertical">
 
-    <RelativeLayout
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+    </LinearLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/titleBar"
-        android:orientation="vertical"
-        android:padding="30dp"
-        tools:context=".ui.activity.CreateOrgActivity">
+        android:layout_above="@id/btn_save_product"
+        android:layout_below="@id/titleBar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/str_product_info"
-                android:textColor="@color/black"
-                android:textSize="26sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -44,10 +42,10 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:textSize="20sp" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
@@ -88,122 +86,182 @@
                         android:maxLines="1"
                         android:textSize="20sp" />
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+            </LinearLayout>-->
 
-            <com.google.android.material.textfield.TextInputLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignTop="@id/sw_is_active"
+                    android:layout_alignBottom="@id/sw_is_active"
+                    android:gravity="center_vertical|left|start"
+                    android:text="@string/is_active"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_is_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_description"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
                 android:layout_marginTop="20dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_description"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
+                    android:gravity="top|left"
                     android:hint="@string/str_description"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:textSize="20sp" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/tv_more_options_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/save_to_view_more_options"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="italic" />
+
+            <RelativeLayout
+                android:id="@+id/rl_view_variants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="View variants"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text=">"
+                    android:textColor="@color/white"
+                    android:padding="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_support_variants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignTop="@id/sw_support_variants"
+                    android:layout_alignBottom="@id/sw_support_variants"
+                    android:gravity="center_vertical"
+                    android:text="@string/support_variants"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_support_variants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_sku"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_quantity"
+                    android:id="@+id/et_sku"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/str_quantity"
-                    android:imeOptions="actionDone"
+                    android:hint="@string/sku"
+                    android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:textSize="20sp" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
+                android:id="@+id/ll_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/str_in_stock"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1">
 
-                <Spinner
-                    android:id="@+id/sp_in_stock"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/str_price"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_original_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/str_original_price"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignTop="@id/sw_advanced_options"
-                    android:layout_alignBottom="@id/sw_advanced_options"
-                    android:gravity="center_vertical"
-                    android:text="@string/str_show_advanced_options"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sw_advanced_options"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignTop="@id/sw_advanced_inventory"
-                    android:layout_alignBottom="@id/sw_advanced_inventory"
-                    android:gravity="center_vertical"
-                    android:text="@string/str_show_advanced_inventory"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sw_advanced_inventory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" />
-            </RelativeLayout>
-
         </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/btn_create_product"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:background="@color/colorAccent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@string/str_create_product"
-            android:textColor="@color/white" />
-    </RelativeLayout>
+    <Button
+        android:id="@+id/btn_save_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:text="@string/save_product"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,9 +53,11 @@ public class CategoryListActivity extends AppCompatActivity implements TitleBarL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
 
-        TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("CATEGORIES");
-        titleBarLayout.setOnIconClickListener(this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Categories");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
         rvCategoryList = findViewById(R.id.rv_category_list);
@@ -65,6 +69,16 @@ public class CategoryListActivity extends AppCompatActivity implements TitleBarL
         getData();
         setListeners();
         //setData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getData() {

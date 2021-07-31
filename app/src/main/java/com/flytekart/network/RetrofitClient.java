@@ -12,9 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    //TODO Add base URL
+    // Add base URL
     //private static final String BASE_URL = "https://aqueous-depths-69529.herokuapp.com/";
-    private static final String BASE_URL = "https://f711ceb68e2e.ngrok.io/";
+    private static final String BASE_URL = "https://e2a904f6aba6.ngrok.io/";
     private ApiService apiService;
 
     private final Gson gson;

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_attribute_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintEnabled="false">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_attribute_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/attribute_name"
+            android:inputType="text"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:paddingStart="@dimen/padding_15"
+            android:paddingTop="@dimen/padding_15"
+            android:paddingEnd="@dimen/padding_15"
+            android:paddingBottom="@dimen/padding_15" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/divider_3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_light" />
+
+    <!--<ImageView
+        android:id="@+id/iv_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/til_password"
+        android:layout_alignBottom="@+id/til_password"
+        android:padding="@dimen/padding_15"
+        android:src="@drawable/ic_password" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintEnabled="false"
+        app:passwordToggleTint="@color/dark_grey">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_attribute_value_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:hint="@string/attribute_value_name"
+            android:padding="@dimen/padding_15" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</LinearLayout>

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Variant implements Parcelable {
+public class VariantAttributeValue implements Parcelable {
 
     @SerializedName("createdAt")
     @Expose
@@ -20,24 +20,12 @@ public class Variant implements Parcelable {
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("product")
+    @SerializedName("variant")
     @Expose
-    private Product product;
-    @SerializedName("sku")
+    private Variant variant;
+    @SerializedName("attributeValue")
     @Expose
-    private String sku;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("price")
-    @Expose
-    private float price;
-    @SerializedName("originalPrice")
-    @Expose
-    private float originalPrice;
-    @SerializedName("active")
-    @Expose
-    private boolean active;
+    private AttributeValue attributeValue;
     @SerializedName("createdBy")
     @Expose
     private String createdBy;
@@ -47,6 +35,9 @@ public class Variant implements Parcelable {
     @SerializedName("deletedBy")
     @Expose
     private String deletedBy;
+
+    public VariantAttributeValue() {
+    }
 
     public String getCreatedAt() {
         return createdAt;
@@ -80,52 +71,20 @@ public class Variant implements Parcelable {
         this.id = id;
     }
 
-    public Product getProduct() {
-        return product;
+    public Variant getVariant() {
+        return variant;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setVariant(Variant variant) {
+        this.variant = variant;
     }
 
-    public String getSku() {
-        return sku;
+    public AttributeValue getAttributeValue() {
+        return attributeValue;
     }
 
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public float getOriginalPrice() {
-        return originalPrice;
-    }
-
-    public void setOriginalPrice(float originalPrice) {
-        this.originalPrice = originalPrice;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setAttributeValue(AttributeValue attributeValue) {
+        this.attributeValue = attributeValue;
     }
 
     public String getCreatedBy() {
@@ -163,12 +122,8 @@ public class Variant implements Parcelable {
         dest.writeString(this.lastUpdatedAt);
         dest.writeString(this.deletedAt);
         dest.writeString(this.id);
-        dest.writeParcelable(this.product, flags);
-        dest.writeString(this.sku);
-        dest.writeString(this.name);
-        dest.writeFloat(this.price);
-        dest.writeFloat(this.originalPrice);
-        dest.writeByte(this.active ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.variant, flags);
+        dest.writeParcelable(this.attributeValue, flags);
         dest.writeString(this.createdBy);
         dest.writeString(this.lastUpdatedBy);
         dest.writeString(this.deletedBy);
@@ -179,45 +134,34 @@ public class Variant implements Parcelable {
         this.lastUpdatedAt = source.readString();
         this.deletedAt = source.readString();
         this.id = source.readString();
-        this.product = source.readParcelable(Product.class.getClassLoader());
-        this.sku = source.readString();
-        this.name = source.readString();
-        this.price = source.readFloat();
-        this.originalPrice = source.readFloat();
-        this.active = source.readByte() != 0;
+        this.variant = source.readParcelable(Variant.class.getClassLoader());
+        this.attributeValue = source.readParcelable(AttributeValue.class.getClassLoader());
         this.createdBy = source.readString();
         this.lastUpdatedBy = source.readString();
         this.deletedBy = source.readString();
     }
 
-    public Variant() {
-    }
-
-    protected Variant(Parcel in) {
+    protected VariantAttributeValue(Parcel in) {
         this.createdAt = in.readString();
         this.lastUpdatedAt = in.readString();
         this.deletedAt = in.readString();
         this.id = in.readString();
-        this.product = in.readParcelable(Product.class.getClassLoader());
-        this.sku = in.readString();
-        this.name = in.readString();
-        this.price = in.readFloat();
-        this.originalPrice = in.readFloat();
-        this.active = in.readByte() != 0;
+        this.variant = in.readParcelable(Variant.class.getClassLoader());
+        this.attributeValue = in.readParcelable(AttributeValue.class.getClassLoader());
         this.createdBy = in.readString();
         this.lastUpdatedBy = in.readString();
         this.deletedBy = in.readString();
     }
 
-    public static final Parcelable.Creator<Variant> CREATOR = new Parcelable.Creator<Variant>() {
+    public static final Parcelable.Creator<VariantAttributeValue> CREATOR = new Parcelable.Creator<VariantAttributeValue>() {
         @Override
-        public Variant createFromParcel(Parcel source) {
-            return new Variant(source);
+        public VariantAttributeValue createFromParcel(Parcel source) {
+            return new VariantAttributeValue(source);
         }
 
         @Override
-        public Variant[] newArray(int size) {
-            return new Variant[size];
+        public VariantAttributeValue[] newArray(int size) {
+            return new VariantAttributeValue[size];
         }
     };
 }

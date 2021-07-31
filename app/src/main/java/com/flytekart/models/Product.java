@@ -32,6 +32,9 @@ public class Product implements Parcelable {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("description")
+    @Expose
+    private String description;
     @SerializedName("categoryId")
     @Expose
     private String categoryId;
@@ -88,6 +91,22 @@ public class Product implements Parcelable {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public String getCategoryId() {
         return categoryId;
     }
@@ -140,6 +159,7 @@ public class Product implements Parcelable {
         dest.writeString(this.deletedAt);
         dest.writeString(this.id);
         dest.writeString(this.name);
+        dest.writeString(this.description);
         dest.writeString(this.categoryId);
         dest.writeString(this.createdBy);
         dest.writeString(this.lastUpdatedBy);
@@ -153,6 +173,7 @@ public class Product implements Parcelable {
         this.deletedAt = source.readString();
         this.id = source.readString();
         this.name = source.readString();
+        this.description = source.readString();
         this.categoryId = source.readString();
         this.createdBy = source.readString();
         this.lastUpdatedBy = source.readString();
@@ -169,6 +190,7 @@ public class Product implements Parcelable {
         this.deletedAt = in.readString();
         this.id = in.readString();
         this.name = in.readString();
+        this.description = in.readString();
         this.categoryId = in.readString();
         this.createdBy = in.readString();
         this.lastUpdatedBy = in.readString();
@@ -176,7 +198,7 @@ public class Product implements Parcelable {
         this.isActive = in.readByte() != 0;
     }
 
-    public static final Creator<Product> CREATOR = new Creator<Product>() {
+    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
         @Override
         public Product createFromParcel(Parcel source) {
             return new Product(source);

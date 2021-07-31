@@ -51,47 +51,53 @@
             android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CreateOrgActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CreateStoreActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.StoreListActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.StoreActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.OrdersListActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.OrderDetailsActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CustomerDetailsActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.ProductListActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CategoryListActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.VariantListActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.CreateVariantActivity"
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CreateCategoryActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.SubCategoryListActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CreateSubCategoryActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <activity
             android:name=".ui.activity.CreateProductActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ToolbarTheme" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
