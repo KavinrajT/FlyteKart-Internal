@@ -1,9 +1,18 @@
 package com.flytekart.models;
 
 public class AttributeValueDTO {
+    private String variantAttributeValueId;
     private String attributeValueId;
     private String attributeName;
     private String attributeValueName;
+
+    public String getVariantAttributeValueId() {
+        return variantAttributeValueId;
+    }
+
+    public void setVariantAttributeValueId(String variantAttributeValueId) {
+        this.variantAttributeValueId = variantAttributeValueId;
+    }
 
     public String getAttributeValueId() {
         return attributeValueId;

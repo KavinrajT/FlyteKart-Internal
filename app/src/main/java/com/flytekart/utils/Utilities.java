@@ -90,4 +90,10 @@ public class Utilities {
         builder.append(Constants.CURRENCY_RUPEE_PREFIX).append(Constants.SPACE).append(bigDecimal.toString());
         return builder.toString();
     }
+
+    public static String getFormattedMoneyWithoutCurrencyCode(double moneyDouble) {
+        BigDecimal bigDecimal = new BigDecimal(moneyDouble)
+                .setScale(2, RoundingMode.HALF_UP);
+        return bigDecimal.toString();
+    }
 }

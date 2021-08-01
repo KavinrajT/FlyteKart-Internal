@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProductListActivity extends AppCompatActivity implements TitleBarLayout.TitleBarIconClickListener {
+public class ProductListActivity extends AppCompatActivity {
 
     private LinearLayout llNoRecordsFound;
     private RecyclerView rvProductList;
@@ -75,10 +76,23 @@ public class ProductListActivity extends AppCompatActivity implements TitleBarLa
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_common, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.menu_create: {
+                Intent createProductIntent = new Intent(this, CreateProductActivity.class);
+                startActivityForResult(createProductIntent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -177,11 +191,5 @@ public class ProductListActivity extends AppCompatActivity implements TitleBarLa
         Intent itemIntent = new Intent(this, CreateProductActivity.class);
         itemIntent.putExtra(Constants.PRODUCT, product);
         startActivity(itemIntent);
-    }
-
-    @Override
-    public void onTitleBarRightIconClicked(View view) {
-        Intent intent = new Intent(ProductListActivity.this, CreateProductActivity.class);
-        startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
     }
 }

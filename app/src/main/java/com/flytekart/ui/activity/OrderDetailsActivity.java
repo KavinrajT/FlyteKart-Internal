@@ -185,11 +185,13 @@ public class OrderDetailsActivity extends AppCompatActivity implements TitleBarL
                     }
                 });
                 builder.show();
+                break;
             }
             case R.id.ll_customer_details: {
                 Intent customerDetailsIntent = new Intent(this, CustomerDetailsActivity.class);
                 customerDetailsIntent.putExtra(Constants.END_USER, orderResponse.getOrder().getEndUser());
                 startActivity(customerDetailsIntent);
+                break;
             }
         }
     }

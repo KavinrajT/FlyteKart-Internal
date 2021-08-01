@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryListActivity extends AppCompatActivity implements TitleBarLayout.TitleBarIconClickListener {
+public class CategoryListActivity extends AppCompatActivity {
 
     private LinearLayout llNoRecordsFound;
     private RecyclerView rvCategoryList;
@@ -72,10 +73,23 @@ public class CategoryListActivity extends AppCompatActivity implements TitleBarL
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_common, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.menu_create: {
+                Intent createCategoryIntent = new Intent(this, CreateCategoryActivity.class);
+                startActivityForResult(createCategoryIntent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -174,11 +188,5 @@ public class CategoryListActivity extends AppCompatActivity implements TitleBarL
         Intent itemIntent = new Intent(this, ProductListActivity.class);
         itemIntent.putExtra(Constants.CATEGORY, category);
         startActivity(itemIntent);
-    }
-
-    @Override
-    public void onTitleBarRightIconClicked(View view) {
-        Intent intent = new Intent(CategoryListActivity.this, CreateCategoryActivity.class);
-        startActivityForResult(intent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
     }
 }

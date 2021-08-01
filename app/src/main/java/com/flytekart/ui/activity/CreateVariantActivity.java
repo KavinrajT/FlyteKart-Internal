@@ -4,9 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -21,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.Attribute;
 import com.flytekart.models.AttributeValueDTO;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
@@ -32,6 +36,7 @@ import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -41,18 +46,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class CreateVariantActivity extends AppCompatActivity implements View.OnClickListener {
-
-    /*private TitleBarLayout titleBarLayout;
-
-    private TextInputEditText etProductName;
-    private TextInputEditText etPrice;
-    private TextInputEditText etOriginalPrice;
-    private TextInputEditText etDescription;
-    private TextInputEditText etQuantity;
-    private Spinner spInStock;
-    private SwitchCompat swAdvancedOptions;
-    private SwitchCompat swAdvancedInventory;
-    private Button btnCreateProduct;*/
 
     private EditText etVariantName;
     private SwitchCompat swIsActive;
@@ -64,14 +57,15 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private LinearLayout llAttributeValues;
     private SharedPreferences sharedPreferences;
     private LayoutInflater layoutInflater;
+    private ArrayAdapter<String> attributeNameAdapter;
+    MaterialAutoCompleteTextView etAttributeName;
 
     private String accessToken;
     private String clientId;
     private Variant variant;
     private Product product;
     private List<VariantAttributeValue> variantAttributeValues;
-
-    private boolean isInStock;
+    private List<String> attributes;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -80,7 +74,6 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Create variant");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -92,6 +85,8 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         btnSaveVariant = findViewById(R.id.btn_save_variant);
         llAddAttributeValues = findViewById(R.id.ll_add_attribute_values);
         llAttributeValues = findViewById(R.id.ll_attribute_values);
+        attributes = new ArrayList<>(5);
+        attributeNameAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attributes);
 
         sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
@@ -103,11 +98,14 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         variant = getIntent().getParcelableExtra(Constants.VARIANT);
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
         if (variant != null) {
+            getSupportActionBar().setTitle("Edit variant");
             setData();
             // TODO Show progress, get data from server and re-setData
             getData();
             // TODO Get data about variantAttributeValues and display
             getVariantAttributeValuesData();
+        } else {
+            getSupportActionBar().setTitle("Create variant");
         }
     }
 
@@ -116,6 +114,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -125,8 +124,8 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         etVariantName.setText(variant.getName());
         swIsActive.setChecked(variant.isActive());
         etSku.setText(variant.getSku());
-        etPrice.setText(Utilities.getFormattedMoney(variant.getPrice()));
-        etOriginalPrice.setText(Utilities.getFormattedMoney(variant.getOriginalPrice()));
+        etPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getPrice()));
+        etOriginalPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getOriginalPrice()));
     }
 
     private void setVariantAttributeValuesData() {
@@ -141,6 +140,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
                 tvAttributeValue.setText(value.getAttributeValue().getName());
 
                 AttributeValueDTO attributeValueDTO = new AttributeValueDTO();
+                attributeValueDTO.setVariantAttributeValueId(value.getId());
                 attributeValueDTO.setAttributeValueId(value.getAttributeValue().getId());
                 attributeValueDTO.setAttributeName(value.getAttributeValue().getAttribute().getName());
                 attributeValueDTO.setAttributeValueName(value.getAttributeValue().getName());
@@ -153,14 +153,6 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
     private void showErrorToast(int messageStr) {
         Toast.makeText(getApplicationContext(), messageStr, Toast.LENGTH_SHORT).show();
-    }
-
-    private void setProductData() {
-        etVariantName.setText(variant.getName());
-        //etPrice.setText(String.valueOf(product.getPrice()));
-        //etOriginalPrice.setText(String.valueOf(product.getOriginalPrice()));
-        //etDescription.setText(product.getDescription());
-        //etQuantity.setText(String.valueOf(product.getQuantity()));
     }
 
     private void getData() {
@@ -212,21 +204,25 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_view_variants: {
-                Intent variantsIntent = new Intent(this, VariantListActivity.class);
-                variantsIntent.putExtra(Constants.PRODUCT, variant);
-                startActivity(variantsIntent);
-            }
             case R.id.ll_add_attribute_values: {
                 showAttributeDialog(null);
+                break;
+            }
+            case R.id.btn_save_variant: {
+                saveVariantAlongWithAttributeValue();
+                break;
             }
         }
     }
 
     private void showAttributeDialog(View selectedView) {
         View dialogView = layoutInflater.inflate(R.layout.dialog_attribute_value, null);
-        EditText etAttributeName = dialogView.findViewById(R.id.et_attribute_name);
+        etAttributeName = dialogView.findViewById(R.id.et_attribute_name);
         EditText etAttributeValueName = dialogView.findViewById(R.id.et_attribute_value_name);
+        etAttributeName.addTextChangedListener(new AttributeNamePrefixListener());
+        etAttributeName.setAdapter(attributeNameAdapter);
+        //etAttributeValueName.addTextChangedListener(new AttributeValueNamePrefixListener());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -261,12 +257,14 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
                 } else {
                     Toast.makeText(CreateVariantActivity.this, "Please enter valid data.", Toast.LENGTH_SHORT).show();
                 }
+                etAttributeName = null;
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // Ignore the click
+                etAttributeName = null;
             }
         });
 
@@ -287,7 +285,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
         CreateVariantRequest request = new CreateVariantRequest();
         if (variant != null) {
-            request.setVariantId(variant.getId());
+            request.setId(variant.getId());
         }
         request.setProductId(product.getId());
         request.setName(etVariantName.getText().toString().trim());
@@ -303,7 +301,96 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         }
         request.setAttributeValueDTOs(attributeValueDTOs);
 
-        // TODO Write a new method for saving
-        // TODO Call the new method and save data
+        Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariant(accessToken, clientId, request);
+        saveVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
+            @Override
+            public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
+                Logger.i("Variant API call failure.");
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<Variant>> call, Response<BaseResponse<Variant>> response) {
+                variant = response.body().getBody();
+                setData();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private class AttributeNamePrefixListener implements TextWatcher {
+        String currentTest;
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            currentTest = charSequence.toString();
+            if (charSequence.length() > 2) {
+                Call<BaseResponse<List<Attribute>>> getAttributesCall = Flytekart.getApiService().getAttributesByPrefix(accessToken, charSequence.toString(), clientId);
+                getAttributesCall.enqueue(new CustomCallback<BaseResponse<List<Attribute>>>() {
+                    @Override
+                    public void onFailure(Call<BaseResponse<List<Attribute>>> call, Throwable t) {
+                        Logger.i("Variant API call failure.");
+                        Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFlytekartSuccessResponse(Call<BaseResponse<List<Attribute>>> call, Response<BaseResponse<List<Attribute>>> response) {
+                        if (currentTest.equals(charSequence.toString())) {
+                            List<Attribute> attributes = response.body().getBody();
+                            setAttributesToSpinner(attributes);
+                        }
+                    }
+
+                    @Override
+                    public void onFlytekartErrorResponse(Call<BaseResponse<List<Attribute>>> call, BaseErrorResponse responseBody) {
+                        Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                        Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    }
+
+    private void setAttributesToSpinner(List<Attribute> attributes) {
+        List<String> languages = new ArrayList<>(attributes.size());
+        for (Attribute attribute : attributes) {
+            languages.add(attribute.getName());
+        }
+        this.attributes.clear();
+        this.attributes.addAll(languages);
+        attributeNameAdapter.clear();
+        attributeNameAdapter.addAll(this.attributes);
+        attributeNameAdapter.notifyDataSetChanged();
+    }
+
+    private class AttributeValueNamePrefixListener implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.flytekart.network;
 
+import com.flytekart.models.Attribute;
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
+import com.flytekart.models.request.CreateVariantRequest;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
@@ -156,5 +158,24 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Path("variantId") String variantId,
             @Query("clientId") String clientId);
+
+    @GET("/api/attributes/")
+    Call<BaseResponse<List<Attribute>>> getAttributesByPrefix(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("prefix") String prefix,
+            @Query("clientId") String clientId);
+
+    @GET("/api/attributeValues/getByAttributeId/{attributeId}")
+    Call<BaseResponse<List<Attribute>>> getAttributeValuesByPrefix(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("attributeId") String attributeId,
+            @Query("prefix") String prefix,
+            @Query("clientId") String clientId);
+
+    @POST("/api/variants/savevav")
+    Call<BaseResponse<Variant>> saveVariant(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateVariantRequest createVariantRequest);
 }
 

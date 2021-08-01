@@ -3,6 +3,7 @@ package com.flytekart.ui.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,9 +12,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 
 import com.flytekart.R;
-import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Utilities;
 import com.flytekart.models.Category;
@@ -26,24 +28,23 @@ import java.util.List;
 
 public class CreateCategoryActivity extends AppCompatActivity {
 
-    private TitleBarLayout titleBarLayout;
     private TextInputEditText etCategoryName;
-    private Spinner spIsActive;
+    private SwitchCompat swIsActive;
     private Button btnCreateCategory;
-
-    private String strIsActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_category);
 
-        titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("CATEGORIES");
-        titleBarLayout.removeRightImg();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Create category");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         etCategoryName = findViewById(R.id.et_category_name);
-        spIsActive = findViewById(R.id.sp_is_active);
+        swIsActive = findViewById(R.id.sw_is_active);
         btnCreateCategory = findViewById(R.id.btn_create_category);
 
         etCategoryName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -54,12 +55,6 @@ public class CreateCategoryActivity extends AppCompatActivity {
                 category.setName(etCategoryName.getText().toString());
             } else {
                 showErrorToast(R.string.err_enter_category_name);
-                return;
-            }
-            if (strIsActive != null) {
-                category.setIsActive(strIsActive.equals("yes"));
-            } else {
-                showErrorToast(R.string.err_enter_is_active);
                 return;
             }
 
@@ -80,22 +75,17 @@ public class CreateCategoryActivity extends AppCompatActivity {
             editor.apply();
             finish();
         });
+    }
 
-        ArrayAdapter<CharSequence> categorySpAdapter = ArrayAdapter.createFromResource(this,
-                R.array.yes_no_array, android.R.layout.simple_spinner_item);
-        categorySpAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spIsActive.setAdapter(categorySpAdapter);
-        spIsActive.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                strIsActive = getResources().getStringArray(R.array.yes_no_array)[position];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void showErrorToast(int messageStr) {

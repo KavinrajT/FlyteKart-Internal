@@ -227,6 +227,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -329,6 +330,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
                 Intent variantsIntent = new Intent(this, VariantListActivity.class);
                 variantsIntent.putExtra(Constants.PRODUCT, product);
                 startActivity(variantsIntent);
+                break;
             }
         }
     }

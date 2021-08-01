@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,10 +74,24 @@ public class VariantListActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_common, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.menu_create: {
+                Intent createVariantIntent = new Intent(this, CreateVariantActivity.class);
+                createVariantIntent.putExtra(Constants.PRODUCT, product);
+                startActivityForResult(createVariantIntent, Constants.ADD_VARIANT_ACTIVITY_REQUEST_CODE);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

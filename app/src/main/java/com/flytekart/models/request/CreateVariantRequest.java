@@ -8,9 +8,9 @@ import java.util.List;
 
 public class CreateVariantRequest {
 
-    @SerializedName("variantId")
+    @SerializedName("id")
     @Expose
-    private String variantId;
+    private String id;
 
     @SerializedName("name")
     @Expose
@@ -40,12 +40,12 @@ public class CreateVariantRequest {
     @Expose
     private List<AttributeValueDTO> attributeValueDTOs;
 
-    public String getVariantId() {
-        return variantId;
+    public String getId() {
+        return id;
     }
 
-    public void setVariantId(String variantId) {
-        this.variantId = variantId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
