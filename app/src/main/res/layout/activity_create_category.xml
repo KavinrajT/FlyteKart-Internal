@@ -16,11 +16,16 @@
             layout="@layout/toolbar" />
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_save_category"
+        android:layout_below="@id/titleBar">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_below="@id/titleBar"
         android:layout_marginRight="16dp"
         android:orientation="vertical">
 
@@ -65,14 +70,15 @@
         </RelativeLayout>
 
     </LinearLayout>
+    </ScrollView>
 
     <Button
-        android:id="@+id/btn_create_category"
+        android:id="@+id/btn_save_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
-        android:text="@string/create_category"
+        android:text="@string/save_category"
         android:textColor="@color/white" />
 
 </RelativeLayout>

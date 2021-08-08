@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.StoreActivity">
 
-    <com.flytekart.ui.views.TitleBarLayout
+    <LinearLayout
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_store_details"
@@ -16,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/titleBar"
         android:padding="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="@string/store_details"/>
+        android:text="@string/store_details"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <View
         android:id="@+id/v_store_details"
@@ -32,8 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/v_store_details"
         android:padding="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="@string/summary"/>
+        android:text="@string/summary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <View
         android:id="@+id/v_summary"
@@ -43,10 +49,26 @@
         android:background="@color/dark_grey"/>
 
     <TextView
-        android:id="@+id/tv_orders"
+        android:id="@+id/tv_categories_products"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/v_summary"
+        android:padding="16dp"
+        android:text="@string/categories_products"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <View
+        android:id="@+id/v_categories_products"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/tv_categories_products"
+        android:background="@color/dark_grey"/>
+
+    <TextView
+        android:id="@+id/tv_orders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/v_categories_products"
         android:padding="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:text="Orders"/>

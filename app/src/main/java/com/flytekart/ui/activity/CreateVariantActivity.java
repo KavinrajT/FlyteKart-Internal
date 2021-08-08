@@ -1,7 +1,6 @@
 package com.flytekart.ui.activity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,7 +28,8 @@ import com.flytekart.models.AttributeValueDTO;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
-import com.flytekart.models.request.CreateVariantRequest;
+import com.flytekart.models.request.CreateVariantVavRequest;
+import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -52,10 +52,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private TextInputEditText etSku;
     private TextInputEditText etPrice;
     private TextInputEditText etOriginalPrice;
-    private Button btnSaveVariant;
-    private View llAddAttributeValues;
     private LinearLayout llAttributeValues;
-    private SharedPreferences sharedPreferences;
     private LayoutInflater layoutInflater;
     private ArrayAdapter<String> attributeNameAdapter;
     MaterialAutoCompleteTextView etAttributeName;
@@ -82,13 +79,13 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         etSku = findViewById(R.id.et_sku);
         etPrice = findViewById(R.id.et_price);
         etOriginalPrice = findViewById(R.id.et_original_price);
-        btnSaveVariant = findViewById(R.id.btn_save_variant);
-        llAddAttributeValues = findViewById(R.id.ll_add_attribute_values);
+        Button btnSaveVariant = findViewById(R.id.btn_save_variant);
+        View llAddAttributeValues = findViewById(R.id.ll_add_attribute_values);
         llAttributeValues = findViewById(R.id.ll_attribute_values);
         attributes = new ArrayList<>(5);
         attributeNameAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attributes);
 
-        sharedPreferences = Utilities.getSharedPreferences();
+        SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
         layoutInflater = LayoutInflater.from(this);
@@ -135,9 +132,11 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
                 TextView tvAttributeName = v.findViewById(R.id.tv_attribute_name);
                 TextView tvAttributeValue = v.findViewById(R.id.tv_attribute_value);
+                View ivAttributeValueDelete = v.findViewById(R.id.iv_attribute_value_delete);
 
                 tvAttributeName.setText(value.getAttributeValue().getAttribute().getName());
                 tvAttributeValue.setText(value.getAttributeValue().getName());
+                ivAttributeValueDelete.setOnClickListener(this);
 
                 AttributeValueDTO attributeValueDTO = new AttributeValueDTO();
                 attributeValueDTO.setVariantAttributeValueId(value.getId());
@@ -145,6 +144,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
                 attributeValueDTO.setAttributeName(value.getAttributeValue().getAttribute().getName());
                 attributeValueDTO.setAttributeValueName(value.getAttributeValue().getName());
                 v.setTag(attributeValueDTO);
+                ivAttributeValueDelete.setTag(attributeValueDTO);
 
                 llAttributeValues.addView(v);
             }
@@ -212,7 +212,79 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
                 saveVariantAlongWithAttributeValue();
                 break;
             }
+            case R.id.iv_attribute_value_delete: {
+                AttributeValueDTO dto = (AttributeValueDTO) v.getTag();
+                deleteAttributeValue(dto);
+                break;
+            }
         }
+    }
+
+    private void deleteAttributeValue(AttributeValueDTO dto) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you want to delete attribute: " + dto.getAttributeName() + " - " + dto.getAttributeValueName() + "?");
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Ignore
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dto.getVariantAttributeValueId() != null) {
+                    // Delete from server and remove item from UI
+                    deleteAttribute(dto);
+                } else {
+                    // Remove item from UI
+                    int foundIndex = 0;
+                    for (int i = 0; i < llAttributeValues.getChildCount(); i++) {
+                        View v = llAttributeValues.getChildAt(i);
+                        AttributeValueDTO savedAttributeValueDTO = (AttributeValueDTO) v.getTag();
+                        if (savedAttributeValueDTO.getAttributeName().equalsIgnoreCase(dto.getAttributeName())) {
+                            foundIndex = i;
+                            break;
+                        }
+                    }
+                    llAttributeValues.removeView(llAttributeValues.getChildAt(foundIndex));
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void deleteAttribute(AttributeValueDTO dto) {
+        DeleteVariantAttributeValueRequest request = new DeleteVariantAttributeValueRequest();
+        request.setId(dto.getVariantAttributeValueId());
+        Call<BaseResponse<VariantAttributeValue>> saveVariantCall = Flytekart.getApiService().deleteVariantAttributeValue(accessToken, clientId, request);
+        saveVariantCall.enqueue(new CustomCallback<BaseResponse<VariantAttributeValue>>() {
+            @Override
+            public void onFailure(Call<BaseResponse<VariantAttributeValue>> call, Throwable t) {
+                Logger.i("Variant API call failure.");
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<VariantAttributeValue>> call, Response<BaseResponse<VariantAttributeValue>> response) {
+                VariantAttributeValue vav = response.body().getBody();
+                int foundIndex = 0;
+                for (int i = 0; i < llAttributeValues.getChildCount(); i++) {
+                    View v = llAttributeValues.getChildAt(i);
+                    AttributeValueDTO savedAttributeValueDTO = (AttributeValueDTO) v.getTag();
+                    if (savedAttributeValueDTO.getAttributeName().equals(dto.getAttributeName())) {
+                        foundIndex = i;
+                        break;
+                    }
+                }
+                llAttributeValues.removeView(llAttributeValues.getChildAt(foundIndex));
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<VariantAttributeValue>> call, BaseErrorResponse responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showAttributeDialog(View selectedView) {
@@ -243,14 +315,17 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
                         TextView tvAttributeName = v.findViewById(R.id.tv_attribute_name);
                         TextView tvAttributeValue = v.findViewById(R.id.tv_attribute_value);
+                        View ivAttributeValueDelete = v.findViewById(R.id.iv_attribute_value_delete);
 
                         tvAttributeName.setText(attributeName);
                         tvAttributeValue.setText(attributeValueName);
+                        ivAttributeValueDelete.setOnClickListener(CreateVariantActivity.this);
 
                         AttributeValueDTO attributeValueDTO = new AttributeValueDTO();
                         attributeValueDTO.setAttributeName(attributeName);
                         attributeValueDTO.setAttributeValueName(attributeValueName);
                         v.setTag(attributeValueDTO);
+                        ivAttributeValueDelete.setTag(attributeValueDTO);
 
                         llAttributeValues.addView(v);
                     }
@@ -283,7 +358,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             attributeValueDTOs.add(attributeValueDTO);
         }
 
-        CreateVariantRequest request = new CreateVariantRequest();
+        CreateVariantVavRequest request = new CreateVariantVavRequest();
         if (variant != null) {
             request.setId(variant.getId());
         }
@@ -301,7 +376,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         }
         request.setAttributeValueDTOs(attributeValueDTOs);
 
-        Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariant(accessToken, clientId, request);
+        Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariantVav(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
             @Override
             public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
@@ -366,12 +441,12 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setAttributesToSpinner(List<Attribute> attributes) {
-        List<String> languages = new ArrayList<>(attributes.size());
+        List<String> attributeNames = new ArrayList<>(attributes.size());
         for (Attribute attribute : attributes) {
-            languages.add(attribute.getName());
+            attributeNames.add(attribute.getName());
         }
         this.attributes.clear();
-        this.attributes.addAll(languages);
+        this.attributes.addAll(attributeNames);
         attributeNameAdapter.clear();
         attributeNameAdapter.addAll(this.attributes);
         attributeNameAdapter.notifyDataSetChanged();

@@ -1,19 +1,23 @@
 package com.flytekart.network;
 
 import com.flytekart.models.Attribute;
+import com.flytekart.models.Category;
+import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.OrderResponse;
+import com.flytekart.models.Organisation;
 import com.flytekart.models.Product;
+import com.flytekart.models.Store;
+import com.flytekart.models.User;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
+import com.flytekart.models.request.CreateProductRequest;
 import com.flytekart.models.request.CreateVariantRequest;
+import com.flytekart.models.request.CreateVariantVavRequest;
+import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
-import com.flytekart.models.Category;
 import com.flytekart.models.response.LoginResponse;
-import com.flytekart.models.Organisation;
-import com.flytekart.models.Store;
-import com.flytekart.models.User;
 import com.flytekart.utils.Constants;
 import com.google.gson.JsonObject;
 
@@ -95,6 +99,12 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId);
 
+    @POST("/api/categories/delete/{categoryId}")
+    Call<BaseResponse<Category>> deleteCategory(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("categoryId") String categoryId,
+            @Query("clientId") String clientId);
+
     @GET("/api/categories/{id}")
     Call<BaseResponse<Category>> getCategory(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
@@ -102,7 +112,7 @@ public interface ApiService {
             @Query("clientId") String clientId);
 
     @POST("/api/categories/")
-    Call<BaseResponse<Category>> createCategory(
+    Call<BaseResponse<Category>> saveCategory(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body Category category);
@@ -141,6 +151,12 @@ public interface ApiService {
             @Path("id") String id,
             @Query("clientId") String clientId);
 
+    @POST("/api/products/")
+    Call<BaseResponse<Product>> saveProduct(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateProductRequest request);
+
     @GET("/api/variants/getByProductId/{productId}")
     Call<BaseResponse<List<Variant>>> getVariantsByProductId(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
@@ -173,9 +189,27 @@ public interface ApiService {
             @Query("clientId") String clientId);
 
     @POST("/api/variants/savevav")
+    Call<BaseResponse<Variant>> saveVariantVav(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateVariantVavRequest createVariantVavRequest);
+
+    @POST("/api/variants/savevav")
     Call<BaseResponse<Variant>> saveVariant(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body CreateVariantRequest createVariantRequest);
+
+    @POST("/api/variantAttributeValues/deleteById")
+    Call<BaseResponse<VariantAttributeValue>> deleteVariantAttributeValue(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body DeleteVariantAttributeValueRequest request);
+
+    @GET("/api/storeCategories/withAllCategories/store/{storeId}")
+    Call<BaseResponse<List<CategoryStoreCategoryDTO>>> getAllCategoriesWithStoreCategories(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("storeId") String storeId,
+            @Query("clientId") String clientId);
 }
 

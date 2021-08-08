@@ -46,7 +46,6 @@ public class ProductListActivity extends AppCompatActivity {
     private LinearLayout llNoRecordsFound;
     private RecyclerView rvProductList;
     private ProductsAdapter adapter;
-    private LinearLayoutManager productsLayoutManager;
     private Category category;
     private List<Product> products;
 
@@ -57,18 +56,19 @@ public class ProductListActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Products");
+        getSupportActionBar().setTitle(R.string.products);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
         rvProductList = findViewById(R.id.rv_product_list);
         rvProductList.setHasFixedSize(true);
-        productsLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager productsLayoutManager = new LinearLayoutManager(this);
         rvProductList.setLayoutManager(productsLayoutManager);
         rvProductList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         category = getIntent().getParcelableExtra(Constants.CATEGORY);
+        getSupportActionBar().setSubtitle(category.getName());
 
         getData();
         setListeners();
@@ -90,6 +90,7 @@ public class ProductListActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_create: {
                 Intent createProductIntent = new Intent(this, CreateProductActivity.class);
+                createProductIntent.putExtra(Constants.CATEGORY, category);
                 startActivityForResult(createProductIntent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
                 return true;
             }
@@ -138,6 +139,7 @@ public class ProductListActivity extends AppCompatActivity {
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
                 Intent intent = new Intent(ProductListActivity.this, CreateProductActivity.class);
+                intent.putExtra(Constants.CATEGORY, category);
                 startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
             });
 
@@ -189,6 +191,7 @@ public class ProductListActivity extends AppCompatActivity {
      */
     private void onProductClicked(Product product) {
         Intent itemIntent = new Intent(this, CreateProductActivity.class);
+        itemIntent.putExtra(Constants.CATEGORY, category);
         itemIntent.putExtra(Constants.PRODUCT, product);
         startActivity(itemIntent);
     }

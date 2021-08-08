@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CreateVariantRequest {
+public class CreateVariantVavRequest {
 
     @SerializedName("id")
     @Expose
@@ -35,6 +35,10 @@ public class CreateVariantRequest {
     @SerializedName("active")
     @Expose
     private boolean active;
+
+    @SerializedName("attributeValueDTOs")
+    @Expose
+    private List<AttributeValueDTO> attributeValueDTOs;
 
     public String getId() {
         return id;
@@ -90,5 +94,13 @@ public class CreateVariantRequest {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<AttributeValueDTO> getAttributeValueDTOs() {
+        return attributeValueDTOs;
+    }
+
+    public void setAttributeValueDTOs(List<AttributeValueDTO> attributeValueDTOs) {
+        this.attributeValueDTOs = attributeValueDTOs;
     }
 }

@@ -161,6 +161,8 @@
                 android:id="@+id/ll_attribute_values"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:divider="?android:dividerVertical"
+                android:showDividers="middle"
                 android:layout_marginTop="@dimen/padding_10"
                 android:orientation="vertical" />
         </LinearLayout>

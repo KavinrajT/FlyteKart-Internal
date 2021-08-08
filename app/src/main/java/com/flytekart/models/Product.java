@@ -8,15 +8,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Product implements Parcelable {
 
-    /*private String name;
-    private Double price;
-    private Double originalPrice;
-    private String description;
-    private Double quantity;
-    private boolean isInStock;
-    private boolean showAdvanceOption;
-    private boolean showAdvanceInventory;*/
-
     @SerializedName("createdAt")
     @Expose
     private String createdAt;

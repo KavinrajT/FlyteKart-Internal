@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,10 +58,11 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_details);
 
-        TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("Customer details");
-        titleBarLayout.setOnIconClickListener(this);
-        titleBarLayout.removeRightImg();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Customer details");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
         tvName = findViewById(R.id.tv_name);

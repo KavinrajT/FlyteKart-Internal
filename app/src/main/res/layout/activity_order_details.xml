@@ -6,10 +6,16 @@
     android:orientation="vertical"
     tools:context=".ui.activity.OrderDetailsActivity">
 
-    <com.flytekart.ui.views.TitleBarLayout
+    <LinearLayout
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+    </LinearLayout>
 
     <!-- Show user's name and email id -->
     <LinearLayout
@@ -68,8 +74,7 @@
         android:id="@+id/ll_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/divider_rv"
-        android:dividerPadding="4dp"
+        android:divider="?android:dividerVertical"
         android:orientation="vertical"
         android:showDividers="middle" />
 
@@ -232,7 +237,6 @@
     <TextView
         android:id="@+id/tv_update_order_status"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/black"
@@ -241,6 +245,7 @@
         android:paddingBottom="8dp"
         android:text="UPDATE ORDER STATUS"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
 </LinearLayout>

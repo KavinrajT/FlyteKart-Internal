@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.ProductListActivity">
+    tools:context=".ui.activity.CategoryListActivity">
 
     <LinearLayout
         android:id="@+id/titleBar"
@@ -17,18 +17,17 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_product_list"
+        android:id="@+id/rv_store_category_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/titleBar"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="16dp" />
 
     <LinearLayout
         android:id="@+id/ll_no_records_found"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_below="@id/titleBar"
         android:orientation="vertical"
         android:visibility="gone">
 

@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/str_no_records_found"
+            android:textColor="@color/grey"
             android:textSize="30sp"
             android:textStyle="bold" />
     </LinearLayout>

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,10 +53,11 @@ public class OrdersListActivity extends AppCompatActivity implements TitleBarLay
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_list);
 
-        TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("Orders");
-        titleBarLayout.setOnIconClickListener(this);
-        titleBarLayout.removeRightImg();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.orders);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
         rvOrdersList = findViewById(R.id.rv_orders_list);

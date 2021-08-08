@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.R;
 import com.flytekart.models.Category;
+import com.flytekart.models.CategoryStoreCategoryDTO;
 
 import java.util.List;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
+public class CategoryStoreCategoriesAdapter extends RecyclerView.Adapter<CategoryStoreCategoriesAdapter.CategoryViewHolder> {
 
     private CategoryClickListener categoryClickListener;
-    private List<Category> categories;
+    private List<CategoryStoreCategoryDTO> categories;
 
-    public CategoriesAdapter(CategoryClickListener categoryClickListener, List<Category> categories) {
+    public CategoryStoreCategoriesAdapter(CategoryClickListener categoryClickListener, List<CategoryStoreCategoryDTO> categories) {
         this.categoryClickListener = categoryClickListener;
         this.categories = categories;
     }
@@ -27,22 +28,21 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_category, parent, false);
+                .inflate(R.layout.list_item_store_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        Category category = categories.get(position);
+        CategoryStoreCategoryDTO category = categories.get(position);
         holder.tvCategoryName.setText(category.getName());
-        if (category.isIsActive()) {
+        if (category.isActive()) {
             holder.tvCategoryStatus.setText(R.string.active);
         } else {
             holder.tvCategoryStatus.setText(R.string.inactive);
         }
         holder.llCategoryName.setOnClickListener(new CategoryNameClickListener(position));
         holder.ivCategoryEdit.setOnClickListener(new EditClickListener(position));
-        holder.ivCategoryDelete.setOnClickListener(new DeleteClickListener(position));
     }
 
     @Override
@@ -76,23 +76,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         }
     }
 
-    private class DeleteClickListener implements View.OnClickListener {
-        private int position;
-
-        public DeleteClickListener(int position) {
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            categoryClickListener.onDelete(position);
-        }
-    }
-
     public interface CategoryClickListener {
         void onCategoryClicked(int position);
         void onEdit(int position);
-        void onDelete(int position);
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
@@ -100,7 +86,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         private final TextView tvCategoryName;
         private final TextView tvCategoryStatus;
         private final View ivCategoryEdit;
-        private final View ivCategoryDelete;
 
         public CategoryViewHolder(View view) {
             super(view);
@@ -108,7 +93,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
             tvCategoryName = view.findViewById(R.id.tv_category_name);
             tvCategoryStatus = view.findViewById(R.id.tv_category_status);
             ivCategoryEdit = view.findViewById(R.id.iv_category_edit);
-            ivCategoryDelete = view.findViewById(R.id.iv_category_delete);
         }
     }
 }

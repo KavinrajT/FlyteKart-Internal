@@ -41,52 +41,10 @@
                     android:hint="@string/str_product_name"
                     android:imeOptions="actionNext"
                     android:inputType="text"
+                    android:maxLength="100"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!--<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/str_price"
-                        android:imeOptions="actionNext"
-                        android:inputType="numberDecimal"
-                        android:maxLines="1"
-                        android:textSize="20sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_original_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/str_original_price"
-                        android:imeOptions="actionNext"
-                        android:inputType="numberDecimal"
-                        android:maxLines="1"
-                        android:textSize="20sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -115,7 +73,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_description"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -124,6 +82,7 @@
                     android:layout_height="100dp"
                     android:gravity="top|left"
                     android:hint="@string/str_description"
+                    android:maxLength="1000"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
@@ -203,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/sku"
                     android:imeOptions="actionNext"
-                    android:inputType="numberDecimal"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>

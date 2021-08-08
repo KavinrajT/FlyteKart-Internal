@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
@@ -55,10 +56,11 @@ public class OrderDetailsActivity extends AppCompatActivity implements TitleBarL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
 
-        TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("Order details");
-        titleBarLayout.setOnIconClickListener(this);
-        titleBarLayout.removeRightImg();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.order_details);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         tvName = findViewById(R.id.tv_name);
         tvEmailId = findViewById(R.id.tv_email_id);

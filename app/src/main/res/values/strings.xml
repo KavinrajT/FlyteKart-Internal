@@ -118,7 +118,8 @@
     <string name="sub_category_info">Sub Category Info</string>
     <string name="sub_category_name">Sub Category Name</string>
     <string name="create_sub_category">Create Sub Category</string>
-    <string name="create_category">Save Category</string>
+    <string name="save_category">Save category</string>
+    <string name="create_category">Create category</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -144,5 +145,11 @@
     <string name="save_variant">Save variant</string>
     <string name="add_attributes">Add attributes</string>
     <string name="plus">+</string>
+    <string name="edit_category">Edit category</string>
+    <string name="categories">Categories</string>
+    <string name="order_details">Order details</string>
+    <string name="orders">Orders</string>
+    <string name="products">Products</string>
+    <string name="available">Available</string>
 
 </resources>

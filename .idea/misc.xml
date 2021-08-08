@@ -3,12 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/grey_add_circle.xml" value="0.23541666666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_create_category.xml" value="0.10663627152988855" />
+        <entry key="app/src/main/res/layout/activity_create_product.xml" value="0.11372451699613893" />
         <entry key="app/src/main/res/layout/activity_create_variant.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10552536231884058" />
+        <entry key="app/src/main/res/layout/activity_order_details.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.10663627152988855" />
+        <entry key="app/src/main/res/layout/activity_store.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_store_category_list.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_variant_list.xml" value="0.10677083333333333" />
         <entry key="app/src/main/res/layout/dialog_attribute_value.xml" value="0.1421875" />
-        <entry key="app/src/main/res/layout/list_item_attribute_value.xml" value="0.13229166666666667" />
+        <entry key="app/src/main/res/layout/dialog_store_category.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/fragment_organisation_list.xml" value="0.10677083333333333" />
+        <entry key="app/src/main/res/layout/list_item_attribute_value.xml" value="0.33869346733668343" />
+        <entry key="app/src/main/res/layout/list_item_category.xml" value="0.10663627152988855" />
+        <entry key="app/src/main/res/layout/list_item_store_category.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_common.xml" value="0.1" />
       </map>
     </option>

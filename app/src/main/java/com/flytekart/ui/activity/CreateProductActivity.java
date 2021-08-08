@@ -17,8 +17,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.AttributeValueDTO;
+import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
+import com.flytekart.models.request.CreateProductRequest;
+import com.flytekart.models.request.CreateVariantRequest;
+import com.flytekart.models.request.CreateVariantVavRequest;
 import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -27,24 +32,13 @@ import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class CreateProductActivity extends AppCompatActivity implements View.OnClickListener {
-
-    /*private TitleBarLayout titleBarLayout;
-
-    private TextInputEditText etProductName;
-    private TextInputEditText etPrice;
-    private TextInputEditText etOriginalPrice;
-    private TextInputEditText etDescription;
-    private TextInputEditText etQuantity;
-    private Spinner spInStock;
-    private SwitchCompat swAdvancedOptions;
-    private SwitchCompat swAdvancedInventory;
-    private Button btnCreateProduct;*/
 
     private Toolbar toolbar;
     private EditText etProductName;
@@ -65,113 +59,11 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
     private String accessToken;
     private String clientId;
 
+    private Category category;
     private Product product;
     private List<Variant> variants;
 
     private boolean isInStock;
-
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_product);
-
-        titleBarLayout = findViewById(R.id.titleBar);
-        product = getIntent().getParcelableExtra(Constants.PRODUCT);
-        if (product == null) {
-            titleBarLayout.setTitleText("ADD PRODUCT");
-        } else {
-            titleBarLayout.setTitleText("EDIT PRODUCT");
-        }
-        titleBarLayout.removeRightImg();
-
-        etProductName = findViewById(R.id.et_product_name);
-        etPrice = findViewById(R.id.et_price);
-        etOriginalPrice = findViewById(R.id.et_original_price);
-        etDescription = findViewById(R.id.et_description);
-        etQuantity = findViewById(R.id.et_quantity);
-        spInStock = findViewById(R.id.sp_in_stock);
-        swAdvancedOptions = findViewById(R.id.sw_advanced_options);
-        swAdvancedInventory = findViewById(R.id.sw_advanced_inventory);
-        btnCreateProduct = findViewById(R.id.btn_create_product);
-
-        etProductName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etDescription.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-
-        btnCreateProduct.setOnClickListener(v -> {
-            Product product = new Product();
-            if (etProductName.getText() != null && !etProductName.getText().toString().isEmpty()) {
-                product.setName(etProductName.getText().toString());
-            } else {
-                showErrorToast(R.string.err_enter_product_name);
-                return;
-            }
-            if (etPrice.getText() != null && !etPrice.getText().toString().isEmpty()) {
-                //product.setPrice(Double.valueOf(etPrice.getText().toString()));
-            } else {
-                showErrorToast(R.string.err_enter_price);
-                return;
-            }
-            if (etOriginalPrice.getText() != null && !etOriginalPrice.getText().toString().isEmpty()) {
-                //product.setOriginalPrice(Double.valueOf(etOriginalPrice.getText().toString()));
-            } else {
-                showErrorToast(R.string.err_enter_original_price);
-                return;
-            }
-            if (etDescription.getText() != null && !etDescription.getText().toString().isEmpty()) {
-                //product.setDescription(etDescription.getText().toString());
-            } else {
-                showErrorToast(R.string.err_enter_description);
-                return;
-            }
-            if (etQuantity.getText() != null && !etQuantity.getText().toString().isEmpty()) {
-                //product.setQuantity(Double.valueOf(etQuantity.getText().toString()));
-            } else {
-                showErrorToast(R.string.err_enter_quantity);
-                return;
-            }
-
-            //product.setInStock(isInStock);
-            //product.setShowAdvanceOption(swAdvancedOptions.isChecked());
-            //product.setShowAdvanceInventory(swAdvancedInventory.isChecked());
-
-            Gson gson = new Gson();
-            SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
-            String productsJsonStr = sharedPreferences.getString(Constants.SHARED_PREF_KEY_PRODUCTS, null);
-            List<Product> products = gson.fromJson(productsJsonStr, new TypeToken<List<Product>>() {
-            }.getType());
-
-            if (products == null) {
-                products = new ArrayList<>();
-            }
-            products.add(product);
-
-            productsJsonStr = gson.toJson(products);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(Constants.SHARED_PREF_KEY_PRODUCTS, productsJsonStr);
-            editor.apply();
-            finish();
-        });
-
-        ArrayAdapter<CharSequence> spAdapter = ArrayAdapter.createFromResource(this,
-                R.array.yes_no_array, android.R.layout.simple_spinner_item);
-        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spInStock.setAdapter(spAdapter);
-        spInStock.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                isInStock = position == 0;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        if (product != null) {
-            setProductData();
-        }
-    }*/
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -180,7 +72,6 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Create product");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -205,8 +96,10 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
 
         rlViewVariants.setOnClickListener(this);
         btnSaveProduct.setOnClickListener(this);
+        category = getIntent().getParcelableExtra(Constants.CATEGORY);
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
         if (product != null) {
+            getSupportActionBar().setTitle("Edit product");
             handleUIWhenProductAvailable();
             setData();
             // TODO Show progress, get data from server and re-setData
@@ -214,6 +107,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             // TODO Get data about variants and display more data
             getVariantsData();
         } else {
+            getSupportActionBar().setTitle("Create product");
             tvMoreOptionsLabel.setVisibility(View.VISIBLE);
             rlSupportVariants.setVisibility(View.GONE);
             tilSku.setVisibility(View.GONE);
@@ -249,18 +143,21 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
 
     private void setVariantsData() {
         if (variants == null || variants.size() == 0) {
+            rlSupportVariants.setVisibility(View.VISIBLE);
             swSupportVariants.setChecked(false);
             tilSku.setVisibility(View.VISIBLE);
             llPrice.setVisibility(View.VISIBLE);
         } else if (variants.size() == 1) {
+            rlSupportVariants.setVisibility(View.VISIBLE);
             swSupportVariants.setChecked(false);
             tilSku.setVisibility(View.VISIBLE);
             etSku.setText(variants.get(0).getSku());
             llPrice.setVisibility(View.VISIBLE);
-            etPrice.setText(String.valueOf(variants.get(0).getPrice()));
-            etOriginalPrice.setText(String.valueOf(variants.get(0).getPrice()));
+            etPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variants.get(0).getPrice()));
+            etOriginalPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variants.get(0).getOriginalPrice()));
         } else { // variants.size() > 1
             // TODO Display variants button
+            rlSupportVariants.setVisibility(View.GONE);
             rlViewVariants.setVisibility(View.VISIBLE);
         }
     }
@@ -332,6 +229,101 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
                 startActivity(variantsIntent);
                 break;
             }
+            case R.id.btn_save_product: {
+                saveProduct();
+                break;
+            }
         }
+    }
+
+    private void saveProduct() {
+        if (product == null) {
+            product = new Product();
+            product.setCategoryId(category.getId());
+        }
+
+        product.setName(etProductName.getText().toString().trim());
+        product.setDescription(etDescription.getText().toString());
+        product.setIsActive(swIsActive.isChecked());
+
+        CreateProductRequest request = new CreateProductRequest();
+        request.setId(product.getId());
+        request.setName(product.getName());
+        request.setDescription(product.getDescription());
+        request.setCategoryId(product.getCategoryId());
+        request.setActive(product.isActive());
+
+        Call<BaseResponse<Product>> saveProductCall = Flytekart.getApiService().saveProduct(accessToken, clientId, request);
+        saveProductCall.enqueue(new CustomCallback<BaseResponse<Product>>() {
+            @Override
+            public void onFailure(Call<BaseResponse<Product>> call, Throwable t) {
+                Logger.i("Save product API call failure.");
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<Product>> call, Response<BaseResponse<Product>> response) {
+                product = response.body().getBody();
+                getSupportActionBar().setTitle("Edit product");
+                tvMoreOptionsLabel.setVisibility(View.GONE);
+                setData();
+                // TODO Check if one variant is available. If yes, save the variant
+                // TODO Get data about variants and display more data
+                if ((variants != null && variants.size() == 1) || llPrice.getVisibility() == View.VISIBLE) {
+                    saveVariant();
+                } else {
+                    getVariantsData();
+                }
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<Product>> call, BaseErrorResponse responseBody) {
+                Logger.e("Save product API call  response status code : " + responseBody.getStatusCode());
+                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveVariant() {
+        CreateVariantRequest request = new CreateVariantRequest();
+        if (variants != null && variants.size() == 1) {
+            Variant variant = variants.get(0);
+            request.setId(variant.getId());
+        }
+        request.setProductId(product.getId());
+        request.setName(product.getName());
+        request.setActive(product.isActive());
+        request.setSku(etSku.getText().toString().trim());
+        String priceString = etPrice.getText().toString().trim();
+        if (!priceString.isEmpty()) {
+            request.setPrice(Float.parseFloat(priceString));
+        }
+        String originalPriceString = etOriginalPrice.getText().toString().trim();
+        if (!priceString.isEmpty()) {
+            request.setOriginalPrice(Float.parseFloat(originalPriceString));
+        }
+
+        Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariant(accessToken, clientId, request);
+        saveVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
+            @Override
+            public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
+                Logger.i("Variant API call failure.");
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<Variant>> call, Response<BaseResponse<Variant>> response) {
+                Variant variant = response.body().getBody();
+                variants = new ArrayList<>(1);
+                variants.add(variant);
+                setVariantsData();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

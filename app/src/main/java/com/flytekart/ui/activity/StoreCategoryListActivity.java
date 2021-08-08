@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -23,16 +25,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
+import com.flytekart.models.CategoryStoreCategoryDTO;
+import com.flytekart.models.Store;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.ui.adapters.CategoriesAdapter;
-import com.flytekart.ui.views.RecyclerItemClickListener;
-import com.flytekart.ui.views.TitleBarLayout;
+import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,20 +45,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryListActivity extends AppCompatActivity implements CategoriesAdapter.CategoryClickListener {
+public class StoreCategoryListActivity extends AppCompatActivity implements CategoryStoreCategoriesAdapter.CategoryClickListener {
 
     private LinearLayout llNoRecordsFound;
-    private RecyclerView rvCategoryList;
-    private CategoriesAdapter adapter;
-    private List<Category> categories;
-    private LinearLayoutManager categoriesLayoutManager;
+    private RecyclerView rvStoreCategoryList;
+    private CategoryStoreCategoriesAdapter adapter;
+    private List<CategoryStoreCategoryDTO> categories;
+    private LinearLayoutManager storeCategoriesLayoutManager;
+    private LayoutInflater layoutInflater;
     private String clientId;
     private String accessToken;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_list);
+        setContentView(R.layout.activity_store_category_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,16 +68,21 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        layoutInflater = LayoutInflater.from(this);
+
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
-        rvCategoryList = findViewById(R.id.rv_category_list);
-        rvCategoryList.setHasFixedSize(true);
-        categoriesLayoutManager = new LinearLayoutManager(this);
-        rvCategoryList.setLayoutManager(categoriesLayoutManager);
-        rvCategoryList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvStoreCategoryList = findViewById(R.id.rv_store_category_list);
+        rvStoreCategoryList.setHasFixedSize(true);
+        storeCategoriesLayoutManager = new LinearLayoutManager(this);
+        rvStoreCategoryList.setLayoutManager(storeCategoriesLayoutManager);
+        rvStoreCategoryList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+
+        store = getIntent().getParcelableExtra(Constants.STORE);
+        getSupportActionBar().setSubtitle(store.getName());
 
         getData();
         //setListeners();
@@ -106,7 +115,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        /*if (requestCode == Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Category addedCategory = data.getParcelableExtra(Constants.CATEGORY);
             if (addedCategory != null) {
                 categories.add(addedCategory);
@@ -120,15 +129,15 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                 categories.add(position, editedCategory);
                 adapter.notifyItemChanged(position);
             }
-        }
+        }*/
     }
 
     private void getData() {
-        Call<BaseResponse<List<Category>>> getCategoriesCall = Flytekart.getApiService().getAllCategories(accessToken, clientId);
-        getCategoriesCall.enqueue(new Callback<BaseResponse<List<Category>>>() {
+        Call<BaseResponse<List<CategoryStoreCategoryDTO>>> getCategoriesCall = Flytekart.getApiService().getAllCategoriesWithStoreCategories(accessToken, store.getId(), clientId);
+        getCategoriesCall.enqueue(new Callback<BaseResponse<List<CategoryStoreCategoryDTO>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<Category>>> call, @NotNull Response<BaseResponse<List<Category>>> response) {
-                Logger.i("Categories list response received.");
+            public void onResponse(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Response<BaseResponse<List<CategoryStoreCategoryDTO>>> response) {
+                Logger.i("Store categories list response received.");
                 if (response.isSuccessful() && response.body() != null) {
                     categories = response.body().getBody();
                     setCategoriesData();
@@ -142,13 +151,13 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                         e.printStackTrace();
                     }
                 }
-                Logger.e("Categories List API call response status code : " + response.code());
+                Logger.e("Store categories List API call response status code : " + response.code());
                 //populateFragment();
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<Category>>> call, @NotNull Throwable t) {
-                Logger.i("Categories List API call failure.");
+            public void onFailure(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Throwable t) {
+                Logger.i("Store categories List API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -156,19 +165,19 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
 
     private void setCategoriesData() {
         if (categories == null || categories.isEmpty()) {
-            rvCategoryList.setVisibility(View.GONE);
+            rvStoreCategoryList.setVisibility(View.GONE);
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(CategoryListActivity.this, CreateCategoryActivity.class);
+                Intent intent = new Intent(StoreCategoryListActivity.this, CreateCategoryActivity.class);
                 startActivityForResult(intent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
             });
 
         } else {
             llNoRecordsFound.setVisibility(View.GONE);
-            rvCategoryList.setVisibility(View.VISIBLE);
+            rvStoreCategoryList.setVisibility(View.VISIBLE);
 
-            adapter = new CategoriesAdapter(this, categories);
-            rvCategoryList.setAdapter(adapter);
+            adapter = new CategoryStoreCategoriesAdapter(this, categories);
+            rvStoreCategoryList.setAdapter(adapter);
         }
     }
 
@@ -182,7 +191,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
 
         });
 
-        rvCategoryList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        rvStoreCategoryList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
@@ -211,7 +220,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
      */
     @Override
     public void onCategoryClicked(int position) {
-        Category category = categories.get(position);
+        CategoryStoreCategoryDTO category = categories.get(position);
         Intent itemIntent = new Intent(this, ProductListActivity.class);
         itemIntent.putExtra(Constants.CATEGORY, category);
         startActivity(itemIntent);
@@ -219,16 +228,18 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
 
     @Override
     public void onEdit(int position) {
-        Intent editCategoryIntent = new Intent(this, CreateCategoryActivity.class);
+        /*Intent editCategoryIntent = new Intent(this, CreateCategoryActivity.class);
         editCategoryIntent.putExtra(Constants.CATEGORY, categories.get(position));
         editCategoryIntent.putExtra(Constants.POSITION, position);
-        startActivityForResult(editCategoryIntent, Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE);
-    }
+        startActivityForResult(editCategoryIntent, Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE);*/
+        View dialogView = layoutInflater.inflate(R.layout.dialog_store_category, null);
+        /*etAttributeName = dialogView.findViewById(R.id.et_attribute_name);
+        EditText etAttributeValueName = dialogView.findViewById(R.id.et_attribute_value_name);
+        etAttributeName.addTextChangedListener(new CreateVariantActivity.AttributeNamePrefixListener());
+        etAttributeName.setAdapter(attributeNameAdapter);*/
 
-    @Override
-    public void onDelete(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to delete the category: " + categories.get(position).getName());
+        builder.setView(dialogView);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -245,7 +256,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
     }
 
     private void deleteCategory(int position) {
-        Category category = categories.get(position);
+        /*Category category = categories.get(position);
         Call<BaseResponse<Category>> deleteCategoryCall = Flytekart.getApiService().deleteCategory(accessToken, category.getId(), clientId);
         deleteCategoryCall.enqueue(new Callback<BaseResponse<Category>>() {
             @Override
@@ -277,6 +288,6 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                 Logger.i("Delete category API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 }
