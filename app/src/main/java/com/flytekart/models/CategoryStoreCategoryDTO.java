@@ -28,6 +28,14 @@ public class CategoryStoreCategoryDTO implements Parcelable {
     @Expose
     private String storeCategoryId;
 
+    @SerializedName("storeCategoryDeletedAt")
+    @Expose
+    private String storeCategoryDeletedAt;
+
+    @SerializedName("storeCategoryDeletedBy")
+    @Expose
+    private String storeCategoryDeletedBy;
+
     public String getId() {
         return id;
     }
@@ -68,6 +76,23 @@ public class CategoryStoreCategoryDTO implements Parcelable {
         this.storeCategoryId = storeCategoryId;
     }
 
+    public String getStoreCategoryDeletedAt() {
+        return storeCategoryDeletedAt;
+    }
+
+    public void setStoreCategoryDeletedAt(String storeCategoryDeletedAt) {
+        this.storeCategoryDeletedAt = storeCategoryDeletedAt;
+    }
+
+    public String getStoreCategoryDeletedBy() {
+        return storeCategoryDeletedBy;
+    }
+
+    public void setStoreCategoryDeletedBy(String storeCategoryDeletedBy) {
+        this.storeCategoryDeletedBy = storeCategoryDeletedBy;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -80,6 +105,8 @@ public class CategoryStoreCategoryDTO implements Parcelable {
         dest.writeString(this.parentCategoryId);
         dest.writeByte(this.isActive ? (byte) 1 : (byte) 0);
         dest.writeString(this.storeCategoryId);
+        dest.writeString(this.storeCategoryDeletedAt);
+        dest.writeString(this.storeCategoryDeletedBy);
     }
 
     public void readFromParcel(Parcel source) {
@@ -88,6 +115,8 @@ public class CategoryStoreCategoryDTO implements Parcelable {
         this.parentCategoryId = source.readString();
         this.isActive = source.readByte() != 0;
         this.storeCategoryId = source.readString();
+        this.storeCategoryDeletedAt = source.readString();
+        this.storeCategoryDeletedBy = source.readString();
     }
 
     public CategoryStoreCategoryDTO() {
@@ -99,6 +128,8 @@ public class CategoryStoreCategoryDTO implements Parcelable {
         this.parentCategoryId = in.readString();
         this.isActive = in.readByte() != 0;
         this.storeCategoryId = in.readString();
+        this.storeCategoryDeletedAt = in.readString();
+        this.storeCategoryDeletedBy = in.readString();
     }
 
     public static final Parcelable.Creator<CategoryStoreCategoryDTO> CREATOR = new Parcelable.Creator<CategoryStoreCategoryDTO>() {

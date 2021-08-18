@@ -6,11 +6,17 @@ import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.Product;
+import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
+import com.flytekart.models.StoreVariant;
 import com.flytekart.models.User;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
+import com.flytekart.models.VariantStoreVariantDTO;
 import com.flytekart.models.request.CreateProductRequest;
+import com.flytekart.models.request.CreateStoreCategoryRequest;
+import com.flytekart.models.request.CreateStoreProductRequest;
+import com.flytekart.models.request.CreateStoreVariantRequest;
 import com.flytekart.models.request.CreateVariantRequest;
 import com.flytekart.models.request.CreateVariantVavRequest;
 import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
@@ -211,5 +217,43 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Path("storeId") String storeId,
             @Query("clientId") String clientId);
+
+    @POST("/api/storeCategories/")
+    Call<BaseResponse<CategoryStoreCategoryDTO>> saveStoreCategory(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateStoreCategoryRequest request);
+
+    @GET("/api/storeProducts/withAllProducts/store/{storeId}")
+    Call<BaseResponse<List<ProductStoreProductDTO>>> getAllProductsWithStoreProducts(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("storeId") String storeId,
+            @Query("clientId") String clientId,
+            @Query("categoryId") String categoryId);
+
+    @POST("/api/storeProducts/")
+    Call<BaseResponse<ProductStoreProductDTO>> saveStoreProduct(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateStoreProductRequest request);
+
+    @GET("/api/storeVariants/withAllVariants/store/{storeId}")
+    Call<BaseResponse<List<VariantStoreVariantDTO>>> getAllVariantsWithStoreVariants(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("storeId") String storeId,
+            @Query("clientId") String clientId,
+            @Query("productId") String productId);
+
+    @GET("/api/storeVariants/getDTO/{id}")
+    Call<BaseResponse<VariantStoreVariantDTO>> getStoreVariant(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Path("id") String id,
+            @Query("clientId") String clientId);
+
+    @POST("/api/storeVariants/")
+    Call<BaseResponse<StoreVariant>> saveStoreVariant(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateStoreVariantRequest request);
 }
 

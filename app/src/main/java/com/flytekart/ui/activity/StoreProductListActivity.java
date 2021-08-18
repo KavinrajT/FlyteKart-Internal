@@ -22,12 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.Category;
 import com.flytekart.models.CategoryStoreCategoryDTO;
+import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
-import com.flytekart.models.request.CreateStoreCategoryRequest;
+import com.flytekart.models.request.CreateStoreProductRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
+import com.flytekart.ui.adapters.ProductStoreProductsAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -42,41 +45,43 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StoreCategoryListActivity extends AppCompatActivity implements CategoryStoreCategoriesAdapter.CategoryClickListener {
+public class StoreProductListActivity extends AppCompatActivity implements ProductStoreProductsAdapter.ProductClickListener {
 
     private LinearLayout llNoRecordsFound;
-    private RecyclerView rvStoreCategoryList;
-    private CategoryStoreCategoriesAdapter adapter;
-    private List<CategoryStoreCategoryDTO> categories;
-    private LinearLayoutManager storeCategoriesLayoutManager;
+    private RecyclerView rvStoreProductList;
+    private ProductStoreProductsAdapter adapter;
+    private List<ProductStoreProductDTO> products;
+    private LinearLayoutManager storeProductsLayoutManager;
     private String clientId;
     private String accessToken;
     private Store store;
+    private CategoryStoreCategoryDTO category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_store_category_list);
+        setContentView(R.layout.activity_store_product_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.categories);
+        getSupportActionBar().setTitle(R.string.products);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
-        rvStoreCategoryList = findViewById(R.id.rv_store_category_list);
-        rvStoreCategoryList.setHasFixedSize(true);
-        storeCategoriesLayoutManager = new LinearLayoutManager(this);
-        rvStoreCategoryList.setLayoutManager(storeCategoriesLayoutManager);
-        rvStoreCategoryList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvStoreProductList = findViewById(R.id.rv_store_product_list);
+        rvStoreProductList.setHasFixedSize(true);
+        storeProductsLayoutManager = new LinearLayoutManager(this);
+        rvStoreProductList.setLayoutManager(storeProductsLayoutManager);
+        rvStoreProductList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
 
         store = getIntent().getParcelableExtra(Constants.STORE);
-        getSupportActionBar().setSubtitle(store.getName());
+        category = getIntent().getParcelableExtra(Constants.CATEGORY);
+        getSupportActionBar().setSubtitle(category.getName());
 
         getData();
         //setListeners();
@@ -115,14 +120,14 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
     }
 
     private void getData() {
-        Call<BaseResponse<List<CategoryStoreCategoryDTO>>> getCategoriesCall = Flytekart.getApiService().getAllCategoriesWithStoreCategories(accessToken, store.getId(), clientId);
-        getCategoriesCall.enqueue(new Callback<BaseResponse<List<CategoryStoreCategoryDTO>>>() {
+        Call<BaseResponse<List<ProductStoreProductDTO>>> getProductsCall = Flytekart.getApiService().getAllProductsWithStoreProducts(accessToken, store.getId(), clientId, category.getId());
+        getProductsCall.enqueue(new Callback<BaseResponse<List<ProductStoreProductDTO>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Response<BaseResponse<List<CategoryStoreCategoryDTO>>> response) {
-                Logger.i("Store categories list response received.");
+            public void onResponse(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call, @NotNull Response<BaseResponse<List<ProductStoreProductDTO>>> response) {
+                Logger.i("Store products list response received.");
                 if (response.isSuccessful() && response.body() != null) {
-                    categories = response.body().getBody();
-                    setCategoriesData();
+                    products = response.body().getBody();
+                    setProductsData();
                 } else if (response.body().getApiError() != null || response.errorBody() != null) {
                     // TODO Need to write this properly
                     try {
@@ -133,33 +138,33 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
                         e.printStackTrace();
                     }
                 }
-                Logger.e("Store categories List API call response status code : " + response.code());
+                Logger.e("Store products List API call response status code : " + response.code());
                 //populateFragment();
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Throwable t) {
-                Logger.i("Store categories List API call failure.");
+            public void onFailure(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call, @NotNull Throwable t) {
+                Logger.i("Store products List API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void setCategoriesData() {
-        if (categories == null || categories.isEmpty()) {
-            rvStoreCategoryList.setVisibility(View.GONE);
+    private void setProductsData() {
+        if (products == null || products.isEmpty()) {
+            rvStoreProductList.setVisibility(View.GONE);
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(StoreCategoryListActivity.this, CreateCategoryActivity.class);
+                Intent intent = new Intent(StoreProductListActivity.this, CreateCategoryActivity.class);
                 startActivityForResult(intent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
             });
 
         } else {
             llNoRecordsFound.setVisibility(View.GONE);
-            rvStoreCategoryList.setVisibility(View.VISIBLE);
+            rvStoreProductList.setVisibility(View.VISIBLE);
 
-            adapter = new CategoryStoreCategoriesAdapter(this, categories);
-            rvStoreCategoryList.setAdapter(adapter);
+            adapter = new ProductStoreProductsAdapter(this, products);
+            rvStoreProductList.setAdapter(adapter);
         }
     }
 
@@ -173,13 +178,13 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
 
         });
 
-        rvStoreCategoryList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        rvStoreProductList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int pos = rv.getChildAdapterPosition(child);
-                    onCategoryClicked(pos);
+                    onProductClicked(pos);
                 }
                 return false;
             }
@@ -201,11 +206,11 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
      * @param position
      */
     @Override
-    public void onCategoryClicked(int position) {
-        CategoryStoreCategoryDTO category = categories.get(position);
-        Intent itemIntent = new Intent(this, StoreProductListActivity.class);
+    public void onProductClicked(int position) {
+        ProductStoreProductDTO product = products.get(position);
+        Intent itemIntent = new Intent(this, StoreVariantListActivity.class);
         itemIntent.putExtra(Constants.STORE, store);
-        itemIntent.putExtra(Constants.CATEGORY, category);
+        itemIntent.putExtra(Constants.PRODUCT, product);
         startActivity(itemIntent);
     }
 
@@ -217,10 +222,10 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
         startActivityForResult(editCategoryIntent, Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE);*/
 
         String message;
-        if (categories.get(position).getStoreCategoryId() != null && categories.get(position).getStoreCategoryDeletedAt() == null)  {
-            message = "Do you want to mark the category " + categories.get(position).getName() + " as unavailable at this store? This will mark all products under this category as unavailable.";
+        if (products.get(position).getStoreProductId() != null && products.get(position).getStoreProductDeletedAt() == null)  {
+            message = "Do you want to mark the product " + products.get(position).getName() + " as unavailable at this store?";
         } else {
-            message = "Do you want to mark the category " + categories.get(position).getName() + " as available at this store?";
+            message = "Do you want to mark the product " + products.get(position).getName() + " as available at this store?";
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -234,7 +239,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                enableCategory(position);
+                enableProduct(position);
             }
         });
         builder.show();
@@ -245,26 +250,26 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
      * Make API call and update UI.
      * @param position
      */
-    private void enableCategory(int position) {
-        CategoryStoreCategoryDTO category = categories.get(position);
-        CreateStoreCategoryRequest request = new CreateStoreCategoryRequest();
-        request.setStoreCategoryId(category.getStoreCategoryId());
+    private void enableProduct(int position) {
+        ProductStoreProductDTO product = products.get(position);
+        CreateStoreProductRequest request = new CreateStoreProductRequest();
+        request.setStoreProductId(product.getStoreProductId());
         request.setStoreId(store.getId());
-        request.setCategoryId(category.getId());
+        request.setProductId(product.getId());
         boolean isActive = false;
-        if (category.getStoreCategoryId() != null && category.getStoreCategoryDeletedAt() == null) {
+        if (product.getStoreProductId() != null && product.getStoreProductDeletedAt() == null) {
             isActive = true;
         }
         request.setActive(!isActive);
-        Call<BaseResponse<CategoryStoreCategoryDTO>> deleteCategoryCall = Flytekart.getApiService().saveStoreCategory(accessToken, clientId, request);
-        deleteCategoryCall.enqueue(new Callback<BaseResponse<CategoryStoreCategoryDTO>>() {
+        Call<BaseResponse<ProductStoreProductDTO>> enableProductCall = Flytekart.getApiService().saveStoreProduct(accessToken, clientId, request);
+        enableProductCall.enqueue(new Callback<BaseResponse<ProductStoreProductDTO>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call, @NotNull Response<BaseResponse<CategoryStoreCategoryDTO>> response) {
-                Logger.i("Save store category response received.");
+            public void onResponse(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call, @NotNull Response<BaseResponse<ProductStoreProductDTO>> response) {
+                Logger.i("Save store product response received.");
                 if (response.isSuccessful() && response.body() != null) {
-                    CategoryStoreCategoryDTO savedCategory = response.body().getBody();
-                    categories.remove(position);
-                    categories.add(position, savedCategory);
+                    ProductStoreProductDTO savedCategory = response.body().getBody();
+                    products.remove(position);
+                    products.add(position, savedCategory);
                     adapter.notifyItemChanged(position);
                 } else if (response.body().getApiError() != null || response.errorBody() != null) {
                     // TODO Need to write this properly
@@ -276,12 +281,12 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
                         e.printStackTrace();
                     }
                 }
-                Logger.e("Save store category API call response status code : " + response.code());
+                Logger.e("Save store product API call response status code : " + response.code());
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call, @NotNull Throwable t) {
-                Logger.i("Save store category API call failure.");
+            public void onFailure(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call, @NotNull Throwable t) {
+                Logger.i("Save store product API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });

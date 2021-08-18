@@ -13,13 +13,18 @@
         <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.10663627152988855" />
         <entry key="app/src/main/res/layout/activity_store.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_store_category_list.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_store_product_list.xml" value="0.16614583333333333" />
+        <entry key="app/src/main/res/layout/activity_store_variant.xml" value="0.10833333333333334" />
+        <entry key="app/src/main/res/layout/activity_store_variant_list.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/activity_variant_list.xml" value="0.10677083333333333" />
         <entry key="app/src/main/res/layout/dialog_attribute_value.xml" value="0.1421875" />
-        <entry key="app/src/main/res/layout/dialog_store_category.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/dialog_store_category.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_organisation_list.xml" value="0.10677083333333333" />
         <entry key="app/src/main/res/layout/list_item_attribute_value.xml" value="0.33869346733668343" />
         <entry key="app/src/main/res/layout/list_item_category.xml" value="0.10663627152988855" />
-        <entry key="app/src/main/res/layout/list_item_store_category.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/list_item_store_category.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/list_item_store_product.xml" value="0.19655797101449277" />
+        <entry key="app/src/main/res/layout/list_item_store_variant.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/menu/menu_common.xml" value="0.1" />
       </map>
     </option>

@@ -32,6 +32,9 @@ public class Variant implements Parcelable {
     @SerializedName("price")
     @Expose
     private float price;
+    @SerializedName("tax")
+    @Expose
+    private float tax;
     @SerializedName("originalPrice")
     @Expose
     private float originalPrice;
@@ -112,6 +115,14 @@ public class Variant implements Parcelable {
         this.price = price;
     }
 
+    public float getTax() {
+        return tax;
+    }
+
+    public void setTax(float tax) {
+        this.tax = tax;
+    }
+
     public float getOriginalPrice() {
         return originalPrice;
     }
@@ -152,6 +163,7 @@ public class Variant implements Parcelable {
         this.deletedBy = deletedBy;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -167,6 +179,7 @@ public class Variant implements Parcelable {
         dest.writeString(this.sku);
         dest.writeString(this.name);
         dest.writeFloat(this.price);
+        dest.writeFloat(this.tax);
         dest.writeFloat(this.originalPrice);
         dest.writeByte(this.active ? (byte) 1 : (byte) 0);
         dest.writeString(this.createdBy);
@@ -183,6 +196,7 @@ public class Variant implements Parcelable {
         this.sku = source.readString();
         this.name = source.readString();
         this.price = source.readFloat();
+        this.tax = source.readFloat();
         this.originalPrice = source.readFloat();
         this.active = source.readByte() != 0;
         this.createdBy = source.readString();
@@ -202,6 +216,7 @@ public class Variant implements Parcelable {
         this.sku = in.readString();
         this.name = in.readString();
         this.price = in.readFloat();
+        this.tax = in.readFloat();
         this.originalPrice = in.readFloat();
         this.active = in.readByte() != 0;
         this.createdBy = in.readString();

@@ -51,6 +51,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private SwitchCompat swIsActive;
     private TextInputEditText etSku;
     private TextInputEditText etPrice;
+    private TextInputEditText etTax;
     private TextInputEditText etOriginalPrice;
     private LinearLayout llAttributeValues;
     private LayoutInflater layoutInflater;
@@ -78,6 +79,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         swIsActive = findViewById(R.id.sw_is_active);
         etSku = findViewById(R.id.et_sku);
         etPrice = findViewById(R.id.et_price);
+        etTax = findViewById(R.id.et_tax);
         etOriginalPrice = findViewById(R.id.et_original_price);
         Button btnSaveVariant = findViewById(R.id.btn_save_variant);
         View llAddAttributeValues = findViewById(R.id.ll_add_attribute_values);
@@ -369,6 +371,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         String priceString = etPrice.getText().toString().trim();
         if (!priceString.isEmpty()) {
             request.setPrice(Float.parseFloat(priceString));
+        }
+        String taxString = etTax.getText().toString().trim();
+        if (!taxString.isEmpty()) {
+            request.setTax(Float.parseFloat(taxString));
         }
         String originalPriceString = etOriginalPrice.getText().toString().trim();
         if (!priceString.isEmpty()) {

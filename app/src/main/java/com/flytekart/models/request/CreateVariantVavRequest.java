@@ -28,6 +28,10 @@ public class CreateVariantVavRequest {
     @Expose
     private float price;
 
+    @SerializedName("tax")
+    @Expose
+    private float tax;
+
     @SerializedName("originalPrice")
     @Expose
     private float originalPrice;
@@ -78,6 +82,14 @@ public class CreateVariantVavRequest {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public float getTax() {
+        return tax;
+    }
+
+    public void setTax(float tax) {
+        this.tax = tax;
     }
 
     public float getOriginalPrice() {

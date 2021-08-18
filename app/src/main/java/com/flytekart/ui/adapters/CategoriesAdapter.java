@@ -15,11 +15,11 @@ import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
 
-    private CategoryClickListener categoryClickListener;
+    private CategoryClickListener productClickListener;
     private List<Category> categories;
 
-    public CategoriesAdapter(CategoryClickListener categoryClickListener, List<Category> categories) {
-        this.categoryClickListener = categoryClickListener;
+    public CategoriesAdapter(CategoryClickListener productClickListener, List<Category> categories) {
+        this.productClickListener = productClickListener;
         this.categories = categories;
     }
 
@@ -59,7 +59,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         @Override
         public void onClick(View v) {
-            categoryClickListener.onCategoryClicked(position);
+            productClickListener.onCategoryClicked(position);
         }
     }
 
@@ -72,7 +72,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         @Override
         public void onClick(View v) {
-            categoryClickListener.onEdit(position);
+            productClickListener.onEdit(position);
         }
     }
 
@@ -85,7 +85,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         @Override
         public void onClick(View v) {
-            categoryClickListener.onDelete(position);
+            productClickListener.onDelete(position);
         }
     }
 

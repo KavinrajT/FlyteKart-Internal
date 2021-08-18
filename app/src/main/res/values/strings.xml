@@ -114,7 +114,10 @@
     <string name="str_no_records_found">No records found.</string>
     <string name="category_info">Category Info</string>
     <string name="category_name">Category Name</string>
+    <string name="product_name">Product Name</string>
+    <string name="variant_name">Variant Name</string>
     <string name="is_active">Is Active?</string>
+    <string name="is_available">Is Available?</string>
     <string name="sub_category_info">Sub Category Info</string>
     <string name="sub_category_name">Sub Category Name</string>
     <string name="create_sub_category">Create Sub Category</string>
@@ -150,6 +153,10 @@
     <string name="order_details">Order details</string>
     <string name="orders">Orders</string>
     <string name="products">Products</string>
+    <string name="variants">Variants</string>
     <string name="available">Available</string>
+    <string name="not_available">Not available</string>
+    <string name="tax">tax</string>
+    <string name="quantity">Quantity</string>
 
 </resources>
