@@ -19,6 +19,7 @@ public class Constants {
     public static final int MAPS_ACTIVITY_REQUEST_CODE = 102;
     public static final int STORE_LIST_ACTIVITY_REQUEST_CODE = 201;
     public static final int ADD_STORE_ACTIVITY_REQUEST_CODE = 202;
+    public static final int EDIT_STORE_ACTIVITY_REQUEST_CODE = 203;
     public static final int ADD_PRODUCT_ACTIVITY_REQUEST_CODE = 301;
     public static final int ADD_VARIANT_ACTIVITY_REQUEST_CODE = 301;
     public static final int ADD_CATEGORY_ACTIVITY_REQUEST_CODE = 401;
@@ -33,6 +34,8 @@ public class Constants {
 
     public static final String EMPTY = "";
     public static final String SPACE = " ";
+    public static final String COMMA_SPACE = ", ";
+    public static final String COMMA = ",";
     public static final String STORE = "store";
     public static final String END_USER = "endUser";
     public static final String CATEGORY = "category";
@@ -40,6 +43,7 @@ public class Constants {
     public static final String PRODUCT = "product";
     public static final String VARIANT = "variant";
     public static final String ORDER = "order";
+    public static final String ADDRESS = "address";
     public static final String CURRENCY_RUPEE_PREFIX = "Rs";
 
     public static final int DEFAULT_PAGE_SIZE = 10;

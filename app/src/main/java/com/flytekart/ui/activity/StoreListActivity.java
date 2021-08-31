@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,8 +25,6 @@ import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.StoresAdapter;
-import com.flytekart.ui.views.DividerItemDecoration;
-import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -36,7 +36,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StoreListActivity extends AppCompatActivity implements TitleBarLayout.TitleBarIconClickListener {
+public class StoreListActivity extends AppCompatActivity {
 
     private LinearLayout llNoRecordsFound;
     private RecyclerView rvStoresList;
@@ -61,11 +61,18 @@ public class StoreListActivity extends AppCompatActivity implements TitleBarLayo
         rvStoresList = findViewById(R.id.rv_stores_list);
         rvStoresList.setHasFixedSize(true);
         rvStoresList.setLayoutManager(new LinearLayoutManager(this));
-        rvStoresList.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.divider_rv)));
+        rvStoresList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        getData();
+        //getData();
         setListeners();
         //setData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_common, menu);
+        return true;
     }
 
     @Override
@@ -74,6 +81,11 @@ public class StoreListActivity extends AppCompatActivity implements TitleBarLayo
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_create: {
+                Intent createStoreIntent = new Intent(this, CreateStoreActivity.class);
+                startActivityForResult(createStoreIntent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -163,38 +175,23 @@ public class StoreListActivity extends AppCompatActivity implements TitleBarLayo
         startActivity(itemIntent);
     }
 
-    private void setData() {
-        SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
-        String storesJsonStr = sharedPreferences.getString(Constants.SHARED_PREF_KEY_STORES, null);
-        List<Store> stores = new Gson().fromJson(storesJsonStr, new TypeToken<List<Store>>() {
-        }.getType());
-        if (stores == null || stores.isEmpty()) {
-            rvStoresList.setVisibility(View.GONE);
-            llNoRecordsFound.setVisibility(View.VISIBLE);
-            llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(StoreListActivity.this, CreateStoreActivity.class);
-                startActivityForResult(intent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
-            });
-
-        } else {
-            llNoRecordsFound.setVisibility(View.GONE);
-            rvStoresList.setVisibility(View.VISIBLE);
-
-            adapter = new StoresAdapter(stores);
-            rvStoresList.setAdapter(adapter);
-            rvStoresList.setLayoutManager(new LinearLayoutManager(this));
-        }
-    }
-
-    @Override
-    public void onTitleBarRightIconClicked(View view) {
-        Intent intent = new Intent(StoreListActivity.this, CreateStoreActivity.class);
-        startActivityForResult(intent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setData();
+        if (requestCode == Constants.ADD_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Store addedStore = data.getParcelableExtra(Constants.STORE);
+            if (addedStore != null) {
+                stores.add(addedStore);
+                adapter.notifyItemInserted(stores.size() - 1);
+            }
+        } else if (requestCode == Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            int position = data.getIntExtra(Constants.POSITION, -1);
+            Store editedStore = data.getParcelableExtra(Constants.STORE);
+            if (position != -1 && editedStore != null) {
+                stores.remove(position);
+                stores.add(position, editedStore);
+                adapter.notifyItemChanged(position);
+            }
+        }
     }
 }

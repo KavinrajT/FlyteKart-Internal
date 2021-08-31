@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -60,8 +61,12 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_store_details:
+            case R.id.tv_store_details: {
+                Intent storeIntent = new Intent(this, CreateStoreActivity.class);
+                storeIntent.putExtra(Constants.STORE, store);
+                startActivityForResult(storeIntent, Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE);
                 break;
+            }
             case R.id.tv_summary:
                 break;
             case R.id.tv_categories_products: {
@@ -75,6 +80,18 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
                 ordersIntent.putExtra(Constants.STORE, store);
                 startActivity(ordersIntent);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Store editedStore = data.getParcelableExtra(Constants.STORE);
+            if (editedStore != null) {
+                store = editedStore;
+                getSupportActionBar().setTitle(store.getName());
+            }
         }
     }
 }

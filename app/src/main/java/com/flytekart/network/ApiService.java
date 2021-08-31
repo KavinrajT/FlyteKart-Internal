@@ -16,6 +16,7 @@ import com.flytekart.models.VariantStoreVariantDTO;
 import com.flytekart.models.request.CreateProductRequest;
 import com.flytekart.models.request.CreateStoreCategoryRequest;
 import com.flytekart.models.request.CreateStoreProductRequest;
+import com.flytekart.models.request.CreateStoreRequest;
 import com.flytekart.models.request.CreateStoreVariantRequest;
 import com.flytekart.models.request.CreateVariantRequest;
 import com.flytekart.models.request.CreateVariantVavRequest;
@@ -95,10 +96,10 @@ public interface ApiService {
             @Query("storeId") String storeId);
 
     @POST("/api/stores/")
-    Call<BaseResponse<Store>> createStore(
+    Call<BaseResponse<Store>> saveStore(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
-            @Body Store store);
+            @Body CreateStoreRequest request);
 
     @GET("/api/categories/")
     Call<BaseResponse<List<Category>>> getAllCategories(
