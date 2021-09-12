@@ -22,6 +22,7 @@ import com.flytekart.models.request.CreateVariantRequest;
 import com.flytekart.models.request.CreateVariantVavRequest;
 import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.request.LoginRequest;
+import com.flytekart.models.request.UpdateOrderStatusRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.LoginResponse;
@@ -256,5 +257,35 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body CreateStoreVariantRequest request);
+
+    @POST("/api/orders/updateOrderStatusToAccepted")
+    Call<BaseResponse<OrderResponse>> acceptOrder(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body UpdateOrderStatusRequest request);
+
+    @POST("/api/orders/updateOrderStatusToProcessing")
+    Call<BaseResponse<OrderResponse>> processOrder(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body UpdateOrderStatusRequest request);
+
+    @POST("/api/orders/updateOrderStatusToProcessed")
+    Call<BaseResponse<OrderResponse>> processedOrder(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body UpdateOrderStatusRequest request);
+
+    @POST("/api/orders/updateOrderStatusToOutForDelivery")
+    Call<BaseResponse<OrderResponse>> outForDeliveryOrder(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body UpdateOrderStatusRequest request);
+
+    @POST("/api/orders/updateOrderStatusToDelivered")
+    Call<BaseResponse<OrderResponse>> deliverOrder(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body UpdateOrderStatusRequest request);
 }
 

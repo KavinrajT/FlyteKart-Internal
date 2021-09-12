@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ui.activity.OrderDetailsActivity">
 
@@ -47,21 +48,17 @@
         android:layout_height="0.5dp"
         android:background="@color/dark_grey" />
 
-    <!-- TODO Show delivery address -->
-    <LinearLayout
+    <!-- Show delivery address -->
+    <TextView
+        android:id="@+id/tv_delivery_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            android:gravity="center"
-            android:text="Address"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    </LinearLayout>
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:drawablePadding="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textStyle="normal"
+        app:drawableLeftCompat="@drawable/ic_home_work_" />
 
     <View
         android:layout_width="match_parent"
@@ -178,14 +175,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Order status"
+                android:text="@string/order_status"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <TextView
                 android:id="@+id/tv_order_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Placed"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
@@ -205,21 +201,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Payment details"
+                android:text="@string/payment_details"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <TextView
                 android:id="@+id/tv_payment_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="COD"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
                 android:id="@+id/tv_payment_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unpaid"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>

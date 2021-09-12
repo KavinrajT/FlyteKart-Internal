@@ -162,5 +162,7 @@
     <string name="quantity">Quantity</string>
     <string name="add_store">Add store</string>
     <string name="edit_store">Edit store</string>
+    <string name="order_status">Order status</string>
+    <string name="payment_details">Payment details</string>
 
 </resources>

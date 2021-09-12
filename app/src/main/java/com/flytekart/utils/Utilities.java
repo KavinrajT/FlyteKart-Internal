@@ -43,21 +43,21 @@ public class Utilities {
 
     public static String getFormattedOrderStatus(String orderStatus) {
         switch (orderStatus) {
-            case "IN_PROGRESS":
+            case Constants.OrderStatus.IN_PROGRESS:
                 return "In progress";
-            case "PLACED":
+            case Constants.OrderStatus.PLACED:
                 return "Placed";
-            case "CANCELED":
+            case Constants.OrderStatus.CANCELED:
                 return "Canceled";
-            case "ACCEPTED":
+            case Constants.OrderStatus.ACCEPTED:
                 return "Accepted";
-            case "PROCESSING":
+            case Constants.OrderStatus.PROCESSING:
                 return "Processing";
-            case "PROCESSED":
+            case Constants.OrderStatus.PROCESSED:
                 return "Processed";
-            case "OUT_FOR_DELIVERY":
+            case Constants.OrderStatus.OUT_FOR_DELIVERY:
                 return "Out for delivery";
-            case "DELIVERED":
+            case Constants.OrderStatus.DELIVERED:
                 return "Delivered";
             default:
                 return Constants.EMPTY;
@@ -66,18 +66,37 @@ public class Utilities {
 
     public static String getNextFormattedOrderStatus(String orderStatus) {
         switch (orderStatus) {
-            case "IN_PROGRESS":
+            case Constants.OrderStatus.IN_PROGRESS:
                 return "Placed";
-            case "PLACED":
+            case Constants.OrderStatus.PLACED:
                 return "Accepted";
-            case "ACCEPTED":
+            case Constants.OrderStatus.ACCEPTED:
                 return "Processing";
-            case "PROCESSING":
+            case Constants.OrderStatus.PROCESSING:
                 return "Processed";
-            case "PROCESSED":
+            case Constants.OrderStatus.PROCESSED:
                 return "Out for delivery";
-            case "OUT_FOR_DELIVERY":
+            case Constants.OrderStatus.OUT_FOR_DELIVERY:
                 return "Delivered";
+            default:
+                return null;
+        }
+    }
+
+    public static String getNextOrderStatus(String orderStatus) {
+        switch (orderStatus) {
+            case Constants.OrderStatus.IN_PROGRESS:
+                return Constants.OrderStatus.PLACED;
+            case Constants.OrderStatus.PLACED:
+                return Constants.OrderStatus.ACCEPTED;
+            case Constants.OrderStatus.ACCEPTED:
+                return Constants.OrderStatus.PROCESSING;
+            case Constants.OrderStatus.PROCESSING:
+                return Constants.OrderStatus.PROCESSED;
+            case Constants.OrderStatus.PROCESSED:
+                return Constants.OrderStatus.OUT_FOR_DELIVERY;
+            case Constants.OrderStatus.OUT_FOR_DELIVERY:
+                return Constants.OrderStatus.DELIVERED;
             default:
                 return null;
         }

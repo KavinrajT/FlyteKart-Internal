@@ -47,4 +47,62 @@ public class Constants {
     public static final String CURRENCY_RUPEE_PREFIX = "Rs";
 
     public static final int DEFAULT_PAGE_SIZE = 10;
+
+    public static final class OrderStatus {
+        public static final String IN_PROGRESS = "IN_PROGRESS";
+        public static final String PLACED = "PLACED";
+        public static final String CANCELED = "CANCELED";
+        public static final String ACCEPTED = "ACCEPTED";
+        public static final String PROCESSING = "PROCESSING";
+        public static final String PROCESSED = "PROCESSED";
+        public static final String OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY";
+        public static final String DELIVERED = "DELIVERED";
+    }
+
+    public static final class OrderItemStatus {
+        public static final String IN_PROGRESS = "IN_PROGRESS";
+        public static final String DELETED = "DELETED";
+        public static final String PLACED = "PLACED";
+        public static final String CANCELED = "CANCELED";
+        public static final String ACCEPTED = "ACCEPTED";
+        public static final String PROCESSING = "PROCESSING";
+        public static final String PROCESSED = "PROCESSED";
+        public static final String OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY";
+        public static final String DELIVERED = "DELIVERED";
+        public static final String REMOVED = "REMOVED";
+    }
+
+    public static final class ReturnOrderStatus {
+        public static final String RETURN_IN_PROGRESS = "RETURN_IN_PROGRESS";
+        public static final String RETURN_PLACED = "RETURN_PLACED";
+        public static final String RETURN_CANCELED = "RETURN_CANCELED";
+        public static final String RETURN_REQUEST_ACCEPTED = "RETURN_REQUEST_ACCEPTED";
+        public static final String RETURN_REQUEST_REJECTED = "RETURN_REQUEST_REJECTED";
+        public static final String RETURN_PICKED = "RETURN_PICKED";
+        public static final String RETURN_RECEIVED = "RETURN_RECEIVED";
+        public static final String RETURN_ACCEPTED = "RETURN_ACCEPTED";
+        public static final String RETURN_REJECTED = "RETURN_REJECTED";
+    }
+
+    public static final class ReturnOrderItemStatus {
+        public static final String RETURN_IN_PROGRESS = "RETURN_IN_PROGRESS";
+        public static final String RETURN_ITEM_DELETED = "RETURN_ITEM_DELETED";
+        public static final String RETURN_PLACED = "RETURN_PLACED";
+        public static final String RETURN_CANCELED = "RETURN_CANCELED";
+        public static final String RETURN_REQUEST_ACCEPTED = "RETURN_REQUEST_ACCEPTED";
+        public static final String RETURN_REQUEST_REJECTED = "RETURN_REQUEST_REJECTED";
+        public static final String RETURN_PICKED = "RETURN_PICKED";
+        public static final String RETURN_RECEIVED = "RETURN_RECEIVED";
+        public static final String RETURN_ACCEPTED = "RETURN_ACCEPTED";
+        public static final String RETURN_REJECTED = "RETURN_REJECTED";
+    }
+
+    public static final class PaymentStatus {
+        public static final String UNPAID = "UNPAID";
+        public static final String PAID = "PAID";
+    }
+
+    public static final class PaymentType {
+        public static final String COD = "COD"; // Covers both cash on delivery and pay on delivery
+    }
 }

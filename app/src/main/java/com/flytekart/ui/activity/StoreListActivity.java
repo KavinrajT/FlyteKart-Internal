@@ -63,7 +63,7 @@ public class StoreListActivity extends AppCompatActivity {
         rvStoresList.setLayoutManager(new LinearLayoutManager(this));
         rvStoresList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        //getData();
+        getData();
         setListeners();
         //setData();
     }

@@ -40,15 +40,18 @@ public class Order implements Parcelable {
     @SerializedName("user")
     @Expose
     private EndUser endUser;
-    @SerializedName("storeId")
+    @SerializedName("store")
     @Expose
-    private String storeId;
+    private Store store;
     @SerializedName("orderStatus")
     @Expose
     private OrderStatus orderStatus;
     @SerializedName("orderSource")
     @Expose
     private OrderSource orderSource;
+    @SerializedName("deliveryAddress")
+    @Expose
+    private Address deliveryAddress;
 
     public String getCreatedAt() {
         return createdAt;
@@ -138,12 +141,12 @@ public class Order implements Parcelable {
         this.endUser = endUser;
     }
 
-    public String getStoreId() {
-        return storeId;
+    public Store getStore() {
+        return store;
     }
 
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public OrderStatus getOrderStatus() {
@@ -161,6 +164,15 @@ public class Order implements Parcelable {
     public void setOrderSource(OrderSource orderSource) {
         this.orderSource = orderSource;
     }
+
+    public Address getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(Address deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
 
     @Override
     public int describeContents() {
@@ -180,9 +192,10 @@ public class Order implements Parcelable {
         dest.writeString(this.employeeDeletedBy);
         dest.writeString(this.id);
         dest.writeParcelable(this.endUser, flags);
-        dest.writeString(this.storeId);
+        dest.writeParcelable(this.store, flags);
         dest.writeParcelable(this.orderStatus, flags);
         dest.writeParcelable(this.orderSource, flags);
+        dest.writeParcelable(this.deliveryAddress, flags);
     }
 
     public void readFromParcel(Parcel source) {
@@ -197,9 +210,10 @@ public class Order implements Parcelable {
         this.employeeDeletedBy = source.readString();
         this.id = source.readString();
         this.endUser = source.readParcelable(EndUser.class.getClassLoader());
-        this.storeId = source.readString();
+        this.store = source.readParcelable(Store.class.getClassLoader());
         this.orderStatus = source.readParcelable(OrderStatus.class.getClassLoader());
         this.orderSource = source.readParcelable(OrderSource.class.getClassLoader());
+        this.deliveryAddress = source.readParcelable(Address.class.getClassLoader());
     }
 
     public Order() {
@@ -217,12 +231,13 @@ public class Order implements Parcelable {
         this.employeeDeletedBy = in.readString();
         this.id = in.readString();
         this.endUser = in.readParcelable(EndUser.class.getClassLoader());
-        this.storeId = in.readString();
+        this.store = in.readParcelable(Store.class.getClassLoader());
         this.orderStatus = in.readParcelable(OrderStatus.class.getClassLoader());
         this.orderSource = in.readParcelable(OrderSource.class.getClassLoader());
+        this.deliveryAddress = in.readParcelable(Address.class.getClassLoader());
     }
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel source) {
             return new Order(source);
