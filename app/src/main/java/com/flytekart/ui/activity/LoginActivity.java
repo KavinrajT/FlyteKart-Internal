@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,7 +25,6 @@ import com.flytekart.utils.Utilities;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvSignUp;
     private TextView tvLogin;
     private TextInputLayout tilClientCode;
+    private ProgressDialog progressDialog;
 
     String loginType;
 
@@ -123,10 +124,12 @@ public class LoginActivity extends AppCompatActivity {
         loginRequest.setPassword(password);
         Call<LoginResponse> loginCall = Flytekart.getApiService().mainLogin(loginRequest);
         tvSignUp.setEnabled(false);
+        showProgress(true);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
                 Logger.i("Main Login API call response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     // Get dropdown data and go to next screen.
@@ -156,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
                 Logger.i("Main Login API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -168,11 +172,13 @@ public class LoginActivity extends AppCompatActivity {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsernameOrEmail(usernameOrEmail);
         loginRequest.setPassword(password);
+        showProgress(true);
         Call<LoginResponse> loginCall = com.flytekart.Flytekart.getApiService().clientLogin(clientId, loginRequest);
         loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
                 Logger.i("Client Login API call response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     // Get dropdown data and go to next screen.
@@ -202,8 +208,22 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
                 Logger.i("Client Login API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

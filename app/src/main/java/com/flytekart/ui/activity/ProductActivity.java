@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -38,6 +39,7 @@ public class ProductActivity extends AppCompatActivity {
     private SwitchCompat swAdvancedOptions;
     private SwitchCompat swAdvancedInventory;
     private Button btnCreateProduct;
+    private ProgressDialog progressDialog;
 
     private boolean isInStock;
 
@@ -137,5 +139,18 @@ public class ProductActivity extends AppCompatActivity {
 
     private void showErrorToast(int messageStr) {
         Toast.makeText(getApplicationContext(), messageStr, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

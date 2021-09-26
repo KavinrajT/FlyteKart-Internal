@@ -27,13 +27,13 @@ public class StoreVariant implements Parcelable {
     private Variant variant;
     @SerializedName("price")
     @Expose
-    private float price;
+    private double price;
     @SerializedName("tax")
     @Expose
-    private float tax;
+    private double tax;
     @SerializedName("originalPrice")
     @Expose
-    private float originalPrice;
+    private double originalPrice;
     @SerializedName("quantity")
     @Expose
     private int quantity;
@@ -98,27 +98,27 @@ public class StoreVariant implements Parcelable {
         this.variant = variant;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public float getTax() {
+    public double getTax() {
         return tax;
     }
 
-    public void setTax(float tax) {
+    public void setTax(double tax) {
         this.tax = tax;
     }
 
-    public float getOriginalPrice() {
+    public double getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(float originalPrice) {
+    public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
     }
 
@@ -175,9 +175,9 @@ public class StoreVariant implements Parcelable {
         dest.writeString(this.id);
         dest.writeParcelable(this.store, flags);
         dest.writeParcelable(this.variant, flags);
-        dest.writeFloat(this.price);
-        dest.writeFloat(this.tax);
-        dest.writeFloat(this.originalPrice);
+        dest.writeDouble(this.price);
+        dest.writeDouble(this.tax);
+        dest.writeDouble(this.originalPrice);
         dest.writeInt(this.quantity);
         dest.writeByte(this.active ? (byte) 1 : (byte) 0);
         dest.writeString(this.createdBy);
@@ -192,9 +192,9 @@ public class StoreVariant implements Parcelable {
         this.id = source.readString();
         this.store = source.readParcelable(Store.class.getClassLoader());
         this.variant = source.readParcelable(Variant.class.getClassLoader());
-        this.price = source.readFloat();
-        this.tax = source.readFloat();
-        this.originalPrice = source.readFloat();
+        this.price = source.readDouble();
+        this.tax = source.readDouble();
+        this.originalPrice = source.readDouble();
         this.quantity = source.readInt();
         this.active = source.readByte() != 0;
         this.createdBy = source.readString();
@@ -212,9 +212,9 @@ public class StoreVariant implements Parcelable {
         this.id = in.readString();
         this.store = in.readParcelable(Store.class.getClassLoader());
         this.variant = in.readParcelable(Variant.class.getClassLoader());
-        this.price = in.readFloat();
-        this.tax = in.readFloat();
-        this.originalPrice = in.readFloat();
+        this.price = in.readDouble();
+        this.tax = in.readDouble();
+        this.originalPrice = in.readDouble();
         this.quantity = in.readInt();
         this.active = in.readByte() != 0;
         this.createdBy = in.readString();

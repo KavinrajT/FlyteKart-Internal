@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class OrdersListActivity extends AppCompatActivity implements TitleBarLayout.TitleBarIconClickListener {
+public class OrdersListActivity extends AppCompatActivity {
 
     private LinearLayout llNoRecordsFound;
     private LinearLayoutManager ordersLayoutManager;
@@ -47,6 +48,7 @@ public class OrdersListActivity extends AppCompatActivity implements TitleBarLay
     private String accessToken;
     private String clientId;
     private int nextPageNumber = 0;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +98,14 @@ public class OrdersListActivity extends AppCompatActivity implements TitleBarLay
 
     private void getData() {
         Logger.e("Loading data - page = " + nextPageNumber);
+        showProgress(true);
         Call<BaseResponse<List<OrderResponse>>> getOrdersByStoreCall = Flytekart.getApiService().getOrdersByStoreId(accessToken, store.getId(), clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
         getOrdersByStoreCall.enqueue(new CustomCallback<BaseResponse<List<OrderResponse>>>() {
             @Override
             public void onFailure(Call<BaseResponse<List<OrderResponse>>> call, Throwable t) {
                 isLoadingOrders = false;
                 Logger.e("Store List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
@@ -109,6 +113,7 @@ public class OrdersListActivity extends AppCompatActivity implements TitleBarLay
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<OrderResponse>>> call, Response<BaseResponse<List<OrderResponse>>> response) {
                 isLoadingOrders = false;
                 Logger.e("Order list API success");
+                showProgress(false);
                 List<OrderResponse> orderResponses = response.body().getBody();
                 setOrdersData(orderResponses);
             }
@@ -117,6 +122,7 @@ public class OrdersListActivity extends AppCompatActivity implements TitleBarLay
             public void onFlytekartErrorResponse(Call<BaseResponse<List<OrderResponse>>> call, BaseErrorResponse responseBody) {
                 isLoadingOrders = false;
                 Logger.e("Order List API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -192,14 +198,21 @@ public class OrdersListActivity extends AppCompatActivity implements TitleBarLay
     }
 
     @Override
-    public void onTitleBarRightIconClicked(View view) {
-        Intent intent = new Intent(OrdersListActivity.this, CreateStoreActivity.class);
-        startActivityForResult(intent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //setData();
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

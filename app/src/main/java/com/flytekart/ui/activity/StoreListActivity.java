@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,15 +43,13 @@ public class StoreListActivity extends AppCompatActivity {
     private RecyclerView rvStoresList;
     private StoresAdapter adapter;
     private List<Store> stores;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_list);
 
-        /*TitleBarLayout titleBarLayout = findViewById(R.id.titleBar);
-        titleBarLayout.setTitleText("Stores");
-        titleBarLayout.setOnIconClickListener(this);*/
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Stores");
@@ -95,16 +94,19 @@ public class StoreListActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        showProgress(true);
         Call<BaseResponse<List<Store>>> getStoresCall = Flytekart.getApiService().getStoresByOrg(accessToken, clientId);
         getStoresCall.enqueue(new CustomCallback<BaseResponse<List<Store>>>() {
             @Override
             public void onFailure(Call<BaseResponse<List<Store>>> call, Throwable t) {
                 Logger.i("Store List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<Store>>> call, Response<BaseResponse<List<Store>>> response) {
+                showProgress(false);
                 stores = response.body().getBody();
                 setStoresData();
             }
@@ -112,6 +114,7 @@ public class StoreListActivity extends AppCompatActivity {
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<List<Store>>> call, BaseErrorResponse responseBody) {
                 Logger.e("Store List API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -192,6 +195,19 @@ public class StoreListActivity extends AppCompatActivity {
                 stores.add(position, editedStore);
                 adapter.notifyItemChanged(position);
             }
+        }
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 }

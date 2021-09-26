@@ -15,7 +15,7 @@
         <entry key="app/src/main/res/layout/activity_create_variant.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10552536231884058" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/activity_order_details.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_order_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_orders_list.xml" value="0.10778985507246377" />
         <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.10663627152988855" />
         <entry key="app/src/main/res/layout/activity_store.xml" value="0.25" />

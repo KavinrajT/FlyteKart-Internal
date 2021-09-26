@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
     private OrdersAdapter adapter;
     private TextView tvName;
     private TextView tvEmailId;
+    private ProgressDialog progressDialog;
 
     private EndUser endUser;
     private List<OrderResponse> orderResponses;
@@ -105,12 +107,14 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
 
     private void getData() {
         Logger.e("Loading data - page = " + nextPageNumber);
+        showProgress(true);
         Call<BaseResponse<List<OrderResponse>>> getOrdersByStoreCall = Flytekart.getApiService().getOrdersByUserId(accessToken, endUser.getId(), clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
         getOrdersByStoreCall.enqueue(new CustomCallback<BaseResponse<List<OrderResponse>>>() {
             @Override
             public void onFailure(Call<BaseResponse<List<OrderResponse>>> call, Throwable t) {
                 isLoadingOrders = false;
                 Logger.e("Store List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
@@ -118,6 +122,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<OrderResponse>>> call, Response<BaseResponse<List<OrderResponse>>> response) {
                 isLoadingOrders = false;
                 Logger.e("Order list API success");
+                showProgress(false);
                 List<OrderResponse> orderResponses = response.body().getBody();
                 setOrdersData(orderResponses);
             }
@@ -126,6 +131,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
             public void onFlytekartErrorResponse(Call<BaseResponse<List<OrderResponse>>> call, BaseErrorResponse responseBody) {
                 isLoadingOrders = false;
                 Logger.e("Order List API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -204,5 +210,18 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //setData();
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

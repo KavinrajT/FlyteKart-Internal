@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.R;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.Organisation;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -42,6 +45,7 @@ public class CreateOrgActivity extends AppCompatActivity {
     private Spinner spBusinessType;
     private TextInputEditText etGstNo;
     private Button btnCreateOrg;
+    private ProgressDialog progressDialog;
 
     private String strStoreType;
     private String strBusinessType;
@@ -164,12 +168,13 @@ public class CreateOrgActivity extends AppCompatActivity {
     private void createOrganisation(Organisation organisation) {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, "");
+        showProgress(true);
         Call<BaseResponse<Organisation>> loginCall = com.flytekart.Flytekart.getApiService().createOrganisation(accessToken, organisation);
-        loginCall.enqueue(new Callback<BaseResponse<Organisation>>() {
+        loginCall.enqueue(new CustomCallback<BaseResponse<Organisation>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
                 Logger.i("create Org API call response received.");
-                Logger.i("create Org API call response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     BaseResponse<Organisation> orgResponse = response.body();
                     // Get dropdown data and go to next screen.
@@ -192,10 +197,30 @@ public class CreateOrgActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<Organisation>> call, BaseErrorResponse responseBody) {
+                Logger.e("Organisation List API call failed.");
+                showProgress(false);
+            }
+
+            @Override
             public void onFailure(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Throwable t) {
                 Logger.i("Organisation List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

@@ -36,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView tvSignUp;
     private TextView tvLogin;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.et_cnf_password);
         tvSignUp = findViewById(R.id.tv_sign_up);
         tvLogin = findViewById(R.id.tv_login);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.loading));
 
         tvLogin.setOnClickListener(view -> {
             Intent signUpIntent = new Intent(SignUpActivity.this, LoginActivity.class);
@@ -77,37 +73,22 @@ public class SignUpActivity extends AppCompatActivity {
             } else if (!TextUtils.equals(password, cnfPassword)) {
                 Toast.makeText(getApplicationContext(), R.string.confirm_password_correctly, Toast.LENGTH_SHORT).show();
             } else {
-                loadingStarted();
                 signUp(name, username, email, phoneNumber, password);
             }
         });
-    }
-
-    public void loadingStarted() {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-    }
-
-    public void loadingFinished() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage(getString(R.string.loading));
-        }
     }
 
     private void signUp(String name, String username, String email, String phoneNumber, String password) {
         User user = new User(name, username, email, phoneNumber, password);
         Call<ApiCallResponse> signUpCall = Flytekart.getApiService().signUp(user);
         tvSignUp.setEnabled(false);
+        showProgress(true);
         signUpCall.enqueue(new Callback<ApiCallResponse>() {
             @Override
             public void onResponse(@NotNull Call<ApiCallResponse> call, @NotNull Response<ApiCallResponse> response) {
                 ApiCallResponse apiCallResponse = null;
                 Logger.i("SignUp API call response received.");
-                loadingFinished();
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     apiCallResponse = response.body();
                     // Get dropdown data and go to next screen.
@@ -133,9 +114,22 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<ApiCallResponse> call, @NotNull Throwable t) {
                 Logger.i("SignUp API call failure.");
-                loadingFinished();
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +25,9 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.CategoriesAdapter;
 import com.flytekart.ui.views.RecyclerItemClickListener;
 import com.flytekart.ui.views.TitleBarLayout;
@@ -52,6 +55,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
     private LinearLayoutManager categoriesLayoutManager;
     private String clientId;
     private String accessToken;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +128,13 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
     }
 
     private void getData() {
+        showProgress(true);
         Call<BaseResponse<List<Category>>> getCategoriesCall = Flytekart.getApiService().getAllCategories(accessToken, clientId);
-        getCategoriesCall.enqueue(new Callback<BaseResponse<List<Category>>>() {
+        getCategoriesCall.enqueue(new CustomCallback<BaseResponse<List<Category>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<Category>>> call, @NotNull Response<BaseResponse<List<Category>>> response) {
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<Category>>> call, Response<BaseResponse<List<Category>>> response) {
                 Logger.i("Categories list response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     categories = response.body().getBody();
                     setCategoriesData();
@@ -143,12 +149,18 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                     }
                 }
                 Logger.e("Categories List API call response status code : " + response.code());
-                //populateFragment();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Category>>> call, BaseErrorResponse responseBody) {
+                Logger.e("Categories List API call failed.");
+                showProgress(false);
             }
 
             @Override
             public void onFailure(@NotNull Call<BaseResponse<List<Category>>> call, @NotNull Throwable t) {
                 Logger.i("Categories List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -246,11 +258,13 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
 
     private void deleteCategory(int position) {
         Category category = categories.get(position);
+        showProgress(true);
         Call<BaseResponse<Category>> deleteCategoryCall = Flytekart.getApiService().deleteCategory(accessToken, category.getId(), clientId);
-        deleteCategoryCall.enqueue(new Callback<BaseResponse<Category>>() {
+        deleteCategoryCall.enqueue(new CustomCallback<BaseResponse<Category>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<Category>> call, @NotNull Response<BaseResponse<Category>> response) {
+            public void onFlytekartSuccessResponse(Call<BaseResponse<Category>> call, Response<BaseResponse<Category>> response) {
                 Logger.i("Delete category response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     Category deletedCategory = response.body().getBody();
                     categories.remove(position);
@@ -269,14 +283,33 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                     }
                 }
                 Logger.e("Delete categoryAPI call response status code : " + response.code());
-                //populateFragment();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<Category>> call, BaseErrorResponse responseBody) {
+                Logger.e("Delete category API call failed.");
+                showProgress(false);
             }
 
             @Override
             public void onFailure(@NotNull Call<BaseResponse<Category>> call, @NotNull Throwable t) {
                 Logger.i("Delete category API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,7 +21,9 @@ import com.flytekart.R;
 import com.flytekart.models.MenuModel;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.MenuExpandableListAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -49,6 +52,7 @@ public class HomeActivity extends BaseActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle drawerToggle;
+    private ProgressDialog progressDialog;
 
     private Organisation organisation;
 
@@ -183,11 +187,13 @@ public class HomeActivity extends BaseActivity {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        showProgress(true);
         Call<BaseResponse<Organisation>> organisationCall = com.flytekart.Flytekart.getApiService().getOrganisation(accessToken, clientId);
-        organisationCall.enqueue(new Callback<BaseResponse<Organisation>>() {
+        organisationCall.enqueue(new CustomCallback<BaseResponse<Organisation>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Response<BaseResponse<Organisation>> response) {
                 Logger.i("Client Login API call response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     organisation = response.body().getBody();
                     Toast.makeText(getApplicationContext(), "Organisation API call successful.", Toast.LENGTH_SHORT).show();
@@ -205,10 +211,30 @@ public class HomeActivity extends BaseActivity {
             }
 
             @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<Organisation>> call, BaseErrorResponse responseBody) {
+                Logger.e("Organisation List API call failed.");
+                showProgress(false);
+            }
+
+            @Override
             public void onFailure(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Throwable t) {
                 Logger.i("Organisation List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

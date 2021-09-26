@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +29,9 @@ import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.request.CreateStoreProductRequest;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
 import com.flytekart.ui.adapters.ProductStoreProductsAdapter;
 import com.flytekart.utils.Constants;
@@ -56,6 +59,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
     private String accessToken;
     private Store store;
     private CategoryStoreCategoryDTO category;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,11 +124,13 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
     }
 
     private void getData() {
+        showProgress(true);
         Call<BaseResponse<List<ProductStoreProductDTO>>> getProductsCall = Flytekart.getApiService().getAllProductsWithStoreProducts(accessToken, store.getId(), clientId, category.getId());
-        getProductsCall.enqueue(new Callback<BaseResponse<List<ProductStoreProductDTO>>>() {
+        getProductsCall.enqueue(new CustomCallback<BaseResponse<List<ProductStoreProductDTO>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call, @NotNull Response<BaseResponse<List<ProductStoreProductDTO>>> response) {
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<ProductStoreProductDTO>>> call, Response<BaseResponse<List<ProductStoreProductDTO>>> response) {
                 Logger.i("Store products list response received.");
+                showProgress(true);
                 if (response.isSuccessful() && response.body() != null) {
                     products = response.body().getBody();
                     setProductsData();
@@ -140,6 +146,11 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
                 }
                 Logger.e("Store products List API call response status code : " + response.code());
                 //populateFragment();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<ProductStoreProductDTO>>> call, BaseErrorResponse responseBody) {
+                Logger.i("Store products list call failed.");
             }
 
             @Override
@@ -261,11 +272,13 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
             isActive = true;
         }
         request.setActive(!isActive);
+        showProgress(true);
         Call<BaseResponse<ProductStoreProductDTO>> enableProductCall = Flytekart.getApiService().saveStoreProduct(accessToken, clientId, request);
-        enableProductCall.enqueue(new Callback<BaseResponse<ProductStoreProductDTO>>() {
+        enableProductCall.enqueue(new CustomCallback<BaseResponse<ProductStoreProductDTO>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call, @NotNull Response<BaseResponse<ProductStoreProductDTO>> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call, @NotNull Response<BaseResponse<ProductStoreProductDTO>> response) {
                 Logger.i("Save store product response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     ProductStoreProductDTO savedCategory = response.body().getBody();
                     products.remove(position);
@@ -285,10 +298,30 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
             }
 
             @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<ProductStoreProductDTO>> call, BaseErrorResponse responseBody) {
+                Logger.e("Save store product API call failed.");
+                showProgress(false);
+            }
+
+            @Override
             public void onFailure(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call, @NotNull Throwable t) {
                 Logger.i("Save store product API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

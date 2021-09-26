@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,7 +24,9 @@ import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.ProductsAdapter;
 import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
@@ -48,6 +51,7 @@ public class ProductListActivity extends AppCompatActivity {
     private ProductsAdapter adapter;
     private Category category;
     private List<Product> products;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +107,11 @@ public class ProductListActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        showProgress(true);
         Call<BaseResponse<List<Product>>> getProductsCall = Flytekart.getApiService().getProductsByCategoryId(accessToken, clientId, category.getId());
-        getProductsCall.enqueue(new Callback<BaseResponse<List<Product>>>() {
+        getProductsCall.enqueue(new CustomCallback<BaseResponse<List<Product>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<Product>>> call, @NotNull Response<BaseResponse<List<Product>>> response) {
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<Product>>> call, Response<BaseResponse<List<Product>>> response) {
                 Logger.i("Categories list response received.");
                 if (response.isSuccessful() && response.body() != null) {
                     products = response.body().getBody();
@@ -122,12 +127,18 @@ public class ProductListActivity extends AppCompatActivity {
                     }
                 }
                 Logger.e("Categories List API call response status code : " + response.code());
-                //populateFragment();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Product>>> call, BaseErrorResponse responseBody) {
+                Logger.e("Categories List API call failed.");
+                showProgress(false);
             }
 
             @Override
             public void onFailure(@NotNull Call<BaseResponse<List<Product>>> call, @NotNull Throwable t) {
                 Logger.i("Categories List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -194,5 +205,18 @@ public class ProductListActivity extends AppCompatActivity {
         itemIntent.putExtra(Constants.CATEGORY, category);
         itemIntent.putExtra(Constants.PRODUCT, product);
         startActivity(itemIntent);
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

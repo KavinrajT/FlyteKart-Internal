@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private LayoutInflater layoutInflater;
     private ArrayAdapter<String> attributeNameAdapter;
     MaterialAutoCompleteTextView etAttributeName;
+    private ProgressDialog progressDialog;
 
     private String accessToken;
     private String clientId;
@@ -158,16 +160,19 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     }
 
     private void getData() {
+        showProgress(true);
         Call<BaseResponse<Variant>> getVariantCall = Flytekart.getApiService().getVariantById(accessToken, variant.getId(), clientId);
         getVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
             @Override
             public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
                 Logger.i("Variant API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<Variant>> call, Response<BaseResponse<Variant>> response) {
+                showProgress(false);
                 variant = response.body().getBody();
                 setData();
             }
@@ -175,22 +180,26 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
                 Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getVariantAttributeValuesData() {
+        showProgress(true);
         Call<BaseResponse<List<VariantAttributeValue>>> getStoresCall = Flytekart.getApiService().getAttributeValuesByVariantId(accessToken, variant.getId(), clientId);
         getStoresCall.enqueue(new CustomCallback<BaseResponse<List<VariantAttributeValue>>>() {
             @Override
             public void onFailure(Call<BaseResponse<List<VariantAttributeValue>>> call, Throwable t) {
                 Logger.i("Variants API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<VariantAttributeValue>>> call, Response<BaseResponse<List<VariantAttributeValue>>> response) {
+                showProgress(false);
                 variantAttributeValues = response.body().getBody();
                 setVariantAttributeValuesData();
             }
@@ -198,6 +207,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<List<VariantAttributeValue>>> call, BaseErrorResponse responseBody) {
                 Logger.e("Variants API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -258,16 +268,19 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private void deleteAttribute(AttributeValueDTO dto) {
         DeleteVariantAttributeValueRequest request = new DeleteVariantAttributeValueRequest();
         request.setId(dto.getVariantAttributeValueId());
+        showProgress(true);
         Call<BaseResponse<VariantAttributeValue>> saveVariantCall = Flytekart.getApiService().deleteVariantAttributeValue(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<VariantAttributeValue>>() {
             @Override
             public void onFailure(Call<BaseResponse<VariantAttributeValue>> call, Throwable t) {
                 Logger.i("Variant API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<VariantAttributeValue>> call, Response<BaseResponse<VariantAttributeValue>> response) {
+                showProgress(false);
                 VariantAttributeValue vav = response.body().getBody();
                 int foundIndex = 0;
                 for (int i = 0; i < llAttributeValues.getChildCount(); i++) {
@@ -284,6 +297,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<VariantAttributeValue>> call, BaseErrorResponse responseBody) {
                 Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -370,28 +384,31 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         request.setSku(etSku.getText().toString().trim());
         String priceString = etPrice.getText().toString().trim();
         if (!priceString.isEmpty()) {
-            request.setPrice(Float.parseFloat(priceString));
+            request.setPrice(Double.parseDouble(priceString));
         }
         String taxString = etTax.getText().toString().trim();
         if (!taxString.isEmpty()) {
-            request.setTax(Float.parseFloat(taxString));
+            request.setTax(Double.parseDouble(taxString));
         }
         String originalPriceString = etOriginalPrice.getText().toString().trim();
         if (!priceString.isEmpty()) {
-            request.setOriginalPrice(Float.parseFloat(originalPriceString));
+            request.setOriginalPrice(Double.parseDouble(originalPriceString));
         }
         request.setAttributeValueDTOs(attributeValueDTOs);
 
+        showProgress(true);
         Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariantVav(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
             @Override
             public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
                 Logger.i("Variant API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<Variant>> call, Response<BaseResponse<Variant>> response) {
+                showProgress(false);
                 variant = response.body().getBody();
                 setData();
             }
@@ -399,6 +416,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
                 Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -472,6 +490,19 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         @Override
         public void afterTextChanged(Editable editable) {
 
+        }
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 }

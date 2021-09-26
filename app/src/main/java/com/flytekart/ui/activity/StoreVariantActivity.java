@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
     private TextInputEditText etOriginalPrice;
     private TextInputEditText etQuantity;
     private TextInputEditText etTax;
+    private ProgressDialog progressDialog;
 
     private String accessToken;
     private String clientId;
@@ -127,16 +129,19 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
 
     private void getData() {
         if (variantStoreVariantDTO.getStoreVariantId() != null) {
+            showProgress(true);
             Call<BaseResponse<VariantStoreVariantDTO>> getStoreVariantCall = Flytekart.getApiService().getStoreVariant(accessToken, variantStoreVariantDTO.getStoreVariantId(), clientId);
             getStoreVariantCall.enqueue(new CustomCallback<BaseResponse<VariantStoreVariantDTO>>() {
                 @Override
                 public void onFailure(Call<BaseResponse<VariantStoreVariantDTO>> call, Throwable t) {
                     Logger.i("Variant API call failure.");
+                    showProgress(false);
                     Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFlytekartSuccessResponse(Call<BaseResponse<VariantStoreVariantDTO>> call, Response<BaseResponse<VariantStoreVariantDTO>> response) {
+                    showProgress(false);
                     variantStoreVariantDTO = response.body().getBody();
                     setData();
                 }
@@ -144,6 +149,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onFlytekartErrorResponse(Call<BaseResponse<VariantStoreVariantDTO>> call, BaseErrorResponse responseBody) {
                     Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                    showProgress(false);
                     Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -196,16 +202,19 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
         }
         request.setActive(swIsActive.isChecked());
 
+        showProgress(true);
         Call<BaseResponse<StoreVariant>> saveVariantCall = Flytekart.getApiService().saveStoreVariant(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<StoreVariant>>() {
             @Override
             public void onFailure(Call<BaseResponse<StoreVariant>> call, Throwable t) {
                 Logger.i("Store variant API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<StoreVariant>> call, Response<BaseResponse<StoreVariant>> response) {
+                showProgress(false);
                 StoreVariant storeVariant = response.body().getBody();
                 variantStoreVariantDTO.setStoreVariantId(storeVariant.getId());
                 Toast.makeText(getApplicationContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
@@ -215,9 +224,22 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<StoreVariant>> call, BaseErrorResponse responseBody) {
                 Logger.e("Store variant API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
 }

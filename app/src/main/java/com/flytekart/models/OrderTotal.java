@@ -9,35 +9,35 @@ import com.google.gson.annotations.SerializedName;
 public class OrderTotal implements Parcelable {
     @SerializedName("totalPrice")
     @Expose
-    private float totalPrice;
+    private double totalPrice;
     @SerializedName("totalTax")
     @Expose
-    private float totalTax;
+    private double totalTax;
     @SerializedName("total")
     @Expose
-    private float total;
+    private double total;
 
-    public float getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(float totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public float getTotalTax() {
+    public double getTotalTax() {
         return totalTax;
     }
 
-    public void setTotalTax(float totalTax) {
+    public void setTotalTax(double totalTax) {
         this.totalTax = totalTax;
     }
 
-    public float getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(float total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
@@ -48,24 +48,24 @@ public class OrderTotal implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(this.totalPrice);
-        dest.writeFloat(this.totalTax);
-        dest.writeFloat(this.total);
+        dest.writeDouble(this.totalPrice);
+        dest.writeDouble(this.totalTax);
+        dest.writeDouble(this.total);
     }
 
     public void readFromParcel(Parcel source) {
-        this.totalPrice = source.readFloat();
-        this.totalTax = source.readFloat();
-        this.total = source.readFloat();
+        this.totalPrice = source.readDouble();
+        this.totalTax = source.readDouble();
+        this.total = source.readDouble();
     }
 
     public OrderTotal() {
     }
 
     protected OrderTotal(Parcel in) {
-        this.totalPrice = in.readFloat();
-        this.totalTax = in.readFloat();
-        this.total = in.readFloat();
+        this.totalPrice = in.readDouble();
+        this.totalTax = in.readDouble();
+        this.total = in.readDouble();
     }
 
     public static final Parcelable.Creator<OrderTotal> CREATOR = new Parcelable.Creator<OrderTotal>() {

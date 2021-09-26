@@ -165,4 +165,7 @@
     <string name="order_status">Order status</string>
     <string name="payment_details">Payment details</string>
 
+    <!-- Progress string -->
+    <string name="progress_please_wait">Please wait</string>
+
 </resources>

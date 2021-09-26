@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OrderItem implements Parcelable {
+public class Payment implements Parcelable {
     @SerializedName("createdAt")
     @Expose
     private String createdAt;
@@ -34,33 +34,26 @@ public class OrderItem implements Parcelable {
     @SerializedName("employeeDeletedBy")
     @Expose
     private String employeeDeletedBy;
+
     @SerializedName("id")
     @Expose
     private String id;
+
     @SerializedName("orderId")
     @Expose
     private String orderId;
-    @SerializedName("orderItemStatusId")
+
+    @SerializedName("amount")
     @Expose
-    private String orderItemStatusId;
-    @SerializedName("storeVariant")
+    private double amount;
+
+    @SerializedName("paymentType")
     @Expose
-    private StoreVariant storeVariant;
-    @SerializedName("unitPrice")
+    private PaymentType paymentType;
+
+    @SerializedName("paymentStatus")
     @Expose
-    private double unitPrice;
-    @SerializedName("unitTax")
-    @Expose
-    private double unitTax;
-    @SerializedName("quantity")
-    @Expose
-    private int quantity;
-    @SerializedName("totalPrice")
-    @Expose
-    private double totalPrice;
-    @SerializedName("totalTax")
-    @Expose
-    private double totalTax;
+    private PaymentStatus paymentStatus;
 
     public String getCreatedAt() {
         return createdAt;
@@ -150,60 +143,28 @@ public class OrderItem implements Parcelable {
         this.orderId = orderId;
     }
 
-    public String getOrderItemStatusId() {
-        return orderItemStatusId;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setOrderItemStatusId(String orderItemStatusId) {
-        this.orderItemStatusId = orderItemStatusId;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
-    public StoreVariant getStoreVariant() {
-        return storeVariant;
+    public PaymentType getPaymentType() {
+        return paymentType;
     }
 
-    public void setStoreVariant(StoreVariant storeVariant) {
-        this.storeVariant = storeVariant;
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public double getUnitTax() {
-        return unitTax;
-    }
-
-    public void setUnitTax(double unitTax) {
-        this.unitTax = unitTax;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public double getTotalTax() {
-        return totalTax;
-    }
-
-    public void setTotalTax(double totalTax) {
-        this.totalTax = totalTax;
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     @Override
@@ -224,13 +185,9 @@ public class OrderItem implements Parcelable {
         dest.writeString(this.employeeDeletedBy);
         dest.writeString(this.id);
         dest.writeString(this.orderId);
-        dest.writeString(this.orderItemStatusId);
-        dest.writeParcelable(this.storeVariant, flags);
-        dest.writeDouble(this.unitPrice);
-        dest.writeDouble(this.unitTax);
-        dest.writeInt(this.quantity);
-        dest.writeDouble(this.totalPrice);
-        dest.writeDouble(this.totalTax);
+        dest.writeDouble(this.amount);
+        dest.writeParcelable(this.paymentType, flags);
+        dest.writeParcelable(this.paymentStatus, flags);
     }
 
     public void readFromParcel(Parcel source) {
@@ -245,19 +202,15 @@ public class OrderItem implements Parcelable {
         this.employeeDeletedBy = source.readString();
         this.id = source.readString();
         this.orderId = source.readString();
-        this.orderItemStatusId = source.readString();
-        this.storeVariant = source.readParcelable(StoreVariant.class.getClassLoader());
-        this.unitPrice = source.readDouble();
-        this.unitTax = source.readDouble();
-        this.quantity = source.readInt();
-        this.totalPrice = source.readDouble();
-        this.totalTax = source.readDouble();
+        this.amount = source.readDouble();
+        this.paymentType = source.readParcelable(PaymentType.class.getClassLoader());
+        this.paymentStatus = source.readParcelable(PaymentStatus.class.getClassLoader());
     }
 
-    public OrderItem() {
+    public Payment() {
     }
 
-    protected OrderItem(Parcel in) {
+    protected Payment(Parcel in) {
         this.createdAt = in.readString();
         this.lastUpdatedAt = in.readString();
         this.deletedAt = in.readString();
@@ -269,24 +222,20 @@ public class OrderItem implements Parcelable {
         this.employeeDeletedBy = in.readString();
         this.id = in.readString();
         this.orderId = in.readString();
-        this.orderItemStatusId = in.readString();
-        this.storeVariant = in.readParcelable(StoreVariant.class.getClassLoader());
-        this.unitPrice = in.readDouble();
-        this.unitTax = in.readDouble();
-        this.quantity = in.readInt();
-        this.totalPrice = in.readDouble();
-        this.totalTax = in.readDouble();
+        this.amount = in.readDouble();
+        this.paymentType = in.readParcelable(PaymentType.class.getClassLoader());
+        this.paymentStatus = in.readParcelable(PaymentStatus.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<OrderItem> CREATOR = new Parcelable.Creator<OrderItem>() {
+    public static final Creator<Payment> CREATOR = new Creator<Payment>() {
         @Override
-        public OrderItem createFromParcel(Parcel source) {
-            return new OrderItem(source);
+        public Payment createFromParcel(Parcel source) {
+            return new Payment(source);
         }
 
         @Override
-        public OrderItem[] newArray(int size) {
-            return new OrderItem[size];
+        public Payment[] newArray(int size) {
+            return new Payment[size];
         }
     };
 }

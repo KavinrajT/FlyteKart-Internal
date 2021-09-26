@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import com.flytekart.R;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.VariantsAdapter;
 import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
@@ -47,6 +50,7 @@ public class VariantListActivity extends AppCompatActivity {
     private LinearLayoutManager variantsLayoutManager;
     private Product product;
     private List<Variant> variants;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +105,13 @@ public class VariantListActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        showProgress(true);
         Call<BaseResponse<List<Variant>>> getVariantsCall = Flytekart.getApiService().getVariantsByProductId(accessToken, product.getId(), clientId);
-        getVariantsCall.enqueue(new Callback<BaseResponse<List<Variant>>>() {
+        getVariantsCall.enqueue(new CustomCallback<BaseResponse<List<Variant>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<Variant>>> call, @NotNull Response<BaseResponse<List<Variant>>> response) {
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<Variant>>> call, Response<BaseResponse<List<Variant>>> response) {
                 Logger.i("Variants list response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     variants = response.body().getBody();
                     setVariantsData();
@@ -120,12 +126,18 @@ public class VariantListActivity extends AppCompatActivity {
                     }
                 }
                 Logger.e("Variants List API call response status code : " + response.code());
-                //populateFragment();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Variant>>> call, BaseErrorResponse responseBody) {
+                Logger.i("Variants list API call failed.");
+                showProgress(false);
             }
 
             @Override
             public void onFailure(@NotNull Call<BaseResponse<List<Variant>>> call, @NotNull Throwable t) {
                 Logger.i("Variants List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -192,5 +204,18 @@ public class VariantListActivity extends AppCompatActivity {
         itemIntent.putExtra(Constants.VARIANT, variant);
         itemIntent.putExtra(Constants.PRODUCT, product);
         startActivityForResult(itemIntent, Constants.ADD_VARIANT_ACTIVITY_REQUEST_CODE);
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

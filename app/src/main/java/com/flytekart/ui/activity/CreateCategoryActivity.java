@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
     private TextInputEditText etCategoryName;
     private SwitchCompat swIsActive;
     private Button btnCreateCategory;
+    private ProgressDialog progressDialog;
 
     private Category category;
     private int position;
@@ -105,16 +107,19 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        showProgress(true);
         Call<BaseResponse<Category>> saveCategoryCall = Flytekart.getApiService().saveCategory(accessToken, clientId, category);
         saveCategoryCall.enqueue(new CustomCallback<BaseResponse<Category>>() {
             @Override
             public void onFailure(Call<BaseResponse<Category>> call, Throwable t) {
                 Logger.i("Category API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<Category>> call, Response<BaseResponse<Category>> response) {
+                showProgress(false);
                 category = response.body().getBody();
                 Toast.makeText(getApplicationContext(), "Category saved successfully.", Toast.LENGTH_SHORT).show();
                 Intent data = new Intent();
@@ -127,8 +132,22 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<Category>> call, BaseErrorResponse responseBody) {
                 Logger.e("Category save API call response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

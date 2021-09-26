@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class CreateStoreActivity extends AppCompatActivity implements View.OnCli
     private int position;
     private Store store;
     private Address storeAddress;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,16 +181,20 @@ public class CreateStoreActivity extends AppCompatActivity implements View.OnCli
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+
+        showProgress(true);
         Call<BaseResponse<Store>> getStoresCall = Flytekart.getApiService().saveStore(accessToken, clientId, request);
         getStoresCall.enqueue(new CustomCallback<BaseResponse<Store>>() {
             @Override
             public void onFailure(Call<BaseResponse<Store>> call, Throwable t) {
                 Logger.i("Save store API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<Store>> call, Response<BaseResponse<Store>> response) {
+                showProgress(false);
                 store = response.body().getBody();
                 storeAddress = store.getAddress();
                 Toast.makeText(getApplicationContext(), "Store information saved successfully.", Toast.LENGTH_SHORT).show();
@@ -202,8 +208,22 @@ public class CreateStoreActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<Store>> call, BaseErrorResponse responseBody) {
                 Logger.e("Save store API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

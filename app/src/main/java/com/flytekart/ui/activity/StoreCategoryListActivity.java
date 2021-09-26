@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +27,9 @@ import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.request.CreateStoreCategoryRequest;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -49,6 +52,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
     private CategoryStoreCategoriesAdapter adapter;
     private List<CategoryStoreCategoryDTO> categories;
     private LinearLayoutManager storeCategoriesLayoutManager;
+    private ProgressDialog progressDialog;
     private String clientId;
     private String accessToken;
     private Store store;
@@ -115,11 +119,13 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
     }
 
     private void getData() {
+        showProgress(true);
         Call<BaseResponse<List<CategoryStoreCategoryDTO>>> getCategoriesCall = Flytekart.getApiService().getAllCategoriesWithStoreCategories(accessToken, store.getId(), clientId);
-        getCategoriesCall.enqueue(new Callback<BaseResponse<List<CategoryStoreCategoryDTO>>>() {
+        getCategoriesCall.enqueue(new CustomCallback<BaseResponse<List<CategoryStoreCategoryDTO>>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Response<BaseResponse<List<CategoryStoreCategoryDTO>>> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Response<BaseResponse<List<CategoryStoreCategoryDTO>>> response) {
                 Logger.i("Store categories list response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     categories = response.body().getBody();
                     setCategoriesData();
@@ -138,8 +144,15 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
             }
 
             @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, BaseErrorResponse responseBody) {
+                Logger.e("Store categories List API call failed.");
+                showProgress(false);
+            }
+
+            @Override
             public void onFailure(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Throwable t) {
                 Logger.i("Store categories List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -256,11 +269,13 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
             isActive = true;
         }
         request.setActive(!isActive);
+        showProgress(true);
         Call<BaseResponse<CategoryStoreCategoryDTO>> deleteCategoryCall = Flytekart.getApiService().saveStoreCategory(accessToken, clientId, request);
-        deleteCategoryCall.enqueue(new Callback<BaseResponse<CategoryStoreCategoryDTO>>() {
+        deleteCategoryCall.enqueue(new CustomCallback<BaseResponse<CategoryStoreCategoryDTO>>() {
             @Override
-            public void onResponse(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call, @NotNull Response<BaseResponse<CategoryStoreCategoryDTO>> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call, @NotNull Response<BaseResponse<CategoryStoreCategoryDTO>> response) {
                 Logger.i("Save store category response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     CategoryStoreCategoryDTO savedCategory = response.body().getBody();
                     categories.remove(position);
@@ -280,10 +295,30 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
             }
 
             @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<CategoryStoreCategoryDTO>> call, BaseErrorResponse responseBody) {
+                Logger.e("Save store category API call failure.");
+                showProgress(false);
+            }
+
+            @Override
             public void onFailure(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call, @NotNull Throwable t) {
                 Logger.i("Save store category API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void showProgress(boolean show) {
+        if (show) {
+            if (progressDialog == null) {
+                progressDialog = new ProgressDialog(this);
+            }
+            progressDialog.setMessage(getResources().getString(R.string.progress_please_wait));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } else if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

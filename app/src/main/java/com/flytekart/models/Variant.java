@@ -31,13 +31,13 @@ public class Variant implements Parcelable {
     private String name;
     @SerializedName("price")
     @Expose
-    private float price;
+    private double price;
     @SerializedName("tax")
     @Expose
-    private float tax;
+    private double tax;
     @SerializedName("originalPrice")
     @Expose
-    private float originalPrice;
+    private double originalPrice;
     @SerializedName("active")
     @Expose
     private boolean active;
@@ -107,27 +107,27 @@ public class Variant implements Parcelable {
         this.name = name;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public float getTax() {
+    public double getTax() {
         return tax;
     }
 
-    public void setTax(float tax) {
+    public void setTax(double tax) {
         this.tax = tax;
     }
 
-    public float getOriginalPrice() {
+    public double getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(float originalPrice) {
+    public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
     }
 
@@ -178,9 +178,9 @@ public class Variant implements Parcelable {
         dest.writeParcelable(this.product, flags);
         dest.writeString(this.sku);
         dest.writeString(this.name);
-        dest.writeFloat(this.price);
-        dest.writeFloat(this.tax);
-        dest.writeFloat(this.originalPrice);
+        dest.writeDouble(this.price);
+        dest.writeDouble(this.tax);
+        dest.writeDouble(this.originalPrice);
         dest.writeByte(this.active ? (byte) 1 : (byte) 0);
         dest.writeString(this.createdBy);
         dest.writeString(this.lastUpdatedBy);
@@ -195,9 +195,9 @@ public class Variant implements Parcelable {
         this.product = source.readParcelable(Product.class.getClassLoader());
         this.sku = source.readString();
         this.name = source.readString();
-        this.price = source.readFloat();
-        this.tax = source.readFloat();
-        this.originalPrice = source.readFloat();
+        this.price = source.readDouble();
+        this.tax = source.readDouble();
+        this.originalPrice = source.readDouble();
         this.active = source.readByte() != 0;
         this.createdBy = source.readString();
         this.lastUpdatedBy = source.readString();
@@ -215,9 +215,9 @@ public class Variant implements Parcelable {
         this.product = in.readParcelable(Product.class.getClassLoader());
         this.sku = in.readString();
         this.name = in.readString();
-        this.price = in.readFloat();
-        this.tax = in.readFloat();
-        this.originalPrice = in.readFloat();
+        this.price = in.readDouble();
+        this.tax = in.readDouble();
+        this.originalPrice = in.readDouble();
         this.active = in.readByte() != 0;
         this.createdBy = in.readString();
         this.lastUpdatedBy = in.readString();
