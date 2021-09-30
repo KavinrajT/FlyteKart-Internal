@@ -167,5 +167,7 @@
 
     <!-- Progress string -->
     <string name="progress_please_wait">Please wait</string>
+    <string name="collection_payment">COLLECT PAYMENT</string>
+    <string name="update_order_status">UPDATE ORDER STATUS</string>
 
 </resources>

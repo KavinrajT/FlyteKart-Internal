@@ -26,6 +26,7 @@ public class Constants {
     public static final int EDIT_CATEGORY_ACTIVITY_REQUEST_CODE = 402;
     public static final int ADD_SUB_CATEGORY_ACTIVITY_REQUEST_CODE = 501;
     public static final int CATEGORY_LIST_ACTIVITY_REQUEST_CODE = 601;
+    public static final int EDIT_ORDER_ACTIVITY_REQUEST_CODE = 701;
 
     public static final String API_TOKEN_TAG = "Authorization";
     public static final String LOGIN_TYPE_MAIN_ACCOUNT = "Main Account";

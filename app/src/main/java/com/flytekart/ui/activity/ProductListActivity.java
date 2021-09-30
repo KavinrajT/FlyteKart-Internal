@@ -112,7 +112,8 @@ public class ProductListActivity extends AppCompatActivity {
         getProductsCall.enqueue(new CustomCallback<BaseResponse<List<Product>>>() {
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<Product>>> call, Response<BaseResponse<List<Product>>> response) {
-                Logger.i("Categories list response received.");
+                Logger.i("Products list response received.");
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     products = response.body().getBody();
                     setProductsData();
@@ -126,18 +127,18 @@ public class ProductListActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                Logger.e("Categories List API call response status code : " + response.code());
+                Logger.e("Products List API call response status code : " + response.code());
             }
 
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<List<Product>>> call, BaseErrorResponse responseBody) {
-                Logger.e("Categories List API call failed.");
+                Logger.e("Products List API call failed.");
                 showProgress(false);
             }
 
             @Override
             public void onFailure(@NotNull Call<BaseResponse<List<Product>>> call, @NotNull Throwable t) {
-                Logger.i("Categories List API call failure.");
+                Logger.i("Products List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
@@ -158,7 +159,7 @@ public class ProductListActivity extends AppCompatActivity {
             llNoRecordsFound.setVisibility(View.GONE);
             rvProductList.setVisibility(View.VISIBLE);
 
-            adapter = new ProductsAdapter(products);
+            adapter = new ProductsAdapter(products, category);
             rvProductList.setAdapter(adapter);
         }
     }

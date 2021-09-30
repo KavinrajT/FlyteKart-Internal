@@ -45,15 +45,8 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
     private EditText etProductName;
     private SwitchCompat swIsActive;
     private TextView tvMoreOptionsLabel;
-    private View rlSupportVariants;
-    private SwitchCompat swSupportVariants;
     private TextInputEditText etDescription;
     private View tilDescription;
-    private TextInputEditText etSku;
-    private View tilSku;
-    private View llPrice;
-    private TextInputEditText etPrice;
-    private TextInputEditText etOriginalPrice;
     private Button btnSaveProduct;
     private View rlViewVariants;
     private SharedPreferences sharedPreferences;
@@ -80,15 +73,8 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         etProductName = findViewById(R.id.et_product_name);
         swIsActive = findViewById(R.id.sw_is_active);
         tvMoreOptionsLabel = findViewById(R.id.tv_more_options_label);
-        rlSupportVariants = findViewById(R.id.rl_support_variants);
-        swSupportVariants = findViewById(R.id.sw_support_variants);
         etDescription = findViewById(R.id.et_description);
         tilDescription = findViewById(R.id.til_description);
-        etSku = findViewById(R.id.et_sku);
-        tilSku = findViewById(R.id.til_sku);
-        llPrice = findViewById(R.id.ll_price);
-        etPrice = findViewById(R.id.et_price);
-        etOriginalPrice = findViewById(R.id.et_original_price);
         btnSaveProduct = findViewById(R.id.btn_save_product);
         rlViewVariants = findViewById(R.id.rl_view_variants);
 
@@ -106,14 +92,11 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             setData();
             // TODO Show progress, get data from server and re-setData
             getData();
-            // TODO Get data about variants and display more data
-            getVariantsData();
+            rlViewVariants.setVisibility(View.VISIBLE);
+            //getVariantsData();
         } else {
             getSupportActionBar().setTitle("Create product");
             tvMoreOptionsLabel.setVisibility(View.VISIBLE);
-            rlSupportVariants.setVisibility(View.GONE);
-            tilSku.setVisibility(View.GONE);
-            llPrice.setVisibility(View.GONE);
             rlViewVariants.setVisibility(View.GONE);
         }
     }
@@ -131,9 +114,6 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
 
     private void handleUIWhenProductAvailable() {
         tvMoreOptionsLabel.setVisibility(View.GONE);
-        rlSupportVariants.setVisibility(View.GONE);
-        tilSku.setVisibility(View.GONE);
-        llPrice.setVisibility(View.GONE);
         rlViewVariants.setVisibility(View.GONE);
     }
 
@@ -144,22 +124,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
     }
 
     private void setVariantsData() {
-        if (variants == null || variants.size() == 0) {
-            rlSupportVariants.setVisibility(View.VISIBLE);
-            swSupportVariants.setChecked(false);
-            tilSku.setVisibility(View.VISIBLE);
-            llPrice.setVisibility(View.VISIBLE);
-        } else if (variants.size() == 1) {
-            rlSupportVariants.setVisibility(View.VISIBLE);
-            swSupportVariants.setChecked(false);
-            tilSku.setVisibility(View.VISIBLE);
-            etSku.setText(variants.get(0).getSku());
-            llPrice.setVisibility(View.VISIBLE);
-            etPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variants.get(0).getPrice()));
-            etOriginalPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variants.get(0).getOriginalPrice()));
-        } else { // variants.size() > 1
-            // TODO Display variants button
-            rlSupportVariants.setVisibility(View.GONE);
+        if (variants != null && variants.size() > 0) {
             rlViewVariants.setVisibility(View.VISIBLE);
         }
     }
@@ -218,7 +183,8 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<Variant>>> call, Response<BaseResponse<List<Variant>>> response) {
                 showProgress(false);
                 variants = response.body().getBody();
-                setVariantsData();
+                rlViewVariants.setVisibility(View.VISIBLE);
+                //setVariantsData();
             }
 
             @Override
@@ -280,65 +246,13 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
                 getSupportActionBar().setTitle("Edit product");
                 tvMoreOptionsLabel.setVisibility(View.GONE);
                 setData();
-                // TODO Check if one variant is available. If yes, save the variant
-                // TODO Get data about variants and display more data
-                if ((variants != null && variants.size() == 1) || llPrice.getVisibility() == View.VISIBLE) {
-                    saveVariant();
-                } else {
-                    getVariantsData();
-                }
+                rlViewVariants.setVisibility(View.VISIBLE);
+                //getVariantsData();
             }
 
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<Product>> call, BaseErrorResponse responseBody) {
                 Logger.e("Save product API call  response status code : " + responseBody.getStatusCode());
-                showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void saveVariant() {
-        CreateVariantRequest request = new CreateVariantRequest();
-        if (variants != null && variants.size() == 1) {
-            Variant variant = variants.get(0);
-            request.setId(variant.getId());
-        }
-        request.setProductId(product.getId());
-        request.setName(product.getName());
-        request.setActive(product.isActive());
-        request.setSku(etSku.getText().toString().trim());
-        String priceString = etPrice.getText().toString().trim();
-        if (!priceString.isEmpty()) {
-            request.setPrice(Double.parseDouble(priceString));
-        }
-        String originalPriceString = etOriginalPrice.getText().toString().trim();
-        if (!priceString.isEmpty()) {
-            request.setOriginalPrice(Double.parseDouble(originalPriceString));
-        }
-
-        showProgress(true);
-        Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariant(accessToken, clientId, request);
-        saveVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
-            @Override
-            public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
-                Logger.i("Variant API call failure.");
-                showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFlytekartSuccessResponse(Call<BaseResponse<Variant>> call, Response<BaseResponse<Variant>> response) {
-                showProgress(false);
-                Variant variant = response.body().getBody();
-                variants = new ArrayList<>(1);
-                variants.add(variant);
-                setVariantsData();
-            }
-
-            @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
-                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
             }

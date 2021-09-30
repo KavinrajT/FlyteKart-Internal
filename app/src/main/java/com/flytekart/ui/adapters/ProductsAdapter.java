@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.R;
+import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 
 import java.util.List;
@@ -16,9 +17,11 @@ import java.util.List;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
 
     private List<Product> products;
+    private Category category;
 
-    public ProductsAdapter(List<Product> products) {
+    public ProductsAdapter(List<Product> products, Category category) {
         this.products = products;
+        this.category = category;
     }
 
     @NonNull
@@ -33,6 +36,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = products.get(position);
         holder.tvProductName.setText(product.getName());
+        holder.tvProductCategoryName.setText(category.getName());
     }
 
     @Override

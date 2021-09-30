@@ -18,7 +18,10 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.LoginResponse;
+import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -109,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (usernameOrEmail.isEmpty() || clientId.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
                 } else {
-                    clientLogin(clientId, usernameOrEmail, password);
+                    employeeLogin(clientId, usernameOrEmail, password);
                 }
             }
         });
@@ -122,16 +125,16 @@ public class LoginActivity extends AppCompatActivity {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsernameOrEmail(usernameOrEmail);
         loginRequest.setPassword(password);
-        Call<LoginResponse> loginCall = Flytekart.getApiService().mainLogin(loginRequest);
+        Call<BaseResponse<LoginResponse>> loginCall = Flytekart.getApiService().mainLogin(loginRequest);
         tvSignUp.setEnabled(false);
         showProgress(true);
-        loginCall.enqueue(new Callback<LoginResponse>() {
+        loginCall.enqueue(new CustomCallback<BaseResponse<LoginResponse>>() {
             @Override
-            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Response<BaseResponse<LoginResponse>> response) {
                 Logger.i("Main Login API call response received.");
                 showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse loginResponse = response.body();
+                    LoginResponse loginResponse = response.body().getBody();
                     // Get dropdown data and go to next screen.
                     Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
@@ -143,8 +146,12 @@ public class LoginActivity extends AppCompatActivity {
                     Intent mainIntent = new Intent(LoginActivity.this, MainHomeActivity.class);
                     startActivity(mainIntent);
                     finish();
+                }
+            }
 
-                } else if (response.errorBody() != null) {
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, BaseErrorResponse responseBody) {
+                /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
                                 response.errorBody().string(), ApiCallResponse.class);
@@ -152,12 +159,13 @@ public class LoginActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-                Logger.e("Main Login API response status code : " + response.code());
+                }*/
+                Logger.e("Main Login API response failed");
+                showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Throwable t) {
                 Logger.i("Main Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -165,22 +173,19 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void clientLogin(String clientId, String usernameOrEmail, String password) {
-        /*JsonObject loginJson = new JsonObject();
-        loginJson.addProperty("usernameOrEmail", usernameOrEmail);
-        loginJson.addProperty("password", password);*/
+    private void employeeLogin(String clientId, String usernameOrEmail, String password) {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsernameOrEmail(usernameOrEmail);
         loginRequest.setPassword(password);
         showProgress(true);
-        Call<LoginResponse> loginCall = com.flytekart.Flytekart.getApiService().clientLogin(clientId, loginRequest);
-        loginCall.enqueue(new Callback<LoginResponse>() {
+        Call<BaseResponse<LoginResponse>> loginCall = com.flytekart.Flytekart.getApiService().clientLogin(clientId, loginRequest);
+        loginCall.enqueue(new CustomCallback<BaseResponse<LoginResponse>>() {
             @Override
-            public void onResponse(@NotNull Call<LoginResponse> call, @NotNull Response<LoginResponse> response) {
-                Logger.i("Client Login API call response received.");
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Response<BaseResponse<LoginResponse>> response) {
+                Logger.i("Employee Login API call response received.");
                 showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse loginResponse = response.body();
+                    LoginResponse loginResponse = response.body().getBody();
                     // Get dropdown data and go to next screen.
                     Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
@@ -189,11 +194,16 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
                     editor.putString(Constants.SHARED_PREF_KEY_CLIENT_ID, clientId);
                     editor.apply();
-                    Logger.i("Client Login API call success.");
+                    Logger.i("Employee Login API call success.");
                     Intent mainIntent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(mainIntent);
                     finish();
-                } else if (response.errorBody() != null) {
+                }
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, BaseErrorResponse responseBody) {
+                /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
                                 response.errorBody().string(), ApiCallResponse.class);
@@ -201,13 +211,14 @@ public class LoginActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-                Logger.e("Client Login API response status code : " + response.code());
+                }*/
+                Logger.e("Employee Login API response failed");
+                showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
-                Logger.i("Client Login API call failure.");
+            public void onFailure(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Throwable t) {
+                Logger.i("Employee Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }

@@ -25,12 +25,14 @@ import androidx.appcompat.widget.Toolbar;
 import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Attribute;
+import com.flytekart.models.AttributeValue;
 import com.flytekart.models.AttributeValueDTO;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
 import com.flytekart.models.request.CreateVariantVavRequest;
 import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
+import com.flytekart.models.response.AttributeResponse;
 import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -42,6 +44,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -57,6 +60,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private LinearLayout llAttributeValues;
     private LayoutInflater layoutInflater;
     private ArrayAdapter<String> attributeNameAdapter;
+    private ArrayAdapter<String> attributeValueNameAdapter;
     MaterialAutoCompleteTextView etAttributeName;
     private ProgressDialog progressDialog;
 
@@ -65,7 +69,9 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private Variant variant;
     private Product product;
     private List<VariantAttributeValue> variantAttributeValues;
-    private List<String> attributes;
+    private List<String> attributesStrings;
+    private List<String> attributeValuesStrings;
+    private List<AttributeResponse> attributeResponses;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -86,8 +92,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         Button btnSaveVariant = findViewById(R.id.btn_save_variant);
         View llAddAttributeValues = findViewById(R.id.ll_add_attribute_values);
         llAttributeValues = findViewById(R.id.ll_attribute_values);
-        attributes = new ArrayList<>(5);
-        attributeNameAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attributes);
+        attributesStrings = new ArrayList<>(5);
+        attributeNameAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attributesStrings);
+        attributeValuesStrings = new ArrayList<>(5);
+        attributeValueNameAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attributeValuesStrings);
 
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
@@ -217,7 +225,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_add_attribute_values: {
-                showAttributeDialog(null);
+                getAllAttributeValuesByAttributes();
                 break;
             }
             case R.id.btn_save_variant: {
@@ -230,6 +238,35 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
                 break;
             }
         }
+    }
+
+    private void getAllAttributeValuesByAttributes() {
+        showProgress(true);
+        Call<BaseResponse<List<AttributeResponse>>> getAttributeValuesCall = Flytekart.getApiService().getAllAttributeValues(accessToken, clientId);
+        getAttributeValuesCall.enqueue(new CustomCallback<BaseResponse<List<AttributeResponse>>>() {
+            @Override
+            public void onFailure(Call<BaseResponse<List<AttributeResponse>>> call, Throwable t) {
+                Logger.i("Variant API call failure.");
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<AttributeResponse>>> call,
+                                                   Response<BaseResponse<List<AttributeResponse>>> response) {
+                showProgress(false);
+                attributeResponses = response.body().getBody();
+                showAttributeDialog(null);
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<AttributeResponse>>> call,
+                                                 BaseErrorResponse responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void deleteAttributeValue(AttributeValueDTO dto) {
@@ -306,10 +343,11 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private void showAttributeDialog(View selectedView) {
         View dialogView = layoutInflater.inflate(R.layout.dialog_attribute_value, null);
         etAttributeName = dialogView.findViewById(R.id.et_attribute_name);
-        EditText etAttributeValueName = dialogView.findViewById(R.id.et_attribute_value_name);
+        MaterialAutoCompleteTextView etAttributeValueName = dialogView.findViewById(R.id.et_attribute_value_name);
         etAttributeName.addTextChangedListener(new AttributeNamePrefixListener());
         etAttributeName.setAdapter(attributeNameAdapter);
-        //etAttributeValueName.addTextChangedListener(new AttributeValueNamePrefixListener());
+        etAttributeValueName.addTextChangedListener(new AttributeValueNamePrefixListener());
+        etAttributeValueName.setAdapter(attributeValueNameAdapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
@@ -391,7 +429,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             request.setTax(Double.parseDouble(taxString));
         }
         String originalPriceString = etOriginalPrice.getText().toString().trim();
-        if (!priceString.isEmpty()) {
+        if (!originalPriceString.isEmpty()) {
             request.setOriginalPrice(Double.parseDouble(originalPriceString));
         }
         request.setAttributeValueDTOs(attributeValueDTOs);
@@ -431,30 +469,16 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            currentTest = charSequence.toString();
+            currentTest = charSequence.toString().toLowerCase();
             if (charSequence.length() > 2) {
-                Call<BaseResponse<List<Attribute>>> getAttributesCall = Flytekart.getApiService().getAttributesByPrefix(accessToken, charSequence.toString(), clientId);
-                getAttributesCall.enqueue(new CustomCallback<BaseResponse<List<Attribute>>>() {
-                    @Override
-                    public void onFailure(Call<BaseResponse<List<Attribute>>> call, Throwable t) {
-                        Logger.i("Variant API call failure.");
-                        Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                List<Attribute> matchingAttributes = new ArrayList<>();
+                for (AttributeResponse attributeResponse : attributeResponses) {
+                    if (attributeResponse.getAttribute().getName().toLowerCase()
+                            .startsWith(currentTest)) {
+                        matchingAttributes.add(attributeResponse.getAttribute());
                     }
-
-                    @Override
-                    public void onFlytekartSuccessResponse(Call<BaseResponse<List<Attribute>>> call, Response<BaseResponse<List<Attribute>>> response) {
-                        if (currentTest.equals(charSequence.toString())) {
-                            List<Attribute> attributes = response.body().getBody();
-                            setAttributesToSpinner(attributes);
-                        }
-                    }
-
-                    @Override
-                    public void onFlytekartErrorResponse(Call<BaseResponse<List<Attribute>>> call, BaseErrorResponse responseBody) {
-                        Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
-                        Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }
+                setAttributesToSpinner(matchingAttributes);
             }
         }
 
@@ -469,14 +493,28 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         for (Attribute attribute : attributes) {
             attributeNames.add(attribute.getName());
         }
-        this.attributes.clear();
-        this.attributes.addAll(attributeNames);
+        this.attributesStrings.clear();
+        this.attributesStrings.addAll(attributeNames);
         attributeNameAdapter.clear();
-        attributeNameAdapter.addAll(this.attributes);
+        attributeNameAdapter.addAll(this.attributesStrings);
         attributeNameAdapter.notifyDataSetChanged();
     }
 
+    private void setAttributeValuesToSpinner(List<AttributeValue> attributeValues) {
+        List<String> attributeValueNames = new ArrayList<>(attributeValues.size());
+        for (AttributeValue attributeValue : attributeValues) {
+            attributeValueNames.add(attributeValue.getName());
+        }
+        this.attributeValuesStrings.clear();
+        this.attributeValuesStrings.addAll(attributeValueNames);
+        attributeValueNameAdapter.clear();
+        attributeValueNameAdapter.addAll(this.attributeValuesStrings);
+        attributeValueNameAdapter.notifyDataSetChanged();
+    }
+
     private class AttributeValueNamePrefixListener implements TextWatcher {
+        String currentTest;
+
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -484,7 +522,23 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            currentTest = charSequence.toString().toLowerCase();
+            String attributeName = etAttributeName.getText().toString().trim().toLowerCase();
+            if (charSequence.length() > 2) {
+                for (AttributeResponse attributeResponse: attributeResponses) {
+                    if (attributeResponse.getAttribute().getName().toLowerCase()
+                            .equals(attributeName)) {
+                        List<AttributeValue> matchingAttributeValues = new ArrayList<>();
+                        for (AttributeValue attributeValue : attributeResponse.getAttributeValues()) {
+                            if (attributeValue.getName().toLowerCase()
+                                    .startsWith(currentTest)) {
+                                matchingAttributeValues.add(attributeValue);
+                            }
+                        }
+                        setAttributeValuesToSpinner(matchingAttributeValues);
+                    }
+                }
+            }
         }
 
         @Override

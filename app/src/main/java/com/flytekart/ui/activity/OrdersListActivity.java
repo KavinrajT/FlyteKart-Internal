@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -84,6 +85,17 @@ public class OrdersListActivity extends AppCompatActivity {
         getData();
         setListeners();
         //setData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadMoreData() {
@@ -170,7 +182,7 @@ public class OrdersListActivity extends AppCompatActivity {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int pos = rv.getChildAdapterPosition(child);
-                    onOrderClicked(orderResponses.get(pos));
+                    onOrderClicked(orderResponses.get(pos), pos);
                 }
                 return false;
             }
@@ -191,16 +203,25 @@ public class OrdersListActivity extends AppCompatActivity {
      * Take user to order details screen
      * @param orderResponse
      */
-    private void onOrderClicked(OrderResponse orderResponse) {
+    private void onOrderClicked(OrderResponse orderResponse, int position) {
         Intent itemIntent = new Intent(this, OrderDetailsActivity.class);
         itemIntent.putExtra(Constants.ORDER, orderResponse);
-        startActivity(itemIntent);
+        itemIntent.putExtra(Constants.POSITION, position);
+        startActivityForResult(itemIntent, Constants.EDIT_ORDER_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //setData();
+        if (requestCode == Constants.EDIT_ORDER_ACTIVITY_REQUEST_CODE) {
+            if (data != null) {
+                int position = data.getIntExtra(Constants.POSITION, 0);
+                OrderResponse orderResponse = data.getParcelableExtra(Constants.ORDER);
+                orderResponses.remove(position);
+                orderResponses.add(position, orderResponse);
+                adapter.notifyItemChanged(position);
+            }
+        }
     }
 
     public void showProgress(boolean show) {

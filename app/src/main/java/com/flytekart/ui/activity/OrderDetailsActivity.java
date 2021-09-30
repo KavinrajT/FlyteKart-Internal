@@ -23,6 +23,7 @@ import com.flytekart.models.Address;
 import com.flytekart.models.OrderItem;
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Payment;
+import com.flytekart.models.request.CODPaymentRequest;
 import com.flytekart.models.request.UpdateOrderStatusRequest;
 import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
@@ -41,6 +42,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     private OrderResponse orderResponse;
     private String accessToken;
     private String clientId;
+    private int position;
 
     private TextView tvName;
     private TextView tvEmailId;
@@ -89,6 +91,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        position = getIntent().getIntExtra(Constants.POSITION, 0);
 
         getData();
     }
@@ -133,7 +136,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         tvDeliveryAddress.setText(builder.toString());
     }
 
-    private void setPaidAndBalanceToUI() {
+    private double getPaidAmount() {
         double paid = 0;
         if (orderResponse.getPayments() != null) {
             for (Payment payment : orderResponse.getPayments()) {
@@ -142,9 +145,21 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         }
+        return paid;
+    }
+
+    private void setPaidAndBalanceToUI() {
+        double paid = getPaidAmount();
         double balance = orderResponse.getOrderTotal().getTotal() - paid;
         tvPaid.setText(String.valueOf(paid));
         tvBalance.setText(String.valueOf(balance));
+
+        if (balance > 0 &&
+                orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
+            tvUpdateOrderStatus.setText(R.string.collection_payment);
+        } else {
+            tvUpdateOrderStatus.setText(R.string.update_order_status);
+        }
     }
 
     private void setOrderDetails() {
@@ -161,9 +176,9 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
 
             tvOrderStatus.setText(Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
             // We shouldn't allow any edits on delivered(except if returns are there) or in-progress orders.
-            if (orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase("DELIVERED") ||
-                    orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase("IN_PROGRESS") ||
-                    orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase("CANCELED")) {
+            if (orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.DELIVERED) ||
+                    orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.IN_PROGRESS) ||
+                    orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.CANCELED)) {
                 tvUpdateOrderStatus.setVisibility(View.GONE);
             } else {
                 tvUpdateOrderStatus.setVisibility(View.VISIBLE);
@@ -213,39 +228,63 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent data = new Intent();
+        data.putExtra(Constants.POSITION, position);
+        data.putExtra(Constants.ORDER, orderResponse);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_update_order_status: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Update order status");
-                String message = "Do you want to update the order status from %1$s to %2$s?";
-                message = String.format(message,
-                        Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()),
-                        Utilities.getNextFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
+                double paid = getPaidAmount();
+                double balance = orderResponse.getOrderTotal().getTotal() - paid;
+                String message;
+                if (balance > 0 && orderResponse.getOrder().getOrderStatus().getName()
+                        .equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
+                    message = "Do you want collect all payment amount?";
+                } else {
+                    message = "Do you want to update the order status from %1$s to %2$s?";
+                    message = String.format(message,
+                            Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()),
+                            Utilities.getNextFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
+                }
                 builder.setMessage(message);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (Utilities.getNextOrderStatus(
                                 orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase("ACCEPTED")) {
+                                .equalsIgnoreCase(Constants.OrderStatus.ACCEPTED)) {
                             acceptOrder();
                         } else if (Utilities.getNextOrderStatus(
                                 orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase("PROCESSING")) {
+                                .equalsIgnoreCase(Constants.OrderStatus.PROCESSING)) {
                             processOrder();
                         } else if (Utilities.getNextOrderStatus(
                                 orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase("PROCESSED")) {
+                                .equalsIgnoreCase(Constants.OrderStatus.PROCESSED)) {
                             processedOrder();
                         } else if (Utilities.getNextOrderStatus(
                                 orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase("OUT_FOR_DELIVERY")) {
+                                .equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
                             outForDeliveryOrder();
                         } else if (Utilities.getNextOrderStatus(
                                 orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase("DELIVERED")) {
-                            deliverOrder();
+                                .equalsIgnoreCase(Constants.OrderStatus.DELIVERED)) {
+                            double paid = getPaidAmount();
+                            double balance = orderResponse.getOrderTotal().getTotal() - paid;
+                            if (balance <= 0) {
+                                deliverOrder();
+                            } else {
+                                collectPayment(balance);
+                            }
                         }
                     }
                 });
@@ -391,6 +430,38 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         showProgress(true);
         Call<BaseResponse<OrderResponse>> processOrderCall = Flytekart.getApiService().deliverOrder(accessToken, clientId, request);
         processOrderCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
+            @Override
+            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+                Logger.e("Accept order API call failure.");
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<OrderResponse>> call, Response<BaseResponse<OrderResponse>> response) {
+                Logger.e("Accept order API success");
+                showProgress(false);
+                orderResponse = response.body().getBody();
+                setOrderDetails();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void collectPayment(double balance) {
+        CODPaymentRequest request = new CODPaymentRequest();
+        request.setOrderId(orderResponse.getOrder().getId());
+        request.setPaymentMode("COD");
+        request.setAmount(balance);
+        showProgress(true);
+        Call<BaseResponse<OrderResponse>> collectCODPaymentCall = Flytekart.getApiService().collectCODPayment(accessToken, clientId, request);
+        collectCODPaymentCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
             public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
                 Logger.e("Accept order API call failure.");

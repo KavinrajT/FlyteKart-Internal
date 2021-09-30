@@ -13,6 +13,7 @@ import com.flytekart.models.User;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
 import com.flytekart.models.VariantStoreVariantDTO;
+import com.flytekart.models.request.CODPaymentRequest;
 import com.flytekart.models.request.CreateProductRequest;
 import com.flytekart.models.request.CreateStoreCategoryRequest;
 import com.flytekart.models.request.CreateStoreProductRequest;
@@ -24,6 +25,7 @@ import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.request.UpdateOrderStatusRequest;
 import com.flytekart.models.response.ApiCallResponse;
+import com.flytekart.models.response.AttributeResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.LoginResponse;
 import com.flytekart.utils.Constants;
@@ -46,11 +48,11 @@ public interface ApiService {
             @Body User user);
 
     @POST("/api/auth/signin/")
-    Call<LoginResponse> mainLogin(
+    Call<BaseResponse<LoginResponse>> mainLogin(
             @Body LoginRequest loginRequest);
 
     @POST("/api/auth/employeesignin")
-    Call<LoginResponse> clientLogin(
+    Call<BaseResponse<LoginResponse>> clientLogin(
             @Query("clientId") String clientId,
             @Body LoginRequest loginRequest);
 
@@ -189,6 +191,16 @@ public interface ApiService {
             @Query("prefix") String prefix,
             @Query("clientId") String clientId);
 
+    @GET("/api/attributes/")
+    Call<BaseResponse<List<Attribute>>> getAllAttributes(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId);
+
+    @GET("/api/attributeValues/")
+    Call<BaseResponse<List<AttributeResponse>>> getAllAttributeValues(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId);
+
     @GET("/api/attributeValues/getByAttributeId/{attributeId}")
     Call<BaseResponse<List<Attribute>>> getAttributeValuesByPrefix(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
@@ -287,5 +299,11 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body UpdateOrderStatusRequest request);
+
+    @POST("/api/payments/collectCODPayment")
+    Call<BaseResponse<OrderResponse>> collectCODPayment(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CODPaymentRequest request);
 }
 

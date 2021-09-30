@@ -278,7 +278,7 @@
         android:gravity="center"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="UPDATE ORDER STATUS"
+        android:text="@string/update_order_status"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/white"
         android:visibility="gone" />
