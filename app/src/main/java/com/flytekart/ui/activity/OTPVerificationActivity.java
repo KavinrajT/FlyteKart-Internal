@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.request.LoginRequest;
-import com.flytekart.models.request.SendOTPRequest;
+import com.flytekart.models.request.VerifyOTPRequest;
 import com.flytekart.models.response.BaseErrorResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.LoginResponse;
@@ -33,39 +33,36 @@ import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class OTPVerificationActivity extends AppCompatActivity {
 
     private TextInputEditText etClientCode;
-    private TextInputEditText etPhoneNumber;
+    private TextInputEditText etEmail;
     private TextInputEditText etPassword;
     private Spinner spLoginType;
     private TextView tvSignUp;
     private TextView tvLogin;
     private TextInputLayout tilClientCode;
     private ProgressDialog progressDialog;
-    private SharedPreferences sharedPreferences;
 
-    private String loginType;
+    String loginType;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_otp_verification);
 
         spLoginType = findViewById(R.id.sp_login_type);
         etClientCode = findViewById(R.id.et_client_code);
         tilClientCode = findViewById(R.id.til_client_code);
-        etPhoneNumber = findViewById(R.id.et_phone_number);
+        etEmail = findViewById(R.id.et_phone_number);
         etPassword = findViewById(R.id.et_password);
         tvSignUp = findViewById(R.id.tv_sign_up);
         tvLogin = findViewById(R.id.tv_login);
-
-        sharedPreferences = Utilities.getSharedPreferences();
-        String clientIdSP = sharedPreferences.getString(Constants.CLIENT_ID, Constants.EMPTY);
-        String usernameSP = sharedPreferences.getString(Constants.USERNAME, Constants.EMPTY);
-        etClientCode.setText(clientIdSP);
-        etPhoneNumber.setText(usernameSP);
+        String clientIdExtra = getIntent().getStringExtra("clientId");
+        String usernameExtra = getIntent().getStringExtra("username");
+        etClientCode.setText(clientIdExtra);
+        etEmail.setText(usernameExtra);
 
         ArrayAdapter<CharSequence> loginSpAdapter = ArrayAdapter.createFromResource(this,
                 R.array.login_type_array, android.R.layout.simple_spinner_item);
@@ -93,16 +90,17 @@ public class LoginActivity extends AppCompatActivity {
         // tilClientCode.setVisibility(View.GONE);
 
         tvSignUp.setOnClickListener(view -> {
-            Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+            Intent signUpIntent = new Intent(OTPVerificationActivity.this, SignUpActivity.class);
             startActivity(signUpIntent);
             finish();
         });
 
         tvLogin.setOnClickListener(view -> {
-            String usernameOrEmail = etPhoneNumber.getText().toString().trim();
+            String usernameOrEmail = etEmail.getText().toString().trim();
             String clientId = etClientCode.getText().toString().trim();
+            String otp = etPassword.getText().toString().trim();
 
-            if (loginType == null) {
+            if (loginType == null || otp.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
             } /*else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
                 if (usernameOrEmail.isEmpty() || password.isEmpty()) {
@@ -114,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (usernameOrEmail.isEmpty() || clientId.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
                 } else {
-                    employeeLogin(clientId, usernameOrEmail);
+                    employeeLogin(clientId, usernameOrEmail, otp);
                 }
             }
         });
@@ -145,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
                     editor.apply();
                     Logger.i("Main Login API call success.");
-                    Intent mainIntent = new Intent(LoginActivity.this, MainHomeActivity.class);
+                    Intent mainIntent = new Intent(OTPVerificationActivity.this, MainHomeActivity.class);
                     startActivity(mainIntent);
                     finish();
                 }
@@ -175,33 +173,36 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void employeeLogin(String clientId, String usernameOrEmail) {
-        SendOTPRequest request = new SendOTPRequest();
+    private void employeeLogin(String clientId, String usernameOrEmail, String otp) {
+        VerifyOTPRequest request = new VerifyOTPRequest();
         request.setUsername(usernameOrEmail);
+        request.setOtp(otp);
         showProgress(true);
-        Call<BaseResponse<String>> loginCall = com.flytekart.Flytekart.getApiService().sendClientOTP(clientId, request);
-        loginCall.enqueue(new CustomCallback<BaseResponse<String>>() {
+        Call<BaseResponse<LoginResponse>> loginCall = Flytekart.getApiService().verifyClientOTP(clientId, request);
+        loginCall.enqueue(new CustomCallback<BaseResponse<LoginResponse>>() {
             @Override
-            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<String>> call, @NotNull Response<BaseResponse<String>> response) {
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Response<BaseResponse<LoginResponse>> response) {
                 Logger.i("Employee Login API call response received.");
                 showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    String responseString = response.body().getBody();
+                    LoginResponse loginResponse = response.body().getBody();
                     // Get dropdown data and go to next screen.
-                    Toast.makeText(getApplicationContext(), responseString, Toast.LENGTH_SHORT).show();
-                    sharedPreferences.edit().putString(Constants.CLIENT_ID, clientId).apply();
-                    sharedPreferences.edit().putString(Constants.USERNAME, usernameOrEmail).apply();
-                    Logger.i("Employee send OTP API call success.");
-                    Intent otpVerificationIntent = new Intent(LoginActivity.this,
-                            OTPVerificationActivity.class);
-                    otpVerificationIntent.putExtra(Constants.CLIENT_ID, clientId);
-                    otpVerificationIntent.putExtra(Constants.USERNAME, usernameOrEmail);
-                    startActivity(otpVerificationIntent);
+                    Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
+                    editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
+                    editor.putString(Constants.SHARED_PREF_KEY_CLIENT_ID, clientId);
+                    editor.apply();
+                    Logger.i("Employee Login API call success.");
+                    Intent mainIntent = new Intent(OTPVerificationActivity.this, HomeActivity.class);
+                    startActivity(mainIntent);
+                    finish();
                 }
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<String>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, BaseErrorResponse responseBody) {
                 /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
@@ -216,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<String>> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Throwable t) {
                 Logger.i("Employee Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

@@ -2,8 +2,11 @@
     <string name="app_name">Flytekart</string>
 
     <string name="password">Password</string>
+    <string name="otp">OTP</string>
     <string name="cnf_password">Confirm password</string>
     <string name="sign_in">Sign In</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="verify">Verify</string>
     <string name="sign_up">Sign Up</string>
     <string name="email">Email</string>
     <string name="name">Name</string>

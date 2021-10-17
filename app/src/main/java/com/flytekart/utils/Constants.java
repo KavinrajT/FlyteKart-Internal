@@ -46,6 +46,8 @@ public class Constants {
     public static final String ORDER = "order";
     public static final String ADDRESS = "address";
     public static final String CURRENCY_RUPEE_PREFIX = "Rs";
+    public static final String CLIENT_ID = "clientId";
+    public static final String USERNAME = "username";
 
     public static final int DEFAULT_PAGE_SIZE = 10;
 

@@ -23,7 +23,9 @@ import com.flytekart.models.request.CreateVariantRequest;
 import com.flytekart.models.request.CreateVariantVavRequest;
 import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.request.LoginRequest;
+import com.flytekart.models.request.SendOTPRequest;
 import com.flytekart.models.request.UpdateOrderStatusRequest;
+import com.flytekart.models.request.VerifyOTPRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.AttributeResponse;
 import com.flytekart.models.response.BaseResponse;
@@ -43,9 +45,9 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    @POST("/api/auth/signup/")
+    /*@POST("/api/auth/signup/")
     Call<ApiCallResponse> signUp(
-            @Body User user);
+            @Body User user);*/
 
     @POST("/api/auth/signin/")
     Call<BaseResponse<LoginResponse>> mainLogin(
@@ -55,6 +57,16 @@ public interface ApiService {
     Call<BaseResponse<LoginResponse>> clientLogin(
             @Query("clientId") String clientId,
             @Body LoginRequest loginRequest);
+
+    @POST("/api/auth/employeeotplogin")
+    Call<BaseResponse<String>> sendClientOTP(
+            @Query("clientId") String clientId,
+            @Body SendOTPRequest request);
+
+    @POST("/api/auth/employeeotpverify")
+    Call<BaseResponse<LoginResponse>> verifyClientOTP(
+            @Query("clientId") String clientId,
+            @Body VerifyOTPRequest request);
 
     @POST("/api/auth/changePassword")
     Call<ApiCallResponse> changePasswordMainUser(

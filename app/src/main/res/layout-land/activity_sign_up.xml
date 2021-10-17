@@ -37,20 +37,20 @@
             android:id="@+id/iv_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/til_email"
-            android:layout_alignBottom="@id/til_email"
+            android:layout_alignTop="@id/til_phone_number"
+            android:layout_alignBottom="@id/til_phone_number"
             android:padding="@dimen/padding_15"
             android:src="@drawable/ic_username" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_email"
+            android:id="@+id/til_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_email"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_email"
+                android:id="@+id/et_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -66,7 +66,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/til_email"
+            android:layout_below="@id/til_phone_number"
             android:background="@color/grey_light" />
 
         <ImageView

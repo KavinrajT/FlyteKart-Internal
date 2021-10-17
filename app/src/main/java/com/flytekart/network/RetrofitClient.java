@@ -14,7 +14,8 @@ public class RetrofitClient {
 
     // Add base URL
     //private static final String BASE_URL = "https://aqueous-depths-69529.herokuapp.com/";
-    private static final String BASE_URL = "https://0e38-117-208-136-242.ngrok.io/";
+    private static final String BASE_URL = "https://2ea0-117-195-86-225.ngrok.io/";
+    //private static final String BASE_URL = "https://flytekart-production.herokuapp.com/";
     private ApiService apiService;
 
     private final Gson gson;

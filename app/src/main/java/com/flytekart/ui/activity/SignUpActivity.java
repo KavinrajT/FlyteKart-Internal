@@ -9,21 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.User;
-import com.flytekart.utils.Logger;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -45,7 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         etName = findViewById(R.id.et_name);
         etUserName = findViewById(R.id.et_username);
-        etEmail = findViewById(R.id.et_email);
+        etEmail = findViewById(R.id.et_phone_number);
         etPhoneNumber = findViewById(R.id.et_phone_number);
         etPassword = findViewById(R.id.et_password);
         etConfirmPassword = findViewById(R.id.et_cnf_password);
@@ -73,12 +60,12 @@ public class SignUpActivity extends AppCompatActivity {
             } else if (!TextUtils.equals(password, cnfPassword)) {
                 Toast.makeText(getApplicationContext(), R.string.confirm_password_correctly, Toast.LENGTH_SHORT).show();
             } else {
-                signUp(name, username, email, phoneNumber, password);
+                //signUp(name, username, email, phoneNumber, password);
             }
         });
     }
 
-    private void signUp(String name, String username, String email, String phoneNumber, String password) {
+    /*private void signUp(String name, String username, String email, String phoneNumber, String password) {
         User user = new User(name, username, email, phoneNumber, password);
         Call<ApiCallResponse> signUpCall = Flytekart.getApiService().signUp(user);
         tvSignUp.setEnabled(false);
@@ -119,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
     public void showProgress(boolean show) {
         if (show) {
             if (progressDialog == null) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/download" />
+        android:src="@drawable/download"
+        tools:ignore="ContentDescription" />
 
     <View
         android:id="@+id/background_image_overlay"
@@ -29,33 +31,65 @@
         android:background="@color/white"
         android:isScrollContainer="true"
         android:paddingStart="15dp"
-        android:paddingTop="5dp"
+        android:paddingTop="15dp"
         android:paddingEnd="15dp"
         android:paddingBottom="5dp">
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/iv_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/til_email"
             android:layout_alignBottom="@id/til_email"
             android:padding="@dimen/padding_15"
-            android:src="@drawable/ic_username" />
+            android:src="@drawable/ic_username" />-->
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_email"
+        <LinearLayout
+            android:id="@+id/ll_account_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/iv_email"
-            android:layout_toRightOf="@id/iv_email"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_account_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:padding="15dp"
+                android:text="@string/account"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/sp_login_type"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/ll_account_type"
+            android:background="@color/grey_light"
+            android:visibility="gone" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_email"
+                android:id="@+id/et_client_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="@string/email"
+                android:enabled="false"
+                android:hint="@string/client_code"
                 android:inputType="text"
                 android:paddingStart="@dimen/padding_15"
                 android:paddingTop="@dimen/padding_15"
@@ -64,28 +98,88 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/divider_2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/til_email"
+            android:layout_below="@id/til_client_code"
             android:background="@color/grey_light" />
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/ll_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider_2"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_country_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_country_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/padding_15"
+                    android:paddingTop="@dimen/padding_15"
+                    android:paddingEnd="@dimen/padding_15"
+                    android:paddingBottom="@dimen/padding_15"
+                    android:text="+91" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_phone_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_phone_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:hint="@string/phone_number"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:paddingStart="@dimen/padding_15"
+                    android:paddingTop="@dimen/padding_15"
+                    android:paddingEnd="@dimen/padding_15"
+                    android:paddingBottom="@dimen/padding_15" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider_3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/ll_phone_number"
+            android:background="@color/grey_light" />
+
+        <!--<ImageView
             android:id="@+id/iv_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/til_password"
             android:layout_alignBottom="@+id/til_password"
             android:padding="@dimen/padding_15"
-            android:src="@drawable/ic_password" />
+            android:src="@drawable/ic_password" />-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider"
-            android:layout_toEndOf="@id/iv_email"
-            android:layout_toRightOf="@id/iv_email"
+            android:layout_below="@id/divider_3"
             app:hintEnabled="false"
             app:passwordToggleTint="@color/dark_grey">
 
@@ -94,8 +188,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="@string/password"
-                android:inputType="textPassword"
+                android:hint="@string/otp"
+                android:inputType="numberPassword"
+                android:maxLength="6"
                 android:padding="@dimen/padding_15" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +202,7 @@
             android:background="@drawable/selector_red_button"
             android:gravity="center"
             android:padding="@dimen/padding_15"
-            android:text="@string/sign_in"
+            android:text="@string/verify"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -123,7 +218,8 @@
             android:text="@string/str_forgot_password"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
@@ -142,6 +238,7 @@
         android:padding="@dimen/padding_15"
         android:text="@string/str_do_not_have_an_account"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="invisible" />
 
 </RelativeLayout>
