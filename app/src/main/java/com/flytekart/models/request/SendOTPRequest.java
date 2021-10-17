@@ -5,15 +5,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class SendOTPRequest {
 
-    @SerializedName("username")
+    @SerializedName("phoneNumber")
     @Expose
-    private String username;
+    private String phoneNumber;
 
-    public String getUsername() {
-        return username;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

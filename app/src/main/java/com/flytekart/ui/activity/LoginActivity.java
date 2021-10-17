@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void employeeLogin(String clientId, String usernameOrEmail) {
         SendOTPRequest request = new SendOTPRequest();
-        request.setUsername(usernameOrEmail);
+        request.setPhoneNumber(usernameOrEmail);
         showProgress(true);
         Call<BaseResponse<String>> loginCall = com.flytekart.Flytekart.getApiService().sendClientOTP(clientId, request);
         loginCall.enqueue(new CustomCallback<BaseResponse<String>>() {
