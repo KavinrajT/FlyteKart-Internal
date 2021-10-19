@@ -18,14 +18,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.AttributeValueDTO;
 import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.request.CreateProductRequest;
-import com.flytekart.models.request.CreateVariantRequest;
-import com.flytekart.models.request.CreateVariantVavRequest;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
@@ -33,7 +30,6 @@ import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -146,7 +142,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<Product>> getStoresCall = Flytekart.getApiService().getProductById(accessToken, product.getId(), clientId);
         getStoresCall.enqueue(new CustomCallback<BaseResponse<Product>>() {
             @Override
-            public void onFailure(Call<BaseResponse<Product>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<Product>> call) {
                 Logger.i("Product API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -160,10 +156,10 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Product>> call, BaseErrorResponse responseBody) {
-                Logger.e("Product API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<Product>> call, APIError responseBody) {
+                Logger.e("Product API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -173,7 +169,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<List<Variant>>> getStoresCall = Flytekart.getApiService().getVariantsByProductId(accessToken, product.getId(), clientId);
         getStoresCall.enqueue(new CustomCallback<BaseResponse<List<Variant>>>() {
             @Override
-            public void onFailure(Call<BaseResponse<List<Variant>>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<Variant>>> call) {
                 Logger.i("Variants API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -188,10 +184,10 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<Variant>>> call, BaseErrorResponse responseBody) {
-                Logger.e("Variants API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Variant>>> call, APIError responseBody) {
+                Logger.e("Variants API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -233,7 +229,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<Product>> saveProductCall = Flytekart.getApiService().saveProduct(accessToken, clientId, request);
         saveProductCall.enqueue(new CustomCallback<BaseResponse<Product>>() {
             @Override
-            public void onFailure(Call<BaseResponse<Product>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<Product>> call) {
                 Logger.i("Save product API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -251,10 +247,10 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Product>> call, BaseErrorResponse responseBody) {
-                Logger.e("Save product API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<Product>> call, APIError responseBody) {
+                Logger.e("Save product API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

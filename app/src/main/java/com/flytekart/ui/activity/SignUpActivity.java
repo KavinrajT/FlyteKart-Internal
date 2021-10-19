@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<ApiCallResponse> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<ApiCallResponse> call) {
                 Logger.i("SignUp API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

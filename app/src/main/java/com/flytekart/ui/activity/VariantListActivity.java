@@ -23,11 +23,10 @@ import com.flytekart.R;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.VariantsAdapter;
-import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -39,7 +38,6 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VariantListActivity extends AppCompatActivity {
@@ -115,27 +113,18 @@ public class VariantListActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     variants = response.body().getBody();
                     setVariantsData();
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Variants List API call response status code : " + response.code());
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<Variant>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Variant>>> call, APIError responseBody) {
                 Logger.i("Variants list API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<Variant>>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<Variant>>> call) {
                 Logger.i("Variants List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +26,7 @@ import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.request.CreateStoreCategoryRequest;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
@@ -42,7 +41,6 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StoreCategoryListActivity extends AppCompatActivity implements CategoryStoreCategoriesAdapter.CategoryClickListener {
@@ -129,28 +127,19 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
                 if (response.isSuccessful() && response.body() != null) {
                     categories = response.body().getBody();
                     setCategoriesData();
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Store categories List API call response status code : " + response.code());
                 //populateFragment();
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, APIError responseBody) {
                 Logger.e("Store categories List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call) {
                 Logger.i("Store categories List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -281,27 +270,18 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
                     categories.remove(position);
                     categories.add(position, savedCategory);
                     adapter.notifyItemChanged(position);
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Save store category API call response status code : " + response.code());
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<CategoryStoreCategoryDTO>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<CategoryStoreCategoryDTO>> call, APIError responseBody) {
                 Logger.e("Save store category API call failure.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call) {
                 Logger.i("Save store category API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

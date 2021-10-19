@@ -9,14 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
@@ -111,7 +110,7 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
         Call<BaseResponse<Category>> saveCategoryCall = Flytekart.getApiService().saveCategory(accessToken, clientId, category);
         saveCategoryCall.enqueue(new CustomCallback<BaseResponse<Category>>() {
             @Override
-            public void onFailure(Call<BaseResponse<Category>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<Category>> call) {
                 Logger.i("Category API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -130,10 +129,10 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Category>> call, BaseErrorResponse responseBody) {
-                Logger.e("Category save API call response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<Category>> call, APIError responseBody) {
+                Logger.e("Category save API call response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

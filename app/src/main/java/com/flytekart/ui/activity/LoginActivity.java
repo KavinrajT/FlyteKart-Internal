@@ -18,7 +18,7 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.request.SendOTPRequest;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.LoginResponse;
 import com.flytekart.network.CustomCallback;
@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, APIError responseBody) {
                 /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<LoginResponse>> call) {
                 Logger.i("Main Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<String>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<String>> call, APIError responseBody) {
                 /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
@@ -213,10 +213,15 @@ public class LoginActivity extends AppCompatActivity {
                 }*/
                 Logger.e("Employee Login API response failed");
                 showProgress(false);
+                if (responseBody != null && responseBody.getMessage() != null) {
+                    Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<String>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<String>> call) {
                 Logger.i("Employee Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

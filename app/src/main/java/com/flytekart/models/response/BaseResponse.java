@@ -12,9 +12,6 @@ public class BaseResponse<T> {
     @SerializedName("body")
     private T body;
 
-    @SerializedName("apiError")
-    private APIError apiError;
-
     public int getStatusCode() {
         return statusCode;
     }
@@ -29,13 +26,5 @@ public class BaseResponse<T> {
 
     public void setBody(T body) {
         this.body = body;
-    }
-
-    public APIError getApiError() {
-        return apiError;
-    }
-
-    public void setApiError(APIError apiError) {
-        this.apiError = apiError;
     }
 }

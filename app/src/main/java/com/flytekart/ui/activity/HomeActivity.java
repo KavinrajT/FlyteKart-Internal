@@ -21,7 +21,7 @@ import com.flytekart.R;
 import com.flytekart.models.MenuModel;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.MenuExpandableListAdapter;
@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeActivity extends BaseActivity {
@@ -107,7 +106,6 @@ public class HomeActivity extends BaseActivity {
                 SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
                 editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
                 editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
-                editor.remove(Constants.SHARED_PREF_KEY_CLIENT_ID);
                 editor.apply();
                 finish();
                 // TODO Open login screen
@@ -211,13 +209,13 @@ public class HomeActivity extends BaseActivity {
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Organisation>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<Organisation>> call, APIError responseBody) {
                 Logger.e("Organisation List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<Organisation>> call) {
                 Logger.i("Organisation List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class APIError {
 
-    @SerializedName("errorCode")
-    private String errorCode;
+    @SerializedName("status")
+    private int status;
 
     @SerializedName("message")
     private String message;
 
-    public String getErrorCode() {
-        return errorCode;
+    public int getStatus() {
+        return status;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getMessage() {

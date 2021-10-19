@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.R;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
@@ -71,13 +70,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<ApiCallResponse> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<ApiCallResponse> call, APIError responseBody) {
                 Logger.e("Organisation List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<ApiCallResponse> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<ApiCallResponse> call) {
                 Logger.i("Organisation List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

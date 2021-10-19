@@ -1,7 +1,6 @@
 package com.flytekart.ui.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,10 +23,8 @@ import com.flytekart.R;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.VariantStoreVariantDTO;
-import com.flytekart.models.request.CreateStoreProductRequest;
-import com.flytekart.models.request.CreateStoreVariantRequest;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.VariantStoreVariantsAdapter;
@@ -43,7 +39,6 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StoreVariantListActivity extends AppCompatActivity {
@@ -132,28 +127,19 @@ public class StoreVariantListActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     variants = response.body().getBody();
                     setVariantsData();
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Store variants List API call response status code : " + response.code());
                 //populateFragment();
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<VariantStoreVariantDTO>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<VariantStoreVariantDTO>>> call, APIError responseBody) {
                 Logger.e("Store variants List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<VariantStoreVariantDTO>>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<VariantStoreVariantDTO>>> call) {
                 Logger.i("Store variants List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,16 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.Category;
 import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.request.CreateStoreProductRequest;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
-import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
 import com.flytekart.ui.adapters.ProductStoreProductsAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -45,7 +42,6 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StoreProductListActivity extends AppCompatActivity implements ProductStoreProductsAdapter.ProductClickListener {
@@ -134,27 +130,18 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
                 if (response.isSuccessful() && response.body() != null) {
                     products = response.body().getBody();
                     setProductsData();
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Store products List API call response status code : " + response.code());
                 //populateFragment();
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<ProductStoreProductDTO>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<ProductStoreProductDTO>>> call, APIError responseBody) {
                 Logger.i("Store products list call failed.");
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call) {
                 Logger.i("Store products List API call failure.");
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
@@ -284,27 +271,18 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
                     products.remove(position);
                     products.add(position, savedCategory);
                     adapter.notifyItemChanged(position);
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Save store product API call response status code : " + response.code());
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<ProductStoreProductDTO>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<ProductStoreProductDTO>> call, APIError responseBody) {
                 Logger.e("Save store product API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call) {
                 Logger.i("Save store product API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

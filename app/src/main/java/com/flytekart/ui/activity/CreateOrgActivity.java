@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.R;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.Organisation;
 import com.flytekart.network.CustomCallback;
@@ -33,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateOrgActivity extends AppCompatActivity {
@@ -179,31 +178,19 @@ public class CreateOrgActivity extends AppCompatActivity {
                     BaseResponse<Organisation> orgResponse = response.body();
                     // Get dropdown data and go to next screen.
                     Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
-                    if (orgResponse.getApiError() != null) {
-                        Logger.i("create Org API call success.");
-                        finish();
-                    }
-                } else if (response.errorBody() != null) {
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("create Org API call  response status code : " + response.code());
                 // populateFragment();
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Organisation>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<Organisation>> call, APIError responseBody) {
                 Logger.e("Organisation List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<Organisation>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<Organisation>> call) {
                 Logger.i("Organisation List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

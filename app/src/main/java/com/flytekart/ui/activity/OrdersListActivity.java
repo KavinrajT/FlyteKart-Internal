@@ -22,12 +22,11 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Store;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.OrdersAdapter;
 import com.flytekart.ui.views.EndlessRecyclerOnScrollListener;
-import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -114,7 +113,7 @@ public class OrdersListActivity extends AppCompatActivity {
         Call<BaseResponse<List<OrderResponse>>> getOrdersByStoreCall = Flytekart.getApiService().getOrdersByStoreId(accessToken, store.getId(), clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
         getOrdersByStoreCall.enqueue(new CustomCallback<BaseResponse<List<OrderResponse>>>() {
             @Override
-            public void onFailure(Call<BaseResponse<List<OrderResponse>>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<OrderResponse>>> call) {
                 isLoadingOrders = false;
                 Logger.e("Store List API call failure.");
                 showProgress(false);
@@ -131,11 +130,11 @@ public class OrdersListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<OrderResponse>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<OrderResponse>>> call, APIError responseBody) {
                 isLoadingOrders = false;
-                Logger.e("Order List API call  response status code : " + responseBody.getStatusCode());
+                Logger.e("Order List API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -24,16 +23,14 @@ import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.ProductsAdapter;
-import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +38,6 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductListActivity extends AppCompatActivity {
@@ -117,27 +113,18 @@ public class ProductListActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     products = response.body().getBody();
                     setProductsData();
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Products List API call response status code : " + response.code());
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<Product>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Product>>> call, APIError responseBody) {
                 Logger.e("Products List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<Product>>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<Product>>> call) {
                 Logger.i("Products List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

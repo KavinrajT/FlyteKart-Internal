@@ -19,11 +19,9 @@ import com.flytekart.R;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.StoreVariant;
-import com.flytekart.models.Variant;
 import com.flytekart.models.VariantStoreVariantDTO;
 import com.flytekart.models.request.CreateStoreVariantRequest;
-import com.flytekart.models.request.CreateVariantVavRequest;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
@@ -133,7 +131,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
             Call<BaseResponse<VariantStoreVariantDTO>> getStoreVariantCall = Flytekart.getApiService().getStoreVariant(accessToken, variantStoreVariantDTO.getStoreVariantId(), clientId);
             getStoreVariantCall.enqueue(new CustomCallback<BaseResponse<VariantStoreVariantDTO>>() {
                 @Override
-                public void onFailure(Call<BaseResponse<VariantStoreVariantDTO>> call, Throwable t) {
+                public void onFlytekartGenericErrorResponse(Call<BaseResponse<VariantStoreVariantDTO>> call) {
                     Logger.i("Variant API call failure.");
                     showProgress(false);
                     Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -147,10 +145,10 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 @Override
-                public void onFlytekartErrorResponse(Call<BaseResponse<VariantStoreVariantDTO>> call, BaseErrorResponse responseBody) {
-                    Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                public void onFlytekartErrorResponse(Call<BaseResponse<VariantStoreVariantDTO>> call, APIError responseBody) {
+                    Logger.e("Variant API call  response status code : " + responseBody.getStatus());
                     showProgress(false);
-                    Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -206,7 +204,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<StoreVariant>> saveVariantCall = Flytekart.getApiService().saveStoreVariant(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<StoreVariant>>() {
             @Override
-            public void onFailure(Call<BaseResponse<StoreVariant>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<StoreVariant>> call) {
                 Logger.i("Store variant API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -222,10 +220,10 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<StoreVariant>> call, BaseErrorResponse responseBody) {
-                Logger.e("Store variant API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<StoreVariant>> call, APIError responseBody) {
+                Logger.e("Store variant API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

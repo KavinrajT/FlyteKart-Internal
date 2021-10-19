@@ -25,7 +25,7 @@ import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Payment;
 import com.flytekart.models.request.CODPaymentRequest;
 import com.flytekart.models.request.UpdateOrderStatusRequest;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
@@ -101,7 +101,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> getOrderByIdCall = Flytekart.getApiService().getOrderById(accessToken, orderResponse.getOrder().getId(), clientId);
         getOrderByIdCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Order List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -116,10 +116,10 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Order API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Order API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -313,7 +313,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> acceptOrderCall = Flytekart.getApiService().acceptOrder(accessToken, clientId, request);
         acceptOrderCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -328,9 +328,9 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatus());
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -342,7 +342,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> processOrderCall = Flytekart.getApiService().processOrder(accessToken, clientId, request);
         processOrderCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -357,9 +357,9 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatus());
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -371,7 +371,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> processOrderCall = Flytekart.getApiService().processedOrder(accessToken, clientId, request);
         processOrderCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -386,10 +386,10 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -401,7 +401,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> processOrderCall = Flytekart.getApiService().outForDeliveryOrder(accessToken, clientId, request);
         processOrderCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -416,9 +416,9 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatus());
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -431,7 +431,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> processOrderCall = Flytekart.getApiService().deliverOrder(accessToken, clientId, request);
         processOrderCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -446,10 +446,10 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -463,7 +463,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         Call<BaseResponse<OrderResponse>> collectCODPaymentCall = Flytekart.getApiService().collectCODPayment(accessToken, clientId, request);
         collectCODPaymentCall.enqueue(new CustomCallback<BaseResponse<OrderResponse>>() {
             @Override
-            public void onFailure(Call<BaseResponse<OrderResponse>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -478,10 +478,10 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, BaseErrorResponse responseBody) {
-                Logger.e("Accept order API call response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
+                Logger.e("Accept order API call response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

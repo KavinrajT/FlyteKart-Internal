@@ -33,7 +33,7 @@ import com.flytekart.models.VariantAttributeValue;
 import com.flytekart.models.request.CreateVariantVavRequest;
 import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.response.AttributeResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
@@ -44,7 +44,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -172,7 +171,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<Variant>> getVariantCall = Flytekart.getApiService().getVariantById(accessToken, variant.getId(), clientId);
         getVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
             @Override
-            public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<Variant>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -186,10 +185,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
-                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, APIError responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -199,7 +198,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<List<VariantAttributeValue>>> getStoresCall = Flytekart.getApiService().getAttributeValuesByVariantId(accessToken, variant.getId(), clientId);
         getStoresCall.enqueue(new CustomCallback<BaseResponse<List<VariantAttributeValue>>>() {
             @Override
-            public void onFailure(Call<BaseResponse<List<VariantAttributeValue>>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<VariantAttributeValue>>> call) {
                 Logger.i("Variants API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -213,10 +212,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<VariantAttributeValue>>> call, BaseErrorResponse responseBody) {
-                Logger.e("Variants API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<VariantAttributeValue>>> call, APIError responseBody) {
+                Logger.e("Variants API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -245,7 +244,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<List<AttributeResponse>>> getAttributeValuesCall = Flytekart.getApiService().getAllAttributeValues(accessToken, clientId);
         getAttributeValuesCall.enqueue(new CustomCallback<BaseResponse<List<AttributeResponse>>>() {
             @Override
-            public void onFailure(Call<BaseResponse<List<AttributeResponse>>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<AttributeResponse>>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -261,10 +260,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<List<AttributeResponse>>> call,
-                                                 BaseErrorResponse responseBody) {
-                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+                                                 APIError responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -309,7 +308,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<VariantAttributeValue>> saveVariantCall = Flytekart.getApiService().deleteVariantAttributeValue(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<VariantAttributeValue>>() {
             @Override
-            public void onFailure(Call<BaseResponse<VariantAttributeValue>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<VariantAttributeValue>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -332,10 +331,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<VariantAttributeValue>> call, BaseErrorResponse responseBody) {
-                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<VariantAttributeValue>> call, APIError responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -438,7 +437,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         Call<BaseResponse<Variant>> saveVariantCall = Flytekart.getApiService().saveVariantVav(accessToken, clientId, request);
         saveVariantCall.enqueue(new CustomCallback<BaseResponse<Variant>>() {
             @Override
-            public void onFailure(Call<BaseResponse<Variant>> call, Throwable t) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<Variant>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -452,10 +451,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, BaseErrorResponse responseBody) {
-                Logger.e("Variant API call  response status code : " + responseBody.getStatusCode());
+            public void onFlytekartErrorResponse(Call<BaseResponse<Variant>> call, APIError responseBody) {
+                Logger.e("Variant API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), responseBody.getApiError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

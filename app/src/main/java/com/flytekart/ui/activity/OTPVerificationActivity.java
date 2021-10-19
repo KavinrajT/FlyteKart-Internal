@@ -18,7 +18,7 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.request.VerifyOTPRequest;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.LoginResponse;
 import com.flytekart.network.CustomCallback;
@@ -59,8 +59,8 @@ public class OTPVerificationActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.et_password);
         tvSignUp = findViewById(R.id.tv_sign_up);
         tvLogin = findViewById(R.id.tv_login);
-        String clientIdExtra = getIntent().getStringExtra("clientId");
-        String usernameExtra = getIntent().getStringExtra("username");
+        String clientIdExtra = getIntent().getStringExtra(Constants.CLIENT_ID);
+        String usernameExtra = getIntent().getStringExtra(Constants.USERNAME);
         etClientCode.setText(clientIdExtra);
         etEmail.setText(usernameExtra);
 
@@ -150,7 +150,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, APIError responseBody) {
                 /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
@@ -165,7 +165,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<LoginResponse>> call) {
                 Logger.i("Main Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -175,7 +175,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
 
     private void employeeLogin(String clientId, String usernameOrEmail, String otp) {
         VerifyOTPRequest request = new VerifyOTPRequest();
-        request.setUsername(usernameOrEmail);
+        request.setPhoneNumber(usernameOrEmail);
         request.setOtp(otp);
         showProgress(true);
         Call<BaseResponse<LoginResponse>> loginCall = Flytekart.getApiService().verifyClientOTP(clientId, request);
@@ -196,13 +196,14 @@ public class OTPVerificationActivity extends AppCompatActivity {
                     editor.apply();
                     Logger.i("Employee Login API call success.");
                     Intent mainIntent = new Intent(OTPVerificationActivity.this, HomeActivity.class);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(mainIntent);
                     finish();
                 }
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<LoginResponse>> call, APIError responseBody) {
                 /*if (response.errorBody() != null) {
                     try {
                         ApiCallResponse apiCallResponse = new Gson().fromJson(
@@ -214,10 +215,15 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 }*/
                 Logger.e("Employee Login API response failed");
                 showProgress(false);
+                if (responseBody != null && responseBody.getMessage() != null) {
+                    Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<LoginResponse>> call) {
                 Logger.i("Employee Login API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();

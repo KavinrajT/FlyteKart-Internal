@@ -25,17 +25,14 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.response.ApiCallResponse;
-import com.flytekart.models.response.BaseErrorResponse;
+import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.CategoriesAdapter;
-import com.flytekart.ui.views.RecyclerItemClickListener;
-import com.flytekart.ui.views.TitleBarLayout;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +40,6 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoryListActivity extends AppCompatActivity implements CategoriesAdapter.CategoryClickListener {
@@ -138,27 +134,18 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                 if (response.isSuccessful() && response.body() != null) {
                     categories = response.body().getBody();
                     setCategoriesData();
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Categories List API call response status code : " + response.code());
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<Category>>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<Category>>> call, APIError responseBody) {
                 Logger.e("Categories List API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<List<Category>>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<Category>>> call) {
                 Logger.i("Categories List API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
@@ -272,27 +259,18 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                     if (position <= categories.size() - 1) {
                         adapter.notifyItemRangeChanged(position, categories.size() - position);
                     }
-                } else if (response.body().getApiError() != null || response.errorBody() != null) {
-                    // TODO Need to write this properly
-                    try {
-                        ApiCallResponse apiCallResponse = new Gson().fromJson(
-                                response.errorBody().string(), ApiCallResponse.class);
-                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
                 Logger.e("Delete categoryAPI call response status code : " + response.code());
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<Category>> call, BaseErrorResponse responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<Category>> call, APIError responseBody) {
                 Logger.e("Delete category API call failed.");
                 showProgress(false);
             }
 
             @Override
-            public void onFailure(@NotNull Call<BaseResponse<Category>> call, @NotNull Throwable t) {
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<Category>> call) {
                 Logger.i("Delete category API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
