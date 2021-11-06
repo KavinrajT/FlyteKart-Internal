@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/download_land" />
+
+    <View
+        android:id="@+id/background_image_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent_image"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/rl_sign_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_login"
+        android:layout_marginLeft="250dp"
+        android:layout_marginRight="250dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/white"
+        android:isScrollContainer="true"
+        android:paddingStart="15dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/iv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/til_phone_number"
+            android:layout_alignBottom="@id/til_phone_number"
+            android:padding="@dimen/padding_15"
+            android:src="@drawable/ic_username" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_email"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/email"
+                android:inputType="text"
+                android:paddingStart="@dimen/padding_15"
+                android:paddingTop="@dimen/padding_15"
+                android:paddingEnd="@dimen/padding_15"
+                android:paddingBottom="@dimen/padding_15" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/til_phone_number"
+            android:background="@color/grey_light" />
+
+        <ImageView
+            android:id="@+id/iv_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/til_password"
+            android:layout_alignBottom="@+id/til_password"
+            android:padding="@dimen/padding_15"
+            android:src="@drawable/ic_password" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:layout_toRightOf="@id/iv_email"
+            app:hintEnabled="false"
+            app:passwordToggleTint="@color/dark_grey">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:padding="@dimen/padding_15" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/divider_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/til_password"
+            android:background="@color/grey_light" />
+
+        <ImageView
+            android:id="@+id/iv_cnf_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/til_cnf_password"
+            android:layout_alignBottom="@+id/til_cnf_password"
+            android:padding="@dimen/padding_15"
+            android:src="@drawable/ic_password" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_cnf_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider_2"
+            android:layout_toRightOf="@id/iv_email"
+            app:hintEnabled="false"
+            app:passwordToggleTint="@color/dark_grey">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_cnf_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/cnf_password"
+                android:inputType="textPassword"
+                android:padding="@dimen/padding_15" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/til_cnf_password"
+            android:background="@drawable/selector_red_button"
+            android:gravity="center"
+            android:padding="@dimen/padding_15"
+            android:text="@string/sign_up"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/rl_sign_up"
+        android:layout_alignLeft="@id/rl_sign_up"
+        android:layout_alignEnd="@id/rl_sign_up"
+        android:layout_alignRight="@id/rl_sign_up"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/selector_blue_button"
+        android:gravity="center"
+        android:padding="@dimen/padding_15"
+        android:text="@string/str_already_have_an_account"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+</RelativeLayout>
