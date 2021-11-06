@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.flytekart.R;
 import com.flytekart.models.MenuModel;
 import com.flytekart.models.Organisation;
+import com.flytekart.models.UserDetails;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
@@ -52,6 +54,10 @@ public class HomeActivity extends BaseActivity {
     private CharSequence mTitle;
     ActionBarDrawerToggle drawerToggle;
     private ProgressDialog progressDialog;
+    private SharedPreferences sharedPreferences;
+    private String accessToken;
+    private String clientId;
+    private UserDetails userDetails;
 
     private Organisation organisation;
 
@@ -68,6 +74,12 @@ public class HomeActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        sharedPreferences = Utilities.getSharedPreferences();
+        accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
+        clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        getUserDetails();
+        setUsernameToUi();
+
         expandableListView = findViewById(R.id.left_drawer);
         expandableListAdapter = new MenuExpandableListAdapter(this, headerList, childList);
         expandableListView.setAdapter(expandableListAdapter);
@@ -80,6 +92,24 @@ public class HomeActivity extends BaseActivity {
         //getAllOrganisations();
     }
 
+    private void getUserDetails() {
+        Gson gson = new Gson();
+        String userDetailsString = sharedPreferences.getString(Constants.SHARED_PREF_KEY_USER_DETAILS, null);
+        if (userDetailsString != null) {
+            this.userDetails = gson.fromJson(userDetailsString, UserDetails.class);
+        }
+    }
+
+    private void setUsernameToUi() {
+        TextView tvUsername = findViewById(R.id.nav_header_textView);
+        if (!TextUtils.isEmpty(userDetails.getName())) {
+            tvUsername.setText(userDetails.getName());
+        } else if (!TextUtils.isEmpty(userDetails.getPhoneNumber())) {
+            tvUsername.setText(userDetails.getPhoneNumber());
+        } else if (!TextUtils.isEmpty(userDetails.getEmail())) {
+            tvUsername.setText(userDetails.getEmail());
+        }
+    }
 
     private void prepareMenuData() {
         headerList.add(new MenuModel(getString(R.string.stores), true, true, null));
@@ -106,6 +136,7 @@ public class HomeActivity extends BaseActivity {
                 SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
                 editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
                 editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
+                editor.remove(Constants.SHARED_PREF_KEY_USER_DETAILS);
                 editor.apply();
                 finish();
                 // TODO Open login screen
@@ -182,9 +213,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void getAllOrganisations() {
-        SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
-        String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
-        String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
         showProgress(true);
         Call<BaseResponse<Organisation>> organisationCall = com.flytekart.Flytekart.getApiService().getOrganisation(accessToken, clientId);
         organisationCall.enqueue(new CustomCallback<BaseResponse<Organisation>>() {

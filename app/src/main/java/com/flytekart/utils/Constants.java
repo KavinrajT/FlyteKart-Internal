@@ -5,6 +5,7 @@ public class Constants {
     public static final String IS_USER_LOGGED_IN = "isUserLoggedIn";
     public static final String SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN = "isMainAccountLoggedIn";
     public static final String SHARED_PREF_KEY_ACCESS_TOKEN = "accessToken";
+    public static final String SHARED_PREF_KEY_USER_DETAILS = "userDetails";
     public static final String SHARED_PREF_KEY_CLIENT_ID = "clientId";
     public static final String SHARED_PREF_KEY_ORGANISATION = "key_organisation";
     public static final String SHARED_PREF_KEY_STORES = "key_stores";

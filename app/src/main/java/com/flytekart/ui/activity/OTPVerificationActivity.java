@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.UserDetails;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.request.VerifyOTPRequest;
 import com.flytekart.models.response.APIError;
@@ -27,6 +28,7 @@ import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +45,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
     private TextView tvLogin;
     private TextInputLayout tilClientCode;
     private ProgressDialog progressDialog;
+    private SharedPreferences sharedPreferences;
 
     String loginType;
 
@@ -63,6 +66,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
         String usernameExtra = getIntent().getStringExtra(Constants.USERNAME);
         etClientCode.setText(clientIdExtra);
         etEmail.setText(usernameExtra);
+        sharedPreferences = Utilities.getSharedPreferences();
 
         ArrayAdapter<CharSequence> loginSpAdapter = ArrayAdapter.createFromResource(this,
                 R.array.login_type_array, android.R.layout.simple_spinner_item);
@@ -188,12 +192,12 @@ public class OTPVerificationActivity extends AppCompatActivity {
                     LoginResponse loginResponse = response.body().getBody();
                     // Get dropdown data and go to next screen.
                     Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_SHORT).show();
-                    SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
                     editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
                     editor.putString(Constants.SHARED_PREF_KEY_CLIENT_ID, clientId);
                     editor.apply();
+                    saveUserDetails(loginResponse.getUserDetails());
                     Logger.i("Employee Login API call success.");
                     Intent mainIntent = new Intent(OTPVerificationActivity.this, HomeActivity.class);
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -229,6 +233,12 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void saveUserDetails(UserDetails userDetails) {
+        Gson gson = new Gson();
+        String json = gson.toJson(userDetails);
+        sharedPreferences.edit().putString(Constants.SHARED_PREF_KEY_USER_DETAILS, json).apply();
     }
 
     public void showProgress(boolean show) {
