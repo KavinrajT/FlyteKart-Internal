@@ -99,27 +99,36 @@ public class OTPVerificationActivity extends AppCompatActivity {
             finish();
         });
 
-        tvLogin.setOnClickListener(view -> {
-            String usernameOrEmail = etEmail.getText().toString().trim();
-            String clientId = etClientCode.getText().toString().trim();
-            String otp = etPassword.getText().toString().trim();
+        etPassword.setOnEditorActionListener((v, actionId, event) -> {
+            checkInputAndVerifyOTP();
+            return false;
+        });
 
-            if (loginType == null || otp.isEmpty()) {
-                Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
-            } /*else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
+        tvLogin.setOnClickListener(view -> {
+            checkInputAndVerifyOTP();
+        });
+    }
+
+    private void checkInputAndVerifyOTP() {
+        String usernameOrEmail = etEmail.getText().toString().trim();
+        String clientId = etClientCode.getText().toString().trim();
+        String otp = etPassword.getText().toString().trim();
+
+        if (loginType == null || otp.isEmpty()) {
+            Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
+        } /*else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
                 if (usernameOrEmail.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
                 } else {
                     mainLogin(usernameOrEmail, password);
                 }
             }*/ else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_CLIENT_ACCOUNT)) {
-                if (usernameOrEmail.isEmpty() || clientId.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
-                } else {
-                    employeeLogin(clientId, usernameOrEmail, otp);
-                }
+            if (usernameOrEmail.isEmpty() || clientId.isEmpty()) {
+                Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
+            } else {
+                employeeLogin(clientId, usernameOrEmail, otp);
             }
-        });
+        }
     }
 
     private void mainLogin(String usernameOrEmail, String password) {
