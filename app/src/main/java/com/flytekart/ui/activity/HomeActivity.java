@@ -115,7 +115,7 @@ public class HomeActivity extends BaseActivity {
         headerList.add(new MenuModel(getString(R.string.stores), true, true, null));
         headerList.add(new MenuModel(getString(R.string.categories_products), true, true, null));
         headerList.add(new MenuModel(getString(R.string.orderResponses), true, true, null));
-        headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
+        //headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
         headerList.add(new MenuModel(getString(R.string.sign_out), true, true, null));
     }
 
