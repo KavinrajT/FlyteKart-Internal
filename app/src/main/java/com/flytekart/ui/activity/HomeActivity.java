@@ -22,8 +22,8 @@ import com.flytekart.R;
 import com.flytekart.models.MenuModel;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.UserDetails;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
+import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.MenuExpandableListAdapter;
@@ -115,7 +115,7 @@ public class HomeActivity extends BaseActivity {
         headerList.add(new MenuModel(getString(R.string.stores), true, true, null));
         headerList.add(new MenuModel(getString(R.string.categories_products), true, true, null));
         headerList.add(new MenuModel(getString(R.string.orderResponses), true, true, null));
-        headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
+        //headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
         headerList.add(new MenuModel(getString(R.string.sign_out), true, true, null));
     }
 
@@ -138,8 +138,9 @@ public class HomeActivity extends BaseActivity {
                 editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
                 editor.remove(Constants.SHARED_PREF_KEY_USER_DETAILS);
                 editor.apply();
+                Intent signOutIntent = new Intent(HomeActivity.this, LoginActivity.class);
+                startActivity(signOutIntent);
                 finish();
-                // TODO Open login screen
             }
             return false;
         }
