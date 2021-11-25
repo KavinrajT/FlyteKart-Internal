@@ -98,26 +98,34 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
 
+        etPhoneNumber.setOnEditorActionListener((v, actionId, event) -> {
+            checkInputAndRequestOTP();
+            return false;
+        });
         tvLogin.setOnClickListener(view -> {
-            String usernameOrEmail = etPhoneNumber.getText().toString().trim();
-            String clientId = etClientCode.getText().toString().trim();
+            checkInputAndRequestOTP();
+        });
+    }
 
-            if (loginType == null) {
-                Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
-            } /*else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
+    private void checkInputAndRequestOTP() {
+        String usernameOrEmail = etPhoneNumber.getText().toString().trim();
+        String clientId = etClientCode.getText().toString().trim();
+
+        if (loginType == null) {
+            Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
+        } /*else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_MAIN_ACCOUNT)) {
                 if (usernameOrEmail.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
                 } else {
                     mainLogin(usernameOrEmail, password);
                 }
             }*/ else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_CLIENT_ACCOUNT)) {
-                if (usernameOrEmail.isEmpty() || clientId.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
-                } else {
-                    employeeLogin(clientId, usernameOrEmail);
-                }
+            if (usernameOrEmail.isEmpty() || clientId.isEmpty()) {
+                Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
+            } else {
+                employeeLogin(clientId, usernameOrEmail);
             }
-        });
+        }
     }
 
     private void mainLogin(String usernameOrEmail, String password) {
