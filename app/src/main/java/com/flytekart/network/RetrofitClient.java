@@ -13,8 +13,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     // Add base URL
-    //private static final String BASE_URL = "https://aqueous-depths-69529.herokuapp.com/";
-    private static final String BASE_URL = "https://4dde-223-186-14-224.ngrok.io/";
+    private static final String BASE_URL = "https://aqueous-depths-69529.herokuapp.com/";
+    //private static final String BASE_URL = "https://4dde-223-186-14-224.ngrok.io/";
     //private static final String BASE_URL = "https://flytekart-production.herokuapp.com/";
     private ApiService apiService;
 

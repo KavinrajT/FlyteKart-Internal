@@ -2,9 +2,11 @@ package com.flytekart.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.Flytekart;
@@ -25,12 +29,20 @@ import com.flytekart.models.response.LoginResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
+import com.flytekart.utils.SmsBroadcastReceiver;
 import com.flytekart.utils.Utilities;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -46,6 +58,8 @@ public class OTPVerificationActivity extends AppCompatActivity {
     private TextInputLayout tilClientCode;
     private ProgressDialog progressDialog;
     private SharedPreferences sharedPreferences;
+    private SmsBroadcastReceiver smsBroadcastReceiver;
+    private final int REQ_USER_CONSENT = 1000;
 
     String loginType;
 
@@ -107,6 +121,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
         tvLogin.setOnClickListener(view -> {
             checkInputAndVerifyOTP();
         });
+        startSmsUserConsent();
     }
 
     private void checkInputAndVerifyOTP() {
@@ -260,6 +275,73 @@ public class OTPVerificationActivity extends AppCompatActivity {
             progressDialog.show();
         } else if (progressDialog != null) {
             progressDialog.dismiss();
+        }
+    }
+
+    private void startSmsUserConsent() {
+        SmsRetrieverClient client = SmsRetriever.getClient(this);
+        client.startSmsUserConsent(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("SmsRetrieverClient", "On Success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("SmsRetrieverClient", "On Failure");
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void registerBroadcastReceiver() {
+        smsBroadcastReceiver = new SmsBroadcastReceiver();
+        smsBroadcastReceiver.smsBroadcastReceiverListener =
+                new SmsBroadcastReceiver.SmsBroadcastReceiverListener() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, REQ_USER_CONSENT);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Log.d("SmsBroadcastReceiver", "On Failure");
+                    }
+                };
+        IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
+        registerReceiver(smsBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerBroadcastReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(smsBroadcastReceiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_USER_CONSENT) {
+            if ((resultCode == RESULT_OK) && (data != null)) {
+                String message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE);
+                getOtpFromMessage(message);
+            }
+        }
+    }
+
+    private void getOtpFromMessage(String message) {
+        // This will match any 6 digit number in the message
+        Pattern pattern = Pattern.compile("(|^)\\d{6}");
+        Matcher matcher = pattern.matcher(message);
+        if (matcher.find()) {
+            etPassword.setText(matcher.group(0));
+            checkInputAndVerifyOTP();
         }
     }
 }
