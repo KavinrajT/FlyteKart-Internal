@@ -1,11 +1,14 @@
 package com.flytekart.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -99,8 +102,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         etPhoneNumber.setOnEditorActionListener((v, actionId, event) -> {
-            checkInputAndRequestOTP();
-            return false;
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etPhoneNumber.getWindowToken(), 0);
+                checkInputAndRequestOTP();
+            }
+            return true;
         });
         tvLogin.setOnClickListener(view -> {
             checkInputAndRequestOTP();
@@ -187,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
         SendOTPRequest request = new SendOTPRequest();
         request.setPhoneNumber(usernameOrEmail);
         showProgress(true);
-        Call<BaseResponse<String>> loginCall = com.flytekart.Flytekart.getApiService().sendClientOTP(clientId, request);
+        Call<BaseResponse<String>> loginCall = Flytekart.getApiService().sendClientOTP(clientId, request);
         loginCall.enqueue(new CustomCallback<BaseResponse<String>>() {
             @Override
             public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<String>> call, @NotNull Response<BaseResponse<String>> response) {

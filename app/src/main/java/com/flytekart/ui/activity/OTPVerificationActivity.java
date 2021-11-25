@@ -1,13 +1,15 @@
 package com.flytekart.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -114,8 +116,12 @@ public class OTPVerificationActivity extends AppCompatActivity {
         });
 
         etPassword.setOnEditorActionListener((v, actionId, event) -> {
-            checkInputAndVerifyOTP();
-            return false;
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etPassword.getWindowToken(), 0);
+                checkInputAndVerifyOTP();
+            }
+            return true;
         });
 
         tvLogin.setOnClickListener(view -> {
@@ -138,7 +144,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
                     mainLogin(usernameOrEmail, password);
                 }
             }*/ else if (TextUtils.equals(loginType, Constants.LOGIN_TYPE_CLIENT_ACCOUNT)) {
-            if (usernameOrEmail.isEmpty() || clientId.isEmpty()) {
+            if (usernameOrEmail.isEmpty() || clientId.isEmpty() || otp.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.enter_all_details, Toast.LENGTH_SHORT).show();
             } else {
                 employeeLogin(clientId, usernameOrEmail, otp);
@@ -283,12 +289,12 @@ public class OTPVerificationActivity extends AppCompatActivity {
         client.startSmsUserConsent(null).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("SmsRetrieverClient", "On Success");
+                Logger.d("SmsRetrieverClient On Success");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("SmsRetrieverClient", "On Failure");
+                Logger.d("SmsRetrieverClient On Failure");
                 e.printStackTrace();
             }
         });
@@ -305,7 +311,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure() {
-                        Log.d("SmsBroadcastReceiver", "On Failure");
+                        Logger.d("SmsBroadcastReceiver on Failure");
                     }
                 };
         IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
