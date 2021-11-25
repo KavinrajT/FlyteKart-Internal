@@ -26,15 +26,15 @@ public class CreateVariantRequest {
 
     @SerializedName("price")
     @Expose
-    private double price;
+    private Double price;
 
     @SerializedName("tax")
     @Expose
-    private double tax;
+    private Double tax;
 
     @SerializedName("originalPrice")
     @Expose
-    private double originalPrice;
+    private Double originalPrice;
 
     @SerializedName("active")
     @Expose
@@ -72,27 +72,27 @@ public class CreateVariantRequest {
         this.sku = sku;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double  price) {
+    public void setPrice(Double  price) {
         this.price = price;
     }
 
-    public double getTax() {
+    public Double getTax() {
         return tax;
     }
 
-    public void setTax(double  tax) {
+    public void setTax(Double  tax) {
         this.tax = tax;
     }
 
-    public double getOriginalPrice() {
+    public Double getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(double  originalPrice) {
+    public void setOriginalPrice(Double  originalPrice) {
         this.originalPrice = originalPrice;
     }
 

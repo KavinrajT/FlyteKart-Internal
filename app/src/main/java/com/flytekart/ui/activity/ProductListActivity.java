@@ -88,6 +88,10 @@ public class ProductListActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_refresh: {
+                getData();
+                return true;
+            }
             case R.id.menu_create: {
                 Intent createProductIntent = new Intent(this, CreateProductActivity.class);
                 createProductIntent.putExtra(Constants.CATEGORY, category);

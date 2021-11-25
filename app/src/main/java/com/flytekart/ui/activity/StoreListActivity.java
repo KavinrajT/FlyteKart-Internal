@@ -78,6 +78,10 @@ public class StoreListActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_refresh: {
+                getData();
+                return true;
+            }
             case R.id.menu_create: {
                 Intent createStoreIntent = new Intent(this, CreateStoreActivity.class);
                 startActivityForResult(createStoreIntent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);

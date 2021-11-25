@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/ic_baseline_refresh_24"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:actionLayout="@layout/toolbar"
+        android:title="Refresh" />
+
+    <item
         android:id="@+id/menu_create"
         android:icon="@drawable/ic_baseline_add_24"
         android:orderInCategory="100"

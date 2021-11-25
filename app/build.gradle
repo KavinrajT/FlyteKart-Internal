@@ -12,15 +12,36 @@ android {
         applicationId "com.flytekart"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 2
-        versionName "0.5.1"
+        versionCode 3
+        versionName "0.5.2"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        local {
+            applicationIdSuffix ".local"
+            buildConfigField "String", "BASE_URL", '"https://5dc7-106-216-168-38.ngrok.io/"'
+            debuggable true
+
+            resValue "string", "app_name", "Flytekart local"
+
+            signingConfig signingConfigs.debug
+        }
+        staging {
+            applicationIdSuffix ".staging"
+            buildConfigField "String", "BASE_URL", '"https://aqueous-depths-69529.herokuapp.com/"'
+
+            resValue "string", "app_name", "Flytekart staging"
+
+            signingConfig signingConfigs.debug
+        }
         release {
+            buildConfigField "String", "BASE_URL", '"https://flytekart-production.herokuapp.com/"'
+
+            resValue "string", "app_name", "Flytekart"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -28,6 +49,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import com.flytekart.models.response.AttributeResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
+import com.flytekart.ui.views.DecimalDigitsInputFilter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -85,9 +87,14 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         etVariantName = findViewById(R.id.et_variant_name);
         swIsActive = findViewById(R.id.sw_is_active);
         etSku = findViewById(R.id.et_sku);
+
         etPrice = findViewById(R.id.et_price);
+        etPrice.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         etTax = findViewById(R.id.et_tax);
+        etTax.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         etOriginalPrice = findViewById(R.id.et_original_price);
+        etOriginalPrice.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
+
         Button btnSaveVariant = findViewById(R.id.btn_save_variant);
         View llAddAttributeValues = findViewById(R.id.ll_add_attribute_values);
         llAttributeValues = findViewById(R.id.ll_attribute_values);
@@ -115,6 +122,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         } else {
             getSupportActionBar().setTitle("Create variant");
         }
+        getSupportActionBar().setSubtitle(product.getName());
     }
 
     @Override
@@ -132,8 +140,21 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         etVariantName.setText(variant.getName());
         swIsActive.setChecked(variant.isActive());
         etSku.setText(variant.getSku());
-        etPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getPrice()));
-        etOriginalPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getOriginalPrice()));
+        if (variant.getPrice() != null) {
+            etPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getPrice()));
+        } else {
+            etPrice.setText(Constants.EMPTY);
+        }
+        if (variant.getOriginalPrice() != null) {
+            etOriginalPrice.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getOriginalPrice()));
+        } else {
+            etOriginalPrice.setText(Constants.EMPTY);
+        }
+        if (variant.getTax() != null) {
+            etTax.setText(Utilities.getFormattedMoneyWithoutCurrencyCode(variant.getTax()));
+        } else {
+            etTax.setText(Constants.EMPTY);
+        }
     }
 
     private void setVariantAttributeValuesData() {
@@ -418,7 +439,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         request.setProductId(product.getId());
         request.setName(etVariantName.getText().toString().trim());
         request.setActive(swIsActive.isChecked());
-        request.setSku(etSku.getText().toString().trim());
+        String sku = etSku.getText().toString().trim();
+        if (sku.length() > 0) {
+            request.setSku(sku);
+        }
         String priceString = etPrice.getText().toString().trim();
         if (!priceString.isEmpty()) {
             request.setPrice(Double.parseDouble(priceString));

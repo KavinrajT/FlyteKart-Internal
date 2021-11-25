@@ -70,6 +70,7 @@ public class VariantListActivity extends AppCompatActivity {
 
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
 
+        getSupportActionBar().setSubtitle(product.getName());
         getData();
         setListeners();
         //setData();
@@ -88,6 +89,10 @@ public class VariantListActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_refresh: {
+                getData();
+                return true;
+            }
             case R.id.menu_create: {
                 Intent createVariantIntent = new Intent(this, CreateVariantActivity.class);
                 createVariantIntent.putExtra(Constants.PRODUCT, product);

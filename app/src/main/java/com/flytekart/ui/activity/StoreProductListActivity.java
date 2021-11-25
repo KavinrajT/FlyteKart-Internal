@@ -126,7 +126,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<ProductStoreProductDTO>>> call, Response<BaseResponse<List<ProductStoreProductDTO>>> response) {
                 Logger.i("Store products list response received.");
-                showProgress(true);
+                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     products = response.body().getBody();
                     setProductsData();
@@ -138,11 +138,13 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<List<ProductStoreProductDTO>>> call, APIError responseBody) {
                 Logger.i("Store products list call failed.");
+                showProgress(false);
             }
 
             @Override
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call) {
                 Logger.i("Store products List API call failure.");
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });

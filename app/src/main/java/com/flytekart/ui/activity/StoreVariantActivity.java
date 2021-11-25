@@ -3,6 +3,7 @@ package com.flytekart.ui.activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.flytekart.models.request.CreateStoreVariantRequest;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
+import com.flytekart.ui.views.DecimalDigitsInputFilter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
@@ -63,9 +65,12 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
         swIsActive = findViewById(R.id.sw_is_active);
         etSku = findViewById(R.id.et_sku);
         etPrice = findViewById(R.id.et_price);
+        etPrice.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         etOriginalPrice = findViewById(R.id.et_original_price);
+        etOriginalPrice.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         etQuantity = findViewById(R.id.et_quantity);
         etTax = findViewById(R.id.et_tax);
+        etTax.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         Button btnSaveVariant = findViewById(R.id.btn_save_variant);
 
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
@@ -183,8 +188,9 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
         if (taxString.length() > 0) {
             request.setTax(Double.parseDouble(taxString));
         } else {
-            Toast.makeText(this, "Please enter a valid tax", Toast.LENGTH_SHORT).show();
-            return;
+            /*Toast.makeText(this, "Please enter a valid tax", Toast.LENGTH_SHORT).show();
+            return;*/
+            request.setTax(null);
         }
         String originalPriceString = etOriginalPrice.getText().toString().trim();
         if (originalPriceString.length() > 0) {

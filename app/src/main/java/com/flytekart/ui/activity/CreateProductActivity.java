@@ -95,6 +95,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             tvMoreOptionsLabel.setVisibility(View.VISIBLE);
             rlViewVariants.setVisibility(View.GONE);
         }
+        getSupportActionBar().setSubtitle(category.getName());
     }
 
     @Override
@@ -214,8 +215,20 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             product.setCategoryId(category.getId());
         }
 
+        String name = etProductName.getText().toString().trim();
+        if (name.length() > 0) {
+            product.setName(name);
+        } else {
+            Toast.makeText(CreateProductActivity.this, "Please enter a valid name", Toast.LENGTH_SHORT).show();
+            return;
+        }
         product.setName(etProductName.getText().toString().trim());
-        product.setDescription(etDescription.getText().toString());
+        String description = etDescription.getText().toString().trim();
+        if (description.length() > 0) {
+            product.setDescription(description);
+        } else {
+            product.setDescription(null);
+        }
         product.setIsActive(swIsActive.isChecked());
 
         CreateProductRequest request = new CreateProductRequest();

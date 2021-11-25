@@ -93,6 +93,10 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_refresh: {
+                getData();
+                return true;
+            }
             case R.id.menu_create: {
                 Intent createCategoryIntent = new Intent(this, CreateCategoryActivity.class);
                 startActivityForResult(createCategoryIntent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);

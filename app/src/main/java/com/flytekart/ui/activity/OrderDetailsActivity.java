@@ -199,11 +199,13 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
 
             TextView tvItemName = v.findViewById(R.id.tv_item_name);
             TextView tvVariantName = v.findViewById(R.id.tv_variant_name);
+            TextView tvCategoryName = v.findViewById(R.id.tv_category_name);
             TextView tvQuantity = v.findViewById(R.id.tv_quantity);
             TextView tvItemPrice = v.findViewById(R.id.tv_item_price);
 
             tvItemName.setText(orderItem.getStoreVariant().getVariant().getProduct().getName());
             tvVariantName.setText(orderItem.getStoreVariant().getVariant().getName());
+            tvCategoryName.setText(orderItem.getStoreVariant().getVariant().getProduct().getName());
             tvQuantity.setText(String.valueOf(orderItem.getQuantity()));
             tvItemPrice.setText(Utilities.getFormattedMoney(orderItem.getTotalPrice()));
 

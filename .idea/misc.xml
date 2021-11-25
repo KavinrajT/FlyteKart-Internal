@@ -7,11 +7,13 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1259259259259259" />
         <entry key="app/src/main/res/drawable/grey_add_circle.xml" value="0.23541666666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.13541666666666666" />
         <entry key="app/src/main/res/drawable/ic_home_work_.xml" value="0.12291666666666666" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1259259259259259" />
         <entry key="app/src/main/res/drawable/ic_my_location.xml" value="0.23541666666666666" />
         <entry key="app/src/main/res/drawable/selector_my_location.xml" value="0.12291666666666666" />
         <entry key="app/src/main/res/layout-land/activity_otp_verification.xml" value="0.10361552028218694" />
+        <entry key="app/src/main/res/layout/activity_category_list.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_create_category.xml" value="0.10663627152988855" />
         <entry key="app/src/main/res/layout/activity_create_product.xml" value="0.11372451699613893" />
         <entry key="app/src/main/res/layout/activity_create_store.xml" value="0.11911231884057971" />

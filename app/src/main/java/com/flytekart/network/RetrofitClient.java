@@ -1,5 +1,6 @@
 package com.flytekart.network;
 
+import com.flytekart.BuildConfig;
 import com.flytekart.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,10 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    // Add base URL
-    //private static final String BASE_URL = "https://aqueous-depths-69529.herokuapp.com/";
-    private static final String BASE_URL = "https://4dde-223-186-14-224.ngrok.io/";
-    //private static final String BASE_URL = "https://flytekart-production.herokuapp.com/";
     private ApiService apiService;
 
     private final Gson gson;
@@ -36,7 +33,7 @@ public class RetrofitClient {
         OkHttpClient okHttpClient = okHttpBuilder.build();
 
         Retrofit apiRetrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(gsonConverterFactory)
                 .client(okHttpClient)
                 .build();
