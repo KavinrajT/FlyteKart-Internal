@@ -1,6 +1,7 @@
 package com.flytekart.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -50,6 +51,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
     private Store store;
     private VariantStoreVariantDTO variantStoreVariantDTO;
     private ProductStoreProductDTO product;
+    private int position;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
         store = getIntent().getParcelableExtra(Constants.STORE);
         variantStoreVariantDTO = getIntent().getParcelableExtra(Constants.VARIANT);
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
+        position = getIntent().getIntExtra(Constants.POSITION, -1);
         getSupportActionBar().setTitle(product.getName());
         getSupportActionBar().setSubtitle(store.getName());
         setData();
@@ -97,6 +100,15 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra(Constants.POSITION, position);
+        data.putExtra(Constants.VARIANT, variantStoreVariantDTO);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     private void setData() {

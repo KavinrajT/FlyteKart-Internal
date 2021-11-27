@@ -30,7 +30,7 @@ public class Utilities {
 
     public static String getFormattedCalendarString(String timeString) {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH);
+        SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz", Locale.ENGLISH);
         SimpleDateFormat resultSdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a", Locale.ENGLISH);
         try {
             cal.setTime(sourceSdf.parse(timeString));

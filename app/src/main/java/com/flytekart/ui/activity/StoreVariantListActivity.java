@@ -22,6 +22,7 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
+import com.flytekart.models.Variant;
 import com.flytekart.models.VariantStoreVariantDTO;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
@@ -36,6 +37,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -99,21 +101,15 @@ public class StoreVariantListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*if (requestCode == Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Category addedCategory = data.getParcelableExtra(Constants.CATEGORY);
-            if (addedCategory != null) {
-                categories.add(addedCategory);
-                adapter.notifyItemInserted(categories.size() - 1);
-            }
-        } else if (requestCode == Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == Constants.EDIT_VARIANT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             int position = data.getIntExtra(Constants.POSITION, -1);
-            Category editedCategory = data.getParcelableExtra(Constants.CATEGORY);
-            if (position != -1 && editedCategory != null) {
-                categories.remove(position);
-                categories.add(position, editedCategory);
+            VariantStoreVariantDTO editedVariant = data.getParcelableExtra(Constants.VARIANT);
+            if (position != -1 && editedVariant != null) {
+                variants.remove(position);
+                variants.add(position, editedVariant);
                 adapter.notifyItemChanged(position);
             }
-        }*/
+        }
     }
 
     private void getData() {
@@ -204,7 +200,8 @@ public class StoreVariantListActivity extends AppCompatActivity {
         itemIntent.putExtra(Constants.STORE, store);
         itemIntent.putExtra(Constants.PRODUCT, product);
         itemIntent.putExtra(Constants.VARIANT, variantStoreVariantDTO);
-        startActivity(itemIntent);
+        itemIntent.putExtra(Constants.POSITION, position);
+        startActivityForResult(itemIntent, Constants.EDIT_VARIANT_ACTIVITY_REQUEST_CODE);
     }
 
     public void showProgress(boolean show) {

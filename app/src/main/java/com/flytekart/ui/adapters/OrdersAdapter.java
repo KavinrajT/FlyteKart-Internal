@@ -33,7 +33,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         OrderResponse orderResponse = orderResponses.get(position);
-        holder.tvUserName.setText(orderResponse.getOrder().getEndUser().getName());
+        if (orderResponse.getOrder().getEndUser().getName() != null) {
+            holder.tvUserName.setText(orderResponse.getOrder().getEndUser().getName());
+        } else {
+            holder.tvUserName.setText(orderResponse.getOrder().getEndUser().getPhoneNumber());
+        }
         holder.tvOrderTime.setText(Utilities.getFormattedCalendarString(orderResponse.getOrder().getCreatedAt()));
         holder.tvOrderSource.setText(orderResponse.getOrder().getOrderSource().getName());
         holder.tvOrderStatus.setText(Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));

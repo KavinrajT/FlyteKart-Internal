@@ -30,7 +30,6 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/black" />
 
@@ -38,7 +37,12 @@
             android:id="@+id/tv_email_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="emailId"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:id="@+id/tv_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     </LinearLayout>

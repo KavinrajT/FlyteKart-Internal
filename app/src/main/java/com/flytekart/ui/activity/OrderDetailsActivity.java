@@ -46,6 +46,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private TextView tvName;
     private TextView tvEmailId;
+    private TextView tvPhoneNumber;
     private TextView tvDeliveryAddress;
     private LinearLayout llItems;
     private TextView tvSubTotal;
@@ -73,6 +74,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
 
         tvName = findViewById(R.id.tv_name);
         tvEmailId = findViewById(R.id.tv_email_id);
+        tvPhoneNumber = findViewById(R.id.tv_phone_number);
         tvDeliveryAddress = findViewById(R.id.tv_delivery_address);
         llItems = findViewById(R.id.ll_items);
         tvSubTotal = findViewById(R.id.tv_sub_total);
@@ -166,6 +168,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         if (this.orderResponse != null) {
             tvName.setText(orderResponse.getOrder().getEndUser().getName());
             tvEmailId.setText(orderResponse.getOrder().getEndUser().getEmail());
+            tvPhoneNumber.setText(orderResponse.getOrder().getEndUser().getPhoneNumber());
 
             // Run a loop to fill llItems
             setItemsData();
@@ -205,7 +208,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
 
             tvItemName.setText(orderItem.getStoreVariant().getVariant().getProduct().getName());
             tvVariantName.setText(orderItem.getStoreVariant().getVariant().getName());
-            tvCategoryName.setText(orderItem.getStoreVariant().getVariant().getProduct().getName());
+            tvCategoryName.setText(orderItem.getStoreVariant().getVariant().getProduct().getCategory().getName());
             tvQuantity.setText(String.valueOf(orderItem.getQuantity()));
             tvItemPrice.setText(Utilities.getFormattedMoney(orderItem.getTotalPrice()));
 

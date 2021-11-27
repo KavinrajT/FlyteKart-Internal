@@ -53,6 +53,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
     private Category category;
     private Product product;
     private List<Variant> variants;
+    private int position;
 
     private boolean isInStock;
 
@@ -82,11 +83,11 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         btnSaveProduct.setOnClickListener(this);
         category = getIntent().getParcelableExtra(Constants.CATEGORY);
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
+        position = getIntent().getIntExtra(Constants.POSITION, -1);
         if (product != null) {
             getSupportActionBar().setTitle("Edit product");
             handleUIWhenProductAvailable();
             setData();
-            // TODO Show progress, get data from server and re-setData
             getData();
             rlViewVariants.setVisibility(View.VISIBLE);
             //getVariantsData();
@@ -107,6 +108,15 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra(Constants.POSITION, position);
+        data.putExtra(Constants.PRODUCT, product);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     private void handleUIWhenProductAvailable() {
@@ -212,7 +222,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
     private void saveProduct() {
         if (product == null) {
             product = new Product();
-            product.setCategoryId(category.getId());
+            product.setCategory(category);
         }
 
         String name = etProductName.getText().toString().trim();
@@ -235,7 +245,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         request.setId(product.getId());
         request.setName(product.getName());
         request.setDescription(product.getDescription());
-        request.setCategoryId(product.getCategoryId());
+        request.setCategoryId(product.getCategory().getId());
         request.setActive(product.isActive());
 
         showProgress(true);
@@ -256,6 +266,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
                 tvMoreOptionsLabel.setVisibility(View.GONE);
                 setData();
                 rlViewVariants.setVisibility(View.VISIBLE);
+                Toast.makeText(getApplicationContext(), "Product saved successfully..", Toast.LENGTH_SHORT).show();
                 //getVariantsData();
             }
 

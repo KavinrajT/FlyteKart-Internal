@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,6 +23,7 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.Product;
+import com.flytekart.models.Variant;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
@@ -35,6 +37,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -171,7 +174,7 @@ public class ProductListActivity extends AppCompatActivity {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int pos = rv.getChildAdapterPosition(child);
-                    onProductClicked(products.get(pos));
+                    onProductClicked(products.get(pos), pos);
                 }
                 return false;
             }
@@ -191,12 +194,40 @@ public class ProductListActivity extends AppCompatActivity {
     /**
      * Open product details
      * @param product
+     * @param position
      */
-    private void onProductClicked(Product product) {
+    private void onProductClicked(Product product, int position) {
         Intent itemIntent = new Intent(this, CreateProductActivity.class);
         itemIntent.putExtra(Constants.CATEGORY, category);
         itemIntent.putExtra(Constants.PRODUCT, product);
-        startActivity(itemIntent);
+        itemIntent.putExtra(Constants.POSITION, position);
+        startActivityForResult(itemIntent, Constants.EDIT_PRODUCT_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Product addedProduct = data.getParcelableExtra(Constants.PRODUCT);
+            if (addedProduct != null) {
+                if (products == null) {
+                    products = new ArrayList<>(10);
+                    products.add(addedProduct);
+                    setProductsData();
+                } else {
+                    products.add(addedProduct);
+                    adapter.notifyItemInserted(products.size() - 1);
+                }
+            }
+        } else if (requestCode == Constants.EDIT_PRODUCT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            int position = data.getIntExtra(Constants.POSITION, -1);
+            Product editedProduct = data.getParcelableExtra(Constants.PRODUCT);
+            if (position != -1 && editedProduct != null) {
+                products.remove(position);
+                products.add(position, editedProduct);
+                adapter.notifyItemChanged(position);
+            }
+        }
     }
 
     public void showProgress(boolean show) {

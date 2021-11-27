@@ -21,8 +21,10 @@ public class Constants {
     public static final int STORE_LIST_ACTIVITY_REQUEST_CODE = 201;
     public static final int ADD_STORE_ACTIVITY_REQUEST_CODE = 202;
     public static final int EDIT_STORE_ACTIVITY_REQUEST_CODE = 203;
-    public static final int ADD_PRODUCT_ACTIVITY_REQUEST_CODE = 301;
+    public static final int ADD_PRODUCT_ACTIVITY_REQUEST_CODE = 801;
+    public static final int EDIT_PRODUCT_ACTIVITY_REQUEST_CODE = 802;
     public static final int ADD_VARIANT_ACTIVITY_REQUEST_CODE = 301;
+    public static final int EDIT_VARIANT_ACTIVITY_REQUEST_CODE = 302;
     public static final int ADD_CATEGORY_ACTIVITY_REQUEST_CODE = 401;
     public static final int EDIT_CATEGORY_ACTIVITY_REQUEST_CODE = 402;
     public static final int ADD_SUB_CATEGORY_ACTIVITY_REQUEST_CODE = 501;

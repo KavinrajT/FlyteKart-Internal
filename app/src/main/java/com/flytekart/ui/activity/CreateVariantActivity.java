@@ -2,6 +2,7 @@ package com.flytekart.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -73,6 +74,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
     private List<String> attributesStrings;
     private List<String> attributeValuesStrings;
     private List<AttributeResponse> attributeResponses;
+    private int position;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -112,6 +114,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         btnSaveVariant.setOnClickListener(this);
         variant = getIntent().getParcelableExtra(Constants.VARIANT);
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
+        position = getIntent().getIntExtra(Constants.POSITION, -1);
         if (variant != null) {
             getSupportActionBar().setTitle("Edit variant");
             setData();
@@ -134,6 +137,16 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent data = new Intent();
+        data.putExtra(Constants.POSITION, position);
+        data.putExtra(Constants.VARIANT, variant);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     private void setData() {
@@ -471,7 +484,10 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartSuccessResponse(Call<BaseResponse<Variant>> call, Response<BaseResponse<Variant>> response) {
                 showProgress(false);
                 variant = response.body().getBody();
+                getSupportActionBar().setTitle("Edit variant");
                 setData();
+                Toast.makeText(getApplicationContext(), "Variant saved successfully..", Toast.LENGTH_SHORT).show();
+                //getVariantsData();
             }
 
             @Override

@@ -19,6 +19,9 @@ public class EndUser implements Parcelable {
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("phoneNumber")
+    @Expose
+    private String phoneNumber;
 
     public String getId() {
         return id;
@@ -52,6 +55,14 @@ public class EndUser implements Parcelable {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -63,6 +74,7 @@ public class EndUser implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.username);
         dest.writeString(this.email);
+        dest.writeString(this.phoneNumber);
     }
 
     public void readFromParcel(Parcel source) {
@@ -70,6 +82,7 @@ public class EndUser implements Parcelable {
         this.name = source.readString();
         this.username = source.readString();
         this.email = source.readString();
+        this.phoneNumber = source.readString();
     }
 
     public EndUser() {
@@ -80,6 +93,7 @@ public class EndUser implements Parcelable {
         this.name = in.readString();
         this.username = in.readString();
         this.email = in.readString();
+        this.phoneNumber = in.readString();
     }
 
     public static final Parcelable.Creator<EndUser> CREATOR = new Parcelable.Creator<EndUser>() {

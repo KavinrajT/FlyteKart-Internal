@@ -39,7 +39,8 @@ public class VariantStoreVariantsAdapter extends RecyclerView.Adapter<VariantSto
         VariantStoreVariantDTO variant = variants.get(position);
         holder.tvVariantName.setText(variant.getName());
         boolean isActive = false;
-        if (variant.getStoreVariantId() != null && variant.getStoreVariantDeletedAt() == null) {
+        if (variant.getStoreVariantId() != null && variant.getStoreVariantDeletedAt() == null
+                && variant.isStoreVariantIsActive()) {
             isActive = true;
         }
 

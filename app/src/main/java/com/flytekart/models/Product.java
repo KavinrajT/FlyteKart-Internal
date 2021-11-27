@@ -26,9 +26,9 @@ public class Product implements Parcelable {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("categoryId")
+    @SerializedName("category")
     @Expose
-    private String categoryId;
+    private Category category;
     @SerializedName("createdBy")
     @Expose
     private String createdBy;
@@ -98,12 +98,12 @@ public class Product implements Parcelable {
         isActive = active;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getCreatedBy() {
@@ -151,7 +151,7 @@ public class Product implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.description);
-        dest.writeString(this.categoryId);
+        dest.writeParcelable(this.category, flags);
         dest.writeString(this.createdBy);
         dest.writeString(this.lastUpdatedBy);
         dest.writeString(this.deletedBy);
@@ -165,7 +165,7 @@ public class Product implements Parcelable {
         this.id = source.readString();
         this.name = source.readString();
         this.description = source.readString();
-        this.categoryId = source.readString();
+        this.category = source.readParcelable(Category.class.getClassLoader());
         this.createdBy = source.readString();
         this.lastUpdatedBy = source.readString();
         this.deletedBy = source.readString();
@@ -182,7 +182,7 @@ public class Product implements Parcelable {
         this.id = in.readString();
         this.name = in.readString();
         this.description = in.readString();
-        this.categoryId = in.readString();
+        this.category = in.readParcelable(Category.class.getClassLoader());
         this.createdBy = in.readString();
         this.lastUpdatedBy = in.readString();
         this.deletedBy = in.readString();

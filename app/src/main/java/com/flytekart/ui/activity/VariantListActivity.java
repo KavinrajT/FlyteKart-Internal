@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
 import com.flytekart.models.response.ApiCallResponse;
@@ -35,6 +37,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -172,7 +175,7 @@ public class VariantListActivity extends AppCompatActivity {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int pos = rv.getChildAdapterPosition(child);
-                    onVariantClicked(variants.get(pos));
+                    onVariantClicked(variants.get(pos), pos);
                 }
                 return false;
             }
@@ -193,11 +196,38 @@ public class VariantListActivity extends AppCompatActivity {
      * Open variant details
      * @param variant
      */
-    private void onVariantClicked(Variant variant) {
+    private void onVariantClicked(Variant variant, int position) {
         Intent itemIntent = new Intent(this, CreateVariantActivity.class);
         itemIntent.putExtra(Constants.VARIANT, variant);
         itemIntent.putExtra(Constants.PRODUCT, product);
-        startActivityForResult(itemIntent, Constants.ADD_VARIANT_ACTIVITY_REQUEST_CODE);
+        itemIntent.putExtra(Constants.POSITION, position);
+        startActivityForResult(itemIntent, Constants.EDIT_VARIANT_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.ADD_VARIANT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Variant addedVariant = data.getParcelableExtra(Constants.VARIANT);
+            if (addedVariant != null) {
+                if (variants == null) {
+                    variants = new ArrayList<>(10);
+                    variants.add(addedVariant);
+                    setVariantsData();
+                } else {
+                    variants.add(addedVariant);
+                    adapter.notifyItemInserted(variants.size() - 1);
+                }
+            }
+        } else if (requestCode == Constants.EDIT_VARIANT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            int position = data.getIntExtra(Constants.POSITION, -1);
+            Variant editedVariant = data.getParcelableExtra(Constants.VARIANT);
+            if (position != -1 && editedVariant != null) {
+                variants.remove(position);
+                variants.add(position, editedVariant);
+                adapter.notifyItemChanged(position);
+            }
+        }
     }
 
     public void showProgress(boolean show) {

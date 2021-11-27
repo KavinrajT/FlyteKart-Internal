@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -113,8 +114,14 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         if (requestCode == Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Category addedCategory = data.getParcelableExtra(Constants.CATEGORY);
             if (addedCategory != null) {
-                categories.add(addedCategory);
-                adapter.notifyItemInserted(categories.size() - 1);
+                if (categories == null) {
+                    categories = new ArrayList<>(10);
+                    categories.add(addedCategory);
+                    setCategoriesData();
+                } else {
+                    categories.add(addedCategory);
+                    adapter.notifyItemInserted(categories.size() - 1);
+                }
             }
         } else if (requestCode == Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             int position = data.getIntExtra(Constants.POSITION, -1);
