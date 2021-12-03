@@ -12,8 +12,8 @@ android {
         applicationId "com.flytekart"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 3
-        versionName "0.5.2"
+        versionCode 4
+        versionName "0.5.4"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,7 +22,8 @@ android {
     buildTypes {
         local {
             applicationIdSuffix ".local"
-            buildConfigField "String", "BASE_URL", '"https://e494-117-208-143-58.ngrok.io/"'
+            buildConfigField "String", "BASE_URL", '"https://3c20-223-182-46-148.ngrok.io/"'
+            //buildConfigField "String", "BASE_URL", '"https://flytekart-production.herokuapp.com/"'
             debuggable true
 
             resValue "string", "app_name", "Flytekart local"
