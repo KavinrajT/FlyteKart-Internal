@@ -97,6 +97,10 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_refresh: {
+                getData();
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
