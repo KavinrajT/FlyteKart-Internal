@@ -25,7 +25,6 @@ import com.flytekart.R;
 import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.request.CreateStoreCategoryRequest;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -33,11 +32,9 @@ import com.flytekart.ui.adapters.CategoryStoreCategoriesAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -91,6 +88,10 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_refresh: {
+                getData();
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -200,6 +201,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
 
     /**
      * Open products list of this category
+     *
      * @param position
      */
     @Override
@@ -219,7 +221,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
         startActivityForResult(editCategoryIntent, Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE);*/
 
         String message;
-        if (categories.get(position).getStoreCategoryId() != null && categories.get(position).getStoreCategoryDeletedAt() == null)  {
+        if (categories.get(position).getStoreCategoryId() != null && categories.get(position).getStoreCategoryDeletedAt() == null) {
             message = "Do you want to mark the category " + categories.get(position).getName() + " as unavailable at this store? This will mark all products under this category as unavailable.";
         } else {
             message = "Do you want to mark the category " + categories.get(position).getName() + " as available at this store?";
@@ -245,6 +247,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
     /**
      * Enable a disabled category or disable an enabled category.
      * Make API call and update UI.
+     *
      * @param position
      */
     private void enableCategory(int position) {
