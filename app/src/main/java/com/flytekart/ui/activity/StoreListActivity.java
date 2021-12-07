@@ -30,6 +30,7 @@ import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -186,6 +187,9 @@ public class StoreListActivity extends AppCompatActivity {
         if (requestCode == Constants.ADD_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Store addedStore = data.getParcelableExtra(Constants.STORE);
             if (addedStore != null) {
+                if (stores == null) {
+                    stores = new ArrayList<>();
+                }
                 stores.add(addedStore);
                 adapter.notifyItemInserted(stores.size() - 1);
             }

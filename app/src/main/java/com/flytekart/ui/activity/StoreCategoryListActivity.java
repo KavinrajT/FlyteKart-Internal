@@ -152,11 +152,6 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
         if (categories == null || categories.isEmpty()) {
             rvStoreCategoryList.setVisibility(View.GONE);
             llNoRecordsFound.setVisibility(View.VISIBLE);
-            llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(StoreCategoryListActivity.this, CreateCategoryActivity.class);
-                startActivityForResult(intent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
-            });
-
         } else {
             llNoRecordsFound.setVisibility(View.GONE);
             rvStoreCategoryList.setVisibility(View.VISIBLE);
