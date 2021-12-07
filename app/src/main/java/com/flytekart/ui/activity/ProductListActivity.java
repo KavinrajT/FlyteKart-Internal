@@ -216,6 +216,9 @@ public class ProductListActivity extends AppCompatActivity {
                     setProductsData();
                 } else {
                     products.add(addedProduct);
+                    if (adapter == null){
+                        adapter = new ProductsAdapter(products, category);
+                    }
                     adapter.notifyItemInserted(products.size() - 1);
                 }
             }

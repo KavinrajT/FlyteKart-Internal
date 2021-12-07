@@ -189,9 +189,15 @@ public class StoreListActivity extends AppCompatActivity {
             if (addedStore != null) {
                 if (stores == null) {
                     stores = new ArrayList<>();
+                    stores.add(addedStore);
+                    setStoresData();
+                } else {
+                    stores.add(addedStore);
+                    if (adapter == null) {
+                        adapter = new StoresAdapter(stores);
+                    }
+                    adapter.notifyItemInserted(stores.size() - 1);
                 }
-                stores.add(addedStore);
-                adapter.notifyItemInserted(stores.size() - 1);
             }
         } else if (requestCode == Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             int position = data.getIntExtra(Constants.POSITION, -1);
