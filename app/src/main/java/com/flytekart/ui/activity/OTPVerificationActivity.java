@@ -22,7 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.EmployeePushToken;
 import com.flytekart.models.UserDetails;
+import com.flytekart.models.request.CreateEmployeePushTokenRequest;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.request.VerifyOTPRequest;
 import com.flytekart.models.response.APIError;
@@ -35,10 +37,13 @@ import com.flytekart.utils.SmsBroadcastReceiver;
 import com.flytekart.utils.Utilities;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -217,22 +222,11 @@ public class OTPVerificationActivity extends AppCompatActivity {
             @Override
             public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<LoginResponse>> call, @NotNull Response<BaseResponse<LoginResponse>> response) {
                 Logger.i("Employee Login API call response received.");
-                showProgress(false);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body().getBody();
-                    // Get dropdown data and go to next screen.
-                    Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_SHORT).show();
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
-                    editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
-                    editor.putString(Constants.SHARED_PREF_KEY_CLIENT_ID, clientId);
-                    editor.apply();
-                    saveUserDetails(loginResponse.getUserDetails());
-                    Logger.i("Employee Login API call success.");
-                    Intent mainIntent = new Intent(OTPVerificationActivity.this, HomeActivity.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(mainIntent);
-                    finish();
+                    getFCMToken(clientId, loginResponse);
+                } else {
+                    showProgress(false);
                 }
             }
 
@@ -259,6 +253,83 @@ public class OTPVerificationActivity extends AppCompatActivity {
             @Override
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<LoginResponse>> call) {
                 Logger.i("Employee Login API call failure.");
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getFCMToken(String clientId, LoginResponse loginResponse) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    String token = task.getResult();
+                    saveFCMToken(clientId, loginResponse, token);
+                } else {
+                    // Fail login
+                    Logger.i("Get FCM token failure.");
+                    showProgress(false);
+                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void saveFCMToken(String clientId, LoginResponse loginResponse, String token) {
+        CreateEmployeePushTokenRequest request = new CreateEmployeePushTokenRequest();
+        request.setUserId(loginResponse.getUserDetails().getId());
+        request.setToken(token);
+        request.setClientType("android");
+        Call<BaseResponse<EmployeePushToken>> saveFCMTokenCall = Flytekart.getApiService().saveFCMToken(
+                loginResponse.getTokenType() + Constants.SPACE + loginResponse.getAccessToken(), clientId, request);
+        saveFCMTokenCall.enqueue(new CustomCallback<BaseResponse<EmployeePushToken>>() {
+            @Override
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<EmployeePushToken>> call, @NotNull Response<BaseResponse<EmployeePushToken>> response) {
+                Logger.i("Employee push token save API call response received.");
+                showProgress(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    EmployeePushToken employeePushToken = response.body().getBody();
+                    // Get dropdown data and go to next screen.
+                    Toast.makeText(getApplicationContext(), "Login successful.", Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN, false);
+                    editor.putString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, loginResponse.getTokenType() + " " + loginResponse.getAccessToken());
+                    editor.putString(Constants.SHARED_PREF_KEY_CLIENT_ID, clientId);
+                    editor.putString(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID, employeePushToken.getId());
+                    editor.apply();
+                    saveUserDetails(loginResponse.getUserDetails());
+                    Logger.i("Employee push token save API call success.");
+                    Intent mainIntent = new Intent(OTPVerificationActivity.this, HomeActivity.class);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(mainIntent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<EmployeePushToken>> call, APIError responseBody) {
+                /*if (response.errorBody() != null) {
+                    try {
+                        ApiCallResponse apiCallResponse = new Gson().fromJson(
+                                response.errorBody().string(), ApiCallResponse.class);
+                        Toast.makeText(getApplicationContext(), apiCallResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+                Logger.e("Employee push token save API response failed");
+                showProgress(false);
+                if (responseBody != null && responseBody.getMessage() != null) {
+                    Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<EmployeePushToken>> call) {
+                Logger.i("Employee push token save API call failure.");
                 showProgress(false);
                 Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }

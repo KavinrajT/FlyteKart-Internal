@@ -3,6 +3,7 @@ package com.flytekart.network;
 import com.flytekart.models.Attribute;
 import com.flytekart.models.Category;
 import com.flytekart.models.CategoryStoreCategoryDTO;
+import com.flytekart.models.EmployeePushToken;
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.Product;
@@ -14,6 +15,7 @@ import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
 import com.flytekart.models.VariantStoreVariantDTO;
 import com.flytekart.models.request.CODPaymentRequest;
+import com.flytekart.models.request.CreateEmployeePushTokenRequest;
 import com.flytekart.models.request.CreateProductRequest;
 import com.flytekart.models.request.CreateStoreCategoryRequest;
 import com.flytekart.models.request.CreateStoreProductRequest;
@@ -21,6 +23,7 @@ import com.flytekart.models.request.CreateStoreRequest;
 import com.flytekart.models.request.CreateStoreVariantRequest;
 import com.flytekart.models.request.CreateVariantRequest;
 import com.flytekart.models.request.CreateVariantVavRequest;
+import com.flytekart.models.request.DeleteEmployeePushTokenRequest;
 import com.flytekart.models.request.DeleteVariantAttributeValueRequest;
 import com.flytekart.models.request.LoginRequest;
 import com.flytekart.models.request.SendOTPRequest;
@@ -67,6 +70,18 @@ public interface ApiService {
     Call<BaseResponse<LoginResponse>> verifyClientOTP(
             @Query("clientId") String clientId,
             @Body VerifyOTPRequest request);
+
+    @POST("/api/notifications/saveEmployeePushToken")
+    Call<BaseResponse<EmployeePushToken>> saveFCMToken(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body CreateEmployeePushTokenRequest request);
+
+    @POST("/api/notifications/deleteEmployeePushToken")
+    Call<BaseResponse<EmployeePushToken>> deleteFCMToken(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body DeleteEmployeePushTokenRequest request);
 
     @POST("/api/auth/changePassword")
     Call<ApiCallResponse> changePasswordMainUser(

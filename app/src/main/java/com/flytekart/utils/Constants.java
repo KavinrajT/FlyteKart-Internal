@@ -53,6 +53,7 @@ public class Constants {
     public static final String USERNAME = "username";
 
     public static final int DEFAULT_PAGE_SIZE = 10;
+    public static final String SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID = "EMPLOYEE_PUSH_TOKEN_ID";
 
     public static final class OrderStatus {
         public static final String IN_PROGRESS = "IN_PROGRESS";
