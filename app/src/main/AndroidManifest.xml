@@ -72,6 +72,21 @@
             android:name=".ui.activity.StoreActivity"
             android:theme="@style/ToolbarTheme" />
         <activity
+            android:name=".ui.activity.ReportsActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.ProductOrderReportActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.ProductOrderReportFiltersActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.OrdersOverTimeReportActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.CustomerAcquisitionReportActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
             android:name=".ui.activity.OrdersListActivity"
             android:theme="@style/ToolbarTheme" />
         <activity

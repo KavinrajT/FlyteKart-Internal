@@ -3,10 +3,14 @@ package com.flytekart.network;
 import com.flytekart.models.Attribute;
 import com.flytekart.models.Category;
 import com.flytekart.models.CategoryStoreCategoryDTO;
+import com.flytekart.models.CustomerAcquisitionReportItem;
+import com.flytekart.models.CustomerOrderReportItem;
 import com.flytekart.models.EmployeePushToken;
 import com.flytekart.models.OrderResponse;
+import com.flytekart.models.OrdersOverTimeReportItem;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.Product;
+import com.flytekart.models.ProductOrderReportItem;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.StoreVariant;
@@ -332,5 +336,33 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body CODPaymentRequest request);
+
+    @GET("/api/reports/orders")
+    Call<BaseResponse<List<ProductOrderReportItem>>> getProductOrderReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/reports/ordersovertime")
+    Call<BaseResponse<List<OrdersOverTimeReportItem>>> getOrdersOverTimeReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/reports/customer")
+    Call<BaseResponse<List<CustomerAcquisitionReportItem>>> getCustomerAcquisitionReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/reports/customerorders")
+    Call<BaseResponse<List<CustomerOrderReportItem>>> getCustomerOrderReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
 }
 

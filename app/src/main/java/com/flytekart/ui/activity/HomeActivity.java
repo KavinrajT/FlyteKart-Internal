@@ -119,6 +119,7 @@ public class HomeActivity extends BaseActivity {
         headerList.add(new MenuModel(getString(R.string.stores), true, true, null));
         headerList.add(new MenuModel(getString(R.string.categories_products), true, true, null));
         headerList.add(new MenuModel(getString(R.string.orderResponses), true, true, null));
+        headerList.add(new MenuModel(getString(R.string.reports), true, true, null));
         //headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
         headerList.add(new MenuModel(getString(R.string.sign_out), true, true, null));
     }
@@ -136,6 +137,9 @@ public class HomeActivity extends BaseActivity {
                 startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.reports))) {
+                Intent intent = new Intent(HomeActivity.this, ReportsActivity.class);
+                startActivity(intent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
                 SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
                 String pushTokenId = sharedPreferences.getString(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID, null);
@@ -170,7 +174,7 @@ public class HomeActivity extends BaseActivity {
                 SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
                 String pushTokenId = sharedPreferences.getString(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID, null);
                 deleteFCMToken(clientId, pushTokenId);
-                SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
                 editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
                 editor.remove(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID);
