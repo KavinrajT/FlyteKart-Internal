@@ -42,6 +42,7 @@
     <string name="stores">Stores</string>
     <string name="categories_products">Categories &amp; products</string>
     <string name="orderResponses">Orders</string>
+    <string name="reports">Reports</string>
     <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
 
@@ -115,10 +116,11 @@
     <string name="str_show_advanced_inventory">Show Advanced Inventory</string>
     <string name="str_create_product">Create Product</string>
     <string name="str_no_records_found">No records found.</string>
-    <string name="category_info">Category Info</string>
-    <string name="category_name">Category Name</string>
-    <string name="product_name">Product Name</string>
-    <string name="variant_name">Variant Name</string>
+    <string name="category_info">Category info</string>
+    <string name="category_name">Category name</string>
+    <string name="product_name">Product name</string>
+    <string name="variant_name">Variant name</string>
+    <string name="date">Date</string>
     <string name="is_active">Is Active?</string>
     <string name="is_available">Is Available?</string>
     <string name="sub_category_info">Sub Category Info</string>
@@ -127,6 +129,7 @@
     <string name="save_category">Save category</string>
     <string name="create_category">Create category</string>
     <string name="save_store">Save store</string>
+    <string name="apply_filters">Apply filters</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -166,10 +169,21 @@
     <string name="edit_store">Edit store</string>
     <string name="order_status">Order status</string>
     <string name="payment_details">Payment details</string>
+    <string name="qty">Qty</string>
+    <string name="ordered">Ordered</string>
+    <string name="delivered">Delivered</string>
+    <string name="count">Count</string>
+    <string name="dummy_zero_price">Rs 0.00</string>
+    <string name="filters">Filters</string>
 
     <!-- Progress string -->
     <string name="progress_please_wait">Please wait</string>
+
     <string name="collection_payment">COLLECT PAYMENT</string>
     <string name="update_order_status">UPDATE ORDER STATUS</string>
+    <string name="product_order_report">Product order report</string>
+    <string name="orders_over_time_report">Orders over time report</string>
+    <string name="customer_acquisition_report">Customer acquisition report</string>
+    <string name="customer_order_report">Customer order report</string>
 
 </resources>

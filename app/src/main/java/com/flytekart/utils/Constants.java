@@ -30,6 +30,7 @@ public class Constants {
     public static final int ADD_SUB_CATEGORY_ACTIVITY_REQUEST_CODE = 501;
     public static final int CATEGORY_LIST_ACTIVITY_REQUEST_CODE = 601;
     public static final int EDIT_ORDER_ACTIVITY_REQUEST_CODE = 701;
+    public static final int PRODUCT_ORDER_REPORT_FILTERS_ACTIVITY_REQUEST_CODE = 801;
 
     public static final String API_TOKEN_TAG = "Authorization";
     public static final String LOGIN_TYPE_MAIN_ACCOUNT = "Main Account";
@@ -53,6 +54,7 @@ public class Constants {
     public static final String USERNAME = "username";
 
     public static final int DEFAULT_PAGE_SIZE = 10;
+    public static final String SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID = "EMPLOYEE_PUSH_TOKEN_ID";
 
     public static final class OrderStatus {
         public static final String IN_PROGRESS = "IN_PROGRESS";

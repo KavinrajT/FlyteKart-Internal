@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.flytekart"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 4
         versionName "0.5.4"
@@ -22,7 +22,7 @@ android {
     buildTypes {
         local {
             applicationIdSuffix ".local"
-            buildConfigField "String", "BASE_URL", '"https://3c20-223-182-46-148.ngrok.io/"'
+            buildConfigField "String", "BASE_URL", '"https://912e-117-195-95-127.eu.ngrok.io/"'
             //buildConfigField "String", "BASE_URL", '"https://flytekart-production.herokuapp.com/"'
             debuggable true
 
@@ -60,7 +60,7 @@ android {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:26.1.1')
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.material:material:1.4.0'
@@ -71,6 +71,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.code.gson:gson:2.8.6'

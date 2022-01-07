@@ -18,10 +18,13 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.EmployeePushToken;
 import com.flytekart.models.MenuModel;
 import com.flytekart.models.Organisation;
 import com.flytekart.models.UserDetails;
+import com.flytekart.models.request.DeleteEmployeePushTokenRequest;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.BaseResponse;
@@ -30,6 +33,7 @@ import com.flytekart.ui.adapters.MenuExpandableListAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -115,6 +119,7 @@ public class HomeActivity extends BaseActivity {
         headerList.add(new MenuModel(getString(R.string.stores), true, true, null));
         headerList.add(new MenuModel(getString(R.string.categories_products), true, true, null));
         headerList.add(new MenuModel(getString(R.string.orderResponses), true, true, null));
+        headerList.add(new MenuModel(getString(R.string.reports), true, true, null));
         //headerList.add(new MenuModel(getString(R.string.change_password), true, true, null));
         headerList.add(new MenuModel(getString(R.string.sign_out), true, true, null));
     }
@@ -132,11 +137,18 @@ public class HomeActivity extends BaseActivity {
                 startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.reports))) {
+                Intent intent = new Intent(HomeActivity.this, ReportsActivity.class);
+                startActivity(intent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
-                SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
+                SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+                String pushTokenId = sharedPreferences.getString(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID, null);
+                deleteFCMToken(clientId, pushTokenId);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
                 editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
                 editor.remove(Constants.SHARED_PREF_KEY_USER_DETAILS);
+                editor.remove(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID);
                 editor.apply();
                 Intent signOutIntent = new Intent(HomeActivity.this, LoginActivity.class);
                 startActivity(signOutIntent);
@@ -159,13 +171,44 @@ public class HomeActivity extends BaseActivity {
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {
-                SharedPreferences.Editor editor = Utilities.getSharedPreferences().edit();
+                SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+                String pushTokenId = sharedPreferences.getString(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID, null);
+                deleteFCMToken(clientId, pushTokenId);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove(Constants.SHARED_PREF_KEY_IS_MAIN_ACCOUNT_LOGGED_IN);
                 editor.remove(Constants.SHARED_PREF_KEY_ACCESS_TOKEN);
+                editor.remove(Constants.SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID);
                 editor.apply();
                 finish();
             }
         }
+    }
+
+    private void deleteFCMToken(String clientId, String pushTokenId) {
+        FirebaseMessaging.getInstance().deleteToken();
+        DeleteEmployeePushTokenRequest request = new DeleteEmployeePushTokenRequest();
+        request.setId(pushTokenId);
+        Call<BaseResponse<EmployeePushToken>> deleteFCMTokenCall = Flytekart.getApiService().deleteFCMToken(
+                accessToken, clientId, request);
+        deleteFCMTokenCall.enqueue(new CustomCallback<BaseResponse<EmployeePushToken>>() {
+            @Override
+            public void onFlytekartSuccessResponse(@NotNull Call<BaseResponse<EmployeePushToken>> call, @NotNull Response<BaseResponse<EmployeePushToken>> response) {
+                Logger.i("Employee push token delete API call response received.");
+                // No need to do anything
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<EmployeePushToken>> call, APIError responseBody) {
+                Logger.e("Employee push token delete API response failed");
+                // No need to do anything
+            }
+
+            @Override
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<EmployeePushToken>> call) {
+                Logger.i("Employee push token save API call failure.");
+                // No need to do anything
+            }
+        });
     }
 
     private void populateFragment() {
