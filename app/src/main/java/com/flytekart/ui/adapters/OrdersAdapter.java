@@ -38,7 +38,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         } else {
             holder.tvUserName.setText(orderResponse.getOrder().getEndUser().getPhoneNumber());
         }
-        holder.tvOrderTime.setText(Utilities.getFormattedCalendarString(orderResponse.getOrder().getCreatedAt()));
+        holder.tvOrderTime.setText(Utilities.getFormattedCalendarString(orderResponse.getOrder().getOrderPlacedAt()));
         holder.tvOrderSource.setText(orderResponse.getOrder().getOrderSource().getName());
         holder.tvOrderStatus.setText(Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
         holder.tvOrderTotal.setText(Utilities.getFormattedMoney(orderResponse.getOrderTotal().getTotal()));
