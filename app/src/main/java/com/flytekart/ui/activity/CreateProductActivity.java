@@ -382,6 +382,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
         request.setDescription(product.getDescription());
         request.setCategoryId(product.getCategory().getId());
         request.setActive(product.isActive());
+        request.setImageUrl(product.getImageUrl());
 
         showProgress(true);
         Call<BaseResponse<Product>> saveProductCall = Flytekart.getApiService().saveProduct(accessToken, clientId, request);
