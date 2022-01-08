@@ -32,8 +32,8 @@ android {
         }
         staging {
             applicationIdSuffix ".staging"
-            buildConfigField "String", "BASE_URL", '"https://aqueous-depths-69529.herokuapp.com/"'
-
+            buildConfigField "String", "BASE_URL", '"https://stageapi.flytekart.com/"'
+            debuggable true
             resValue "string", "app_name", "Flytekart staging"
 
             signingConfig signingConfigs.debug
@@ -83,6 +83,7 @@ dependencies {
     implementation("com.google.guava:guava:30.1.1-android")
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth-api-phone:17.5.1'
+    implementation 'com.kbeanie:multipicker:1.1.2@aar'
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

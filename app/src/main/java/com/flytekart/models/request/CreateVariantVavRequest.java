@@ -40,6 +40,10 @@ public class CreateVariantVavRequest {
     @Expose
     private boolean active;
 
+    @SerializedName("imageUrl")
+    @Expose
+    private String imageUrl;
+
     @SerializedName("attributeValueDTOs")
     @Expose
     private List<AttributeValueDTO> attributeValueDTOs;
@@ -114,5 +118,13 @@ public class CreateVariantVavRequest {
 
     public void setAttributeValueDTOs(List<AttributeValueDTO> attributeValueDTOs) {
         this.attributeValueDTOs = attributeValueDTOs;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

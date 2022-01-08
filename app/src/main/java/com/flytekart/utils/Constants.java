@@ -16,6 +16,7 @@ public class Constants {
     public static final int TIMEOUT = 60;
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    public static final int STORAGE_PERMISSION_REQUEST_CODE = 1001;
     public static final int CREATE_ORG_ACTIVITY_REQUEST_CODE = 101;
     public static final int MAPS_ACTIVITY_REQUEST_CODE = 102;
     public static final int STORE_LIST_ACTIVITY_REQUEST_CODE = 201;
@@ -55,6 +56,10 @@ public class Constants {
 
     public static final int DEFAULT_PAGE_SIZE = 10;
     public static final String SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID = "EMPLOYEE_PUSH_TOKEN_ID";
+
+    public static final String STR_JPEG_FILE_EXTENSION = ".jpeg";
+    public static final int MAX_IMAGE_SIZE = 200 ;// IN KB
+    public static final int IMAGE_MAX_DIM = 500;
 
     public static final class OrderStatus {
         public static final String IN_PROGRESS = "IN_PROGRESS";

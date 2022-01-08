@@ -41,6 +41,9 @@ public class Product implements Parcelable {
     @SerializedName("isActive")
     @Expose
     private boolean isActive;
+    @SerializedName("imageUrl")
+    @Expose
+    private String imageUrl;
 
     public String getCreatedAt() {
         return createdAt;
@@ -138,6 +141,15 @@ public class Product implements Parcelable {
         this.isActive = isActive;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -156,6 +168,7 @@ public class Product implements Parcelable {
         dest.writeString(this.lastUpdatedBy);
         dest.writeString(this.deletedBy);
         dest.writeByte(this.isActive ? (byte) 1 : (byte) 0);
+        dest.writeString(this.imageUrl);
     }
 
     public void readFromParcel(Parcel source) {
@@ -170,6 +183,7 @@ public class Product implements Parcelable {
         this.lastUpdatedBy = source.readString();
         this.deletedBy = source.readString();
         this.isActive = source.readByte() != 0;
+        this.imageUrl = source.readString();
     }
 
     public Product() {
@@ -187,6 +201,7 @@ public class Product implements Parcelable {
         this.lastUpdatedBy = in.readString();
         this.deletedBy = in.readString();
         this.isActive = in.readByte() != 0;
+        this.imageUrl = in.readString();
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {

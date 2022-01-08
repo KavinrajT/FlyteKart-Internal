@@ -14,7 +14,6 @@ import com.flytekart.models.ProductOrderReportItem;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.StoreVariant;
-import com.flytekart.models.User;
 import com.flytekart.models.Variant;
 import com.flytekart.models.VariantAttributeValue;
 import com.flytekart.models.VariantStoreVariantDTO;
@@ -36,12 +35,14 @@ import com.flytekart.models.request.VerifyOTPRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.AttributeResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.models.response.FileUploadResponse;
 import com.flytekart.models.response.LoginResponse;
 import com.flytekart.utils.Constants;
 import com.google.gson.JsonObject;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -364,5 +365,11 @@ public interface ApiService {
             @Query("clientId") String clientId,
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
+
+    @POST("/api/s3/upload")
+    Call<FileUploadResponse> uploadFile(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body MultipartBody multipartBody);
 }
 
