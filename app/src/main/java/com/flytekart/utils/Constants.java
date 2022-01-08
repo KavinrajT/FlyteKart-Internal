@@ -53,6 +53,7 @@ public class Constants {
     public static final String CURRENCY_RUPEE_PREFIX = "Rs";
     public static final String CLIENT_ID = "clientId";
     public static final String USERNAME = "username";
+    public static final String MULTIPLE = "MULTIPLE";
 
     public static final int DEFAULT_PAGE_SIZE = 10;
     public static final String SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID = "EMPLOYEE_PUSH_TOKEN_ID";
@@ -117,5 +118,6 @@ public class Constants {
 
     public static final class PaymentType {
         public static final String COD = "COD"; // Covers both cash on delivery and pay on delivery
+        public static final String RAZORPAY = "RAZORPAY";
     }
 }

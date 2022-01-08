@@ -153,8 +153,16 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     private void setPaidAndBalanceToUI() {
         double paid = getPaidAmount();
         double balance = orderResponse.getOrderTotal().getTotal() - paid;
-        tvPaid.setText(String.valueOf(paid));
-        tvBalance.setText(String.valueOf(balance));
+        tvPaid.setText(Utilities.getFormattedMoney(paid));
+        tvBalance.setText(Utilities.getFormattedMoney(balance));
+
+        if (orderResponse.getPayments().size() == 0) {
+            tvPaymentType.setText(Constants.EMPTY);
+        } else if (orderResponse.getPayments().size() == 1) {
+            tvPaymentType.setText(orderResponse.getPayments().get(0).getPaymentType().getName());
+        } else {
+            tvPaymentType.setText(Constants.MULTIPLE);
+        }
 
         if (balance > 0 &&
                 orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
