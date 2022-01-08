@@ -185,5 +185,8 @@
     <string name="orders_over_time_report">Orders over time report</string>
     <string name="customer_acquisition_report">Customer acquisition report</string>
     <string name="customer_order_report">Customer order report</string>
+    <string name="str_choose_image">Choose image from?</string>
+    <string name="str_gallery">Gallery</string>
+    <string name="str_camera">Camera</string>
 
 </resources>

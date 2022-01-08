@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -32,11 +31,9 @@ import com.flytekart.ui.adapters.CategoriesAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +117,9 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                     setCategoriesData();
                 } else {
                     categories.add(addedCategory);
+                    if (adapter == null) {
+                        adapter = new CategoriesAdapter(this, categories);
+                    }
                     adapter.notifyItemInserted(categories.size() - 1);
                 }
             }
@@ -217,6 +217,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
 
     /**
      * Open products list of this category
+     *
      * @param position
      */
     @Override

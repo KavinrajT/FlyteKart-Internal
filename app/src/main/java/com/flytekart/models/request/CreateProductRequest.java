@@ -28,6 +28,10 @@ public class CreateProductRequest {
     @Expose
     private boolean isActive;
 
+    @SerializedName("imageUrl")
+    @Expose
+    private String imageUrl;
+
     public String getId() {
         return id;
     }
@@ -66,5 +70,13 @@ public class CreateProductRequest {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String isImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

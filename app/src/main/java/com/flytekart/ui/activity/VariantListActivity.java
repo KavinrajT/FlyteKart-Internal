@@ -21,10 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.Category;
 import com.flytekart.models.Product;
 import com.flytekart.models.Variant;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -32,11 +30,9 @@ import com.flytekart.ui.adapters.VariantsAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,6 +190,7 @@ public class VariantListActivity extends AppCompatActivity {
 
     /**
      * Open variant details
+     *
      * @param variant
      */
     private void onVariantClicked(Variant variant, int position) {
@@ -216,6 +213,9 @@ public class VariantListActivity extends AppCompatActivity {
                     setVariantsData();
                 } else {
                     variants.add(addedVariant);
+                    if (adapter == null) {
+                        adapter = new VariantsAdapter(variants);
+                    }
                     adapter.notifyItemInserted(variants.size() - 1);
                 }
             }

@@ -50,6 +50,9 @@ public class Variant implements Parcelable {
     @SerializedName("deletedBy")
     @Expose
     private String deletedBy;
+    @SerializedName("imageUrl")
+    @Expose
+    private String imageUrl;
 
     public String getCreatedAt() {
         return createdAt;
@@ -163,6 +166,14 @@ public class Variant implements Parcelable {
         this.deletedBy = deletedBy;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -184,6 +195,7 @@ public class Variant implements Parcelable {
         dest.writeString(this.createdBy);
         dest.writeString(this.lastUpdatedBy);
         dest.writeString(this.deletedBy);
+        dest.writeString(this.imageUrl);
     }
 
     public void readFromParcel(Parcel source) {
@@ -201,6 +213,7 @@ public class Variant implements Parcelable {
         this.createdBy = source.readString();
         this.lastUpdatedBy = source.readString();
         this.deletedBy = source.readString();
+        this.imageUrl = source.readString();
     }
 
     public Variant() {
@@ -221,6 +234,7 @@ public class Variant implements Parcelable {
         this.createdBy = in.readString();
         this.lastUpdatedBy = in.readString();
         this.deletedBy = in.readString();
+        this.imageUrl = in.readString();
     }
 
     public static final Parcelable.Creator<Variant> CREATOR = new Parcelable.Creator<Variant>() {

@@ -26,7 +26,6 @@ import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
 import com.flytekart.models.request.CreateStoreProductRequest;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -34,11 +33,9 @@ import com.flytekart.ui.adapters.ProductStoreProductsAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -158,10 +155,6 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
         if (products == null || products.isEmpty()) {
             rvStoreProductList.setVisibility(View.GONE);
             llNoRecordsFound.setVisibility(View.VISIBLE);
-            llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(StoreProductListActivity.this, CreateCategoryActivity.class);
-                startActivityForResult(intent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
-            });
 
         } else {
             llNoRecordsFound.setVisibility(View.GONE);
@@ -207,6 +200,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
 
     /**
      * Open products list of this category
+     *
      * @param position
      */
     @Override
@@ -226,7 +220,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
         startActivityForResult(editCategoryIntent, Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE);*/
 
         String message;
-        if (products.get(position).getStoreProductId() != null && products.get(position).getStoreProductDeletedAt() == null)  {
+        if (products.get(position).getStoreProductId() != null && products.get(position).getStoreProductDeletedAt() == null) {
             message = "Do you want to mark the product " + products.get(position).getName() + " as unavailable at this store?";
         } else {
             message = "Do you want to mark the product " + products.get(position).getName() + " as available at this store?";
@@ -252,6 +246,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
     /**
      * Enable a disabled category or disable an enabled category.
      * Make API call and update UI.
+     *
      * @param position
      */
     private void enableProduct(int position) {

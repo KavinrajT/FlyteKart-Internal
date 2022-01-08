@@ -22,9 +22,7 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.ProductStoreProductDTO;
 import com.flytekart.models.Store;
-import com.flytekart.models.Variant;
 import com.flytekart.models.VariantStoreVariantDTO;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -32,12 +30,9 @@ import com.flytekart.ui.adapters.VariantStoreVariantsAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

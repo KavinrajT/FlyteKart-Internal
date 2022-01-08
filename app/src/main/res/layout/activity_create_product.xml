@@ -70,6 +70,30 @@
                     android:layout_alignParentRight="true" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical|start"
+                    android:text="Product Image :"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/iv_product_img"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_photo_camera" />
+            </RelativeLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_description"
                 android:layout_width="match_parent"
@@ -82,9 +106,9 @@
                     android:layout_height="100dp"
                     android:gravity="top|left"
                     android:hint="@string/str_description"
-                    android:maxLength="1000"
                     android:imeOptions="actionNext"
                     android:inputType="text"
+                    android:maxLength="1000"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -118,11 +142,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text=">"
-                    android:textColor="@color/white"
+                    android:layout_alignParentRight="true"
                     android:padding="5dp"
+                    android:text=">"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_alignParentRight="true" />
+                    android:textColor="@color/white" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -130,8 +154,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -155,8 +179,8 @@
                 android:id="@+id/til_sku"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_sku"
@@ -173,9 +197,9 @@
                 android:id="@+id/ll_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
