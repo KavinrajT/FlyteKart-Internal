@@ -7,6 +7,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Order implements Parcelable {
+    @SerializedName("orderPlacedAt")
+    @Expose
+    private String orderPlacedAt;
     @SerializedName("createdAt")
     @Expose
     private String createdAt;
@@ -52,6 +55,14 @@ public class Order implements Parcelable {
     @SerializedName("deliveryAddress")
     @Expose
     private Address deliveryAddress;
+
+    public String getOrderPlacedAt() {
+        return orderPlacedAt;
+    }
+
+    public void setOrderPlacedAt(String orderPlacedAt) {
+        this.orderPlacedAt = orderPlacedAt;
+    }
 
     public String getCreatedAt() {
         return createdAt;
@@ -173,7 +184,6 @@ public class Order implements Parcelable {
         this.deliveryAddress = deliveryAddress;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -181,6 +191,7 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.orderPlacedAt);
         dest.writeString(this.createdAt);
         dest.writeString(this.lastUpdatedAt);
         dest.writeString(this.deletedAt);
@@ -199,6 +210,7 @@ public class Order implements Parcelable {
     }
 
     public void readFromParcel(Parcel source) {
+        this.orderPlacedAt = source.readString();
         this.createdAt = source.readString();
         this.lastUpdatedAt = source.readString();
         this.deletedAt = source.readString();
@@ -220,6 +232,7 @@ public class Order implements Parcelable {
     }
 
     protected Order(Parcel in) {
+        this.orderPlacedAt = in.readString();
         this.createdAt = in.readString();
         this.lastUpdatedAt = in.readString();
         this.deletedAt = in.readString();
@@ -237,7 +250,7 @@ public class Order implements Parcelable {
         this.deliveryAddress = in.readParcelable(Address.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel source) {
             return new Order(source);
