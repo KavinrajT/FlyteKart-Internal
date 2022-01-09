@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.flytekart"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 4
         versionName "0.5.4"
@@ -22,7 +22,7 @@ android {
     buildTypes {
         local {
             applicationIdSuffix ".local"
-            buildConfigField "String", "BASE_URL", '"https://b047-117-208-137-180.eu.ngrok.io/"'
+            buildConfigField "String", "BASE_URL", '"https://d032-117-195-95-68.eu.ngrok.io/"'
             //buildConfigField "String", "BASE_URL", '"https://flytekart-production.herokuapp.com/"'
             debuggable true
 
@@ -83,7 +83,7 @@ dependencies {
     implementation("com.google.guava:guava:30.1.1-android")
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth-api-phone:17.5.1'
-    implementation 'com.kbeanie:multipicker:1.1.2@aar'
+    implementation 'com.kbeanie:multipicker:1.6.2@aar'
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

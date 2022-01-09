@@ -106,7 +106,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Order List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -329,7 +329,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -358,7 +358,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -387,7 +387,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -417,7 +417,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -447,7 +447,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -479,7 +479,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<OrderResponse>> call) {
                 Logger.e("Accept order API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override

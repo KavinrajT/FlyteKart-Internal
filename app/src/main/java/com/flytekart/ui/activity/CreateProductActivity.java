@@ -239,7 +239,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<Product>> call) {
                 Logger.i("Product API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -266,7 +266,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<Variant>>> call) {
                 Logger.i("Variants API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -326,7 +326,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<FileUploadResponse> call) {
                 Logger.i("Product image upload API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -391,7 +391,7 @@ public class CreateProductActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<Product>> call) {
                 Logger.i("Save product API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override

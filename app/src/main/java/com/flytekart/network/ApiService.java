@@ -371,5 +371,11 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body MultipartBody multipartBody);
+
+    @POST("/api/categories/upload")
+    Call<FileUploadResponse> uploadProductsFile(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Body MultipartBody multipartBody);
 }
 

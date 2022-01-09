@@ -137,7 +137,7 @@ public class StoreVariantListActivity extends AppCompatActivity {
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<VariantStoreVariantDTO>>> call) {
                 Logger.i("Store variants List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }

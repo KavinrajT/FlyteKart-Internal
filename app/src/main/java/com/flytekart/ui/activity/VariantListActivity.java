@@ -131,7 +131,7 @@ public class VariantListActivity extends AppCompatActivity {
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<Variant>>> call) {
                 Logger.i("Variants List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }

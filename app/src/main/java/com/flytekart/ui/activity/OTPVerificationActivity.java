@@ -207,7 +207,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<LoginResponse>> call) {
                 Logger.i("Main Login API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -246,7 +246,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 if (responseBody != null && responseBody.getMessage() != null) {
                     Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -254,7 +254,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<LoginResponse>> call) {
                 Logger.i("Employee Login API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -270,7 +270,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
                     // Fail login
                     Logger.i("Get FCM token failure.");
                     showProgress(false);
-                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -323,7 +323,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 if (responseBody != null && responseBody.getMessage() != null) {
                     Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -331,7 +331,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<EmployeePushToken>> call) {
                 Logger.i("Employee push token save API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }

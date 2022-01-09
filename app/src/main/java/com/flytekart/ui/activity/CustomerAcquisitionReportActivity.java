@@ -148,7 +148,7 @@ public class CustomerAcquisitionReportActivity extends AppCompatActivity {
                 Logger.i("CustomerAcquisitionReport call failure.");
                 showProgress(false);
                 isLoadingOrders = false;
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
