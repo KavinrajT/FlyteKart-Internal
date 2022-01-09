@@ -193,7 +193,7 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
             public void onFlytekartGenericErrorResponse(Call<FileUploadResponse> call) {
                 Logger.i("Category image upload API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -243,7 +243,7 @@ public class CreateCategoryActivity extends AppCompatActivity implements View.On
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<Category>> call) {
                 Logger.i("Category API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override

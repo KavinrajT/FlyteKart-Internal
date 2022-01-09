@@ -188,5 +188,9 @@
     <string name="str_choose_image">Choose image from?</string>
     <string name="str_gallery">Gallery</string>
     <string name="str_camera">Camera</string>
+    <string name="reports_and_statistics_coming_soon">Reports and statistics coming soon!</string>
+    <string name="upload_file">Upload file</string>
+    <string name="something_went_wrong">Something went wrong. Please try again.</string>
+    <string name="categories_data_upload_success">Categories and product data uploaded successfully.</string>
 
 </resources>

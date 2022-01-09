@@ -146,7 +146,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<ProductStoreProductDTO>>> call) {
                 Logger.i("Store products List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -286,7 +286,7 @@ public class StoreProductListActivity extends AppCompatActivity implements Produ
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<ProductStoreProductDTO>> call) {
                 Logger.i("Save store product API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }

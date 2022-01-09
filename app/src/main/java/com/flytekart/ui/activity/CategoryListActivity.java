@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -26,17 +27,33 @@ import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.models.response.FileUploadResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.ui.adapters.CategoriesAdapter;
 import com.flytekart.utils.Constants;
+import com.flytekart.utils.FileUtils;
 import com.flytekart.utils.Logger;
+import com.flytekart.utils.PhotoUtils;
 import com.flytekart.utils.Utilities;
+import com.kbeanie.multipicker.api.CameraImagePicker;
+import com.kbeanie.multipicker.api.FilePicker;
+import com.kbeanie.multipicker.api.ImagePicker;
+import com.kbeanie.multipicker.api.Picker;
+import com.kbeanie.multipicker.api.callbacks.FilePickerCallback;
+import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
+import com.kbeanie.multipicker.api.entity.ChosenFile;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -50,6 +67,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
     private String clientId;
     private String accessToken;
     private ProgressDialog progressDialog;
+    private FilePicker filePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +118,71 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                 startActivityForResult(createCategoryIntent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
                 return true;
             }
+            case R.id.menu_upload: {
+                pickFile();
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void pickFile() {
+        FilePickerCallback callback = new FilePickerCallback() {
+            @Override
+            public void onFilesChosen(List<ChosenFile> list) {
+                String originalPath = list.get(0).getOriginalPath();
+                String uriString = FileUtils.getUriFromPath(originalPath);
+                Uri uri = Uri.parse(uriString);
+                File file = FileUtils.getFile(CategoryListActivity.this, uri);
+                uploadFile(file, uri);
+            }
+
+            @Override
+            public void onError(String s) {
+                Logger.e("File pick failed: " + s);
+            }
+        };
+        filePicker = new FilePicker(this);
+        filePicker.setMimeType("text/csv");
+        filePicker.setFilePickerCallback(callback);
+        filePicker.pickFile();
+    }
+
+    public void uploadFile(File file, Uri uri) {
+        RequestBody fileBody = RequestBody.create(MediaType.parse("text/csv"), file);
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .addFormDataPart("file", file.getName(), fileBody);
+        MultipartBody body = builder.build();
+
+        SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
+        String accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
+        String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+
+        showProgress(true);
+        Call<FileUploadResponse> uploadFileCall = Flytekart.getApiService().uploadProductsFile(accessToken, clientId, body);
+        uploadFileCall.enqueue(new CustomCallback<>() {
+            @Override
+            public void onFlytekartGenericErrorResponse(Call<FileUploadResponse> call) {
+                Logger.i("Category file upload API call failure.");
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<FileUploadResponse> call, Response<FileUploadResponse> response) {
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), R.string.categories_data_upload_success, Toast.LENGTH_SHORT).show();
+                getData();
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<FileUploadResponse> call, APIError responseBody) {
+                Logger.e("Category file upload API call response status code : " + responseBody.getStatus());
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -131,6 +211,8 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
                 categories.add(position, editedCategory);
                 adapter.notifyItemChanged(position);
             }
+        } else if (requestCode == Picker.PICK_FILE && resultCode == RESULT_OK) {
+            filePicker.submit(data);
         }
     }
 
@@ -159,7 +241,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<Category>>> call) {
                 Logger.i("Categories List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -285,7 +367,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<Category>> call) {
                 Logger.i("Delete category API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }

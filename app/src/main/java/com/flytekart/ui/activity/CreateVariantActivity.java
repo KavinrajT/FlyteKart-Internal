@@ -285,7 +285,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<Variant>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -312,7 +312,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<VariantAttributeValue>>> call) {
                 Logger.i("Variants API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -362,7 +362,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<AttributeResponse>>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -426,7 +426,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<VariantAttributeValue>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -534,7 +534,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<FileUploadResponse> call) {
                 Logger.i("Variant image upload API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -603,7 +603,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<Variant>> call) {
                 Logger.i("Variant API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override

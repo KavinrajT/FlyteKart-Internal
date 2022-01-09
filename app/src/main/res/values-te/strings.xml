@@ -1,0 +1,196 @@
+<resources>
+
+    <string name="password">పాస్వర్డ్</string>
+    <string name="otp">ఓటిపి</string>
+    <string name="cnf_password">పాస్వర్డ్ను నిర్ధారించండి</string>
+    <string name="sign_in">సైన్ ఇన్ చేయండి</string>
+    <string name="send_otp">ఓటిపి ని పంపండి</string>
+    <string name="verify">ధృవీకరించండి</string>
+    <string name="sign_up">సైన్ అప్</string>
+    <string name="email">ఇమెయిల్</string>
+    <string name="name">పేరు</string>
+    <string name="username">వినియోగదారు పేరు</string>
+    <string name="phone_number">ఫోను నంబరు</string>
+    <string name="client_code">క్లయింట్ కోడ్</string>
+
+    <string name="nav_drawer_open">Open Nav Drawer</string>
+    <string name="nav_drawer_close">Close Nav Drawer</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">సెట్టింగులు</string>
+
+    <string name="str_forgot_password">పాస్వర్డ్ మర్చిపోయారా?</string>
+    <string name="str_do_not_have_an_account">ఖాతా లేదా?అయితే చేరండి</string>
+    <string name="str_already_have_an_account">ఖాతా కలిగి ఉన్నారా? సైన్ ఇన్</string>
+
+    <string name="create_organisation">సంస్థను సృష్టించండి</string>
+    <string name="add_stores">స్టోర్ ని ఆడ్ చేయి</string>
+    <string name="add_products">ప్రొడక్ట్స్ ని ఆడ్ చేయి</string>
+    <string name="str_clear_all">ప్రొడక్ట్స్ ని ఆడ్ చేయి</string>
+
+    <string name="str_username">వినియోగదారు పేరు</string>
+    <string name="str_shop_management">దుకాణం నిర్వహణ</string>
+    <string name="str_general_settings">సాధారణ సెట్టింగులు</string>
+    <string name="str_delivery_areas">డెలివరీ ప్రాంతాలు</string>
+    <string name="str_product_management">ఉత్పత్తి నిర్వహణ</string>
+    <string name="str_products">ఉత్పత్తులు</string>
+    <string name="str_categories">కేటగిరీలు</string>
+    <string name="stores">దుకాణాలు</string>
+    <string name="categories_products">కేటగిరీలు &amp; ఉత్పత్తులు</string>
+    <string name="orderResponses">ఆర్డర్స్</string>
+    <string name="reports">రిపోర్ట్స్</string>
+    <string name="change_password">పాస్వర్డ్ మార్చండి</string>
+    <string name="sign_out">సైన్ అవుట్</string>
+
+    <string-array name="store_type_array">
+        <item>ఒకే దుకాణం</item>
+        <item>గొలుసు దుకాణాలు</item>
+    </string-array>
+
+    <string-array name="login_type_array">
+        <item>ప్రధాన ఖాతా</item>
+        <item>క్లయింట్ ఖాతా</item>
+    </string-array>
+
+    <string-array name="business_type_array">
+        <item>రెస్టారెంట్</item>
+        <item>కిరాణా</item>
+        <item>పండ్లు మరియు కూరగాయలు</item>
+        <item>ఫార్మసీ</item>
+        <item>ఇతర</item>
+    </string-array>
+
+    <string-array name="yes_no_array">
+        <item>అవును</item>
+        <item>కాదు</item>
+    </string-array>
+
+    <string name="title_activity_maps">మ్యాప్</string>
+    <string name="err_enter_org_name">దయచేసి సంస్థ పేరును నమోదు చేయండి.</string>
+    <string name="err_enter_store_type">దయచేసి స్టోర్ రకాన్ని నమోదు చేయండి.</string>
+    <string name="err_enter_business_type">దయచేసి వ్యాపార రకాన్ని నమోదు చేయండి.</string>
+    <string name="err_add_address">దయచేసి చిరునామాను జోడించండి.</string>
+    <string name="err_enter_gst_no">దయచేసి జి.ఎస్.టి (GST) నంబర్‌ని నమోదు చేయండి.</string>
+
+    <string name="err_enter_store_name">దయచేసి స్టోర్ పేరును నమోదు చేయండి.</string>
+
+    <string name="err_enter_product_name">దయచేసి ఉత్పత్తి పేరును నమోదు చేయండి.</string>
+    <string name="err_enter_price">దయచేసి ధరను నమోదు చేయండి.</string>
+    <string name="err_enter_original_price">దయచేసి అసలు ధరను నమోదు చేయండి.</string>
+    <string name="err_enter_description">దయచేసి వివరణను నమోదు చేయండి.</string>
+    <string name="err_enter_quantity">దయచేసి పరిమాణాన్ని నమోదు చేయండి.</string>
+
+    <string name="err_enter_category_name">దయచేసి వర్గం పేరును నమోదు చేయండి.</string>
+    <string name="err_enter_sub_category_name">దయచేసి ఉప వర్గం పేరును నమోదు చేయండి.</string>
+    <string name="err_enter_is_active">Please enter is active field.</string>
+
+    <string name="str_organisation_info">సంస్థ సమాచారం</string>
+    <string name="str_organisation_name">సంస్థ పేరు</string>
+    <string name="str_store_type">స్టోర్ రకం :</string>
+    <string name="str_location">స్థానం:</string>
+    <string name="str_locate_me">నన్ను గుర్తించు</string>
+    <string name="str_business_type">వ్యాపార రకం :</string>
+    <string name="str_gst_number"> జి.ఎస్.టి (GST) సంఖ్య</string>
+    <string name="str_create_organisation">సంస్థను సృష్టించండి</string>
+    <string name="str_locating">గుర్తించడం..…</string>
+    <string name="str_address_line_1">చిరునామా లైన్ 1</string>
+    <string name="str_address_line_2">చిరునామా లైన్ 2</string>
+    <string name="str_landmark">ల్యాండ్ మార్క్</string>
+    <string name="str_add_address">చిరునామాను జోడించండి</string>
+    <string name="str_store_info">స్టోర్ సమాచారం</string>
+    <string name="str_store_name">స్టోర్ పేరు</string>
+    <string name="str_create_store">స్టోర్‌ని సృష్టించండి</string>
+    <string name="str_product_info">ఉత్పత్తి సమాచారం</string>
+    <string name="str_product_name">ఉత్పత్తి పేరు</string>
+    <string name="str_variant_name">వేరియంట్ పేరు</string>
+    <string name="str_price">ధర</string>
+    <string name="str_original_price">అసలు ధర</string>
+    <string name="str_description">వివరణ</string>
+    <string name="str_quantity">పరిమాణం</string>
+    <string name="str_in_stock">అందుబాటులో ఉంది?</string>
+    <string name="str_show_advanced_options">అధునాతన ఎంపికలను చూపించు</string>
+    <string name="str_show_advanced_inventory">సమగ్ర జాబితా చూపించు</string>
+    <string name="str_create_product">ఉత్పత్తిని సృష్టించండి</string>
+    <string name="str_no_records_found">ఫలితాలు లేవు.</string>
+    <string name="category_info">వర్గం సమాచారం</string>
+    <string name="category_name">వర్గం పేరు</string>
+    <string name="product_name">ఉత్పత్తి పేరు</string>
+    <string name="variant_name">వేరియంట్ పేరు</string>
+    <string name="date">తేదీ</string>
+    <string name="is_active">యాక్టివ్‌గా ఉంది?</string>
+    <string name="is_available">అందుబాటులో ఉంది?</string>
+    <string name="sub_category_info">ఉప వర్గం సమాచారం</string>
+    <string name="sub_category_name">ఉప వర్గం పేరు</string>
+    <string name="create_sub_category">ఉప వర్గాన్ని సృష్టించండి</string>
+    <string name="save_category">కేటగిరీని సేవ్ చేయండి</string>
+    <string name="create_category">కేటగిరీని సృష్టించండి</string>
+    <string name="save_store">స్టోర్‌ను సేవ్ చేయండి</string>
+    <string name="apply_filters">ఫిల్టర్‌లను వర్తింపజేయండి</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="loading">దయచేసి వేచి ఉండండి...</string>
+    <string name="enter_all_details">దయచేసి కొనసాగే ముందు అన్ని వినియోగదారు వివరాలను నమోదు చేయండి.</string>
+    <string name="confirm_password_correctly">కొనసాగే ముందు మీ పాస్‌వర్డ్‌ను సరిగ్గా నిర్ధారించండి.</string>
+    <string name="account">ఖాతా</string>
+    <string name="store_name">స్టోర్ పేరు</string>
+    <string name="store_address">స్టోర్ చిరునామా</string>
+    <string name="summary">సారాంశం</string>
+    <string name="store_details">స్టోర్ వివరాలు</string>
+    <string name="quantity_label">పరిమాణం:</string>
+    <string name="active">యాక్టివ్</string>
+    <string name="inactive">ఇనాక్టివ్</string>
+    <string name="support_variants">వేరియంట్‌లు కావలి</string>
+    <string name="save_to_view_more_options">మరిన్ని ఎంపికలను వీక్షించడానికి సేవ్ చేయండి</string>
+    <string name="sku">ఎస్.కే.యు (SKU)</string>
+    <string name="save_product">ఉత్పత్తిని సేవ్ చేయండి</string>
+    <string name="dummy_price">₹ 10.00</string>
+    <string name="attribute_name">లక్షణం పేరు</string>
+    <string name="attribute_value_name">విలువ</string>
+    <string name="value">విలువ</string>
+    <string name="save_variant">వేరియంట్‌ను సేవ్ చేయండి</string>
+    <string name="add_attributes">లక్షణాలను జోడించండి</string>
+    <string name="plus">+</string>
+    <string name="edit_category">వర్గాన్ని సవరించండి</string>
+    <string name="categories">కేటగిరీలు</string>
+    <string name="order_details">ఆర్డర్ వివరాలు</string>
+    <string name="orders">ఆర్డర్స్</string>
+    <string name="products">ఉత్పత్తులు</string>
+    <string name="variants">వేరియంట్‌లు</string>
+    <string name="available">అందుబాటులో ఉంది</string>
+    <string name="not_available">అందుబాటులో లేదు</string>
+    <string name="tax">పన్ను (Tax)</string>
+    <string name="quantity">పరిమాణం</string>
+    <string name="add_store">స్టోర్ జోడించండి</string>
+    <string name="edit_store">సవరించు స్టోర్</string>
+    <string name="order_status">ఆర్డర్ స్థితి</string>
+    <string name="payment_details">చెల్లింపు వివరాలు</string>
+    <string name="qty">పరి.</string>
+    <string name="ordered">ఆదేశించారు</string>
+    <string name="delivered">పంపిణీ చేయబడింది</string>
+    <string name="count">సంఖ్యా</string>
+    <string name="dummy_zero_price">₹ 0.00</string>
+    <string name="filters">ఫిల్టర్లు</string>
+
+    <!-- Progress string -->
+    <string name="progress_please_wait">దయచేసి వేచి ఉండండి</string>
+
+    <string name="collection_payment">చెల్లింపును సేకరించండి</string>
+    <string name="update_order_status">ఆర్డర్ స్థితి సవరించండి</string>
+    <string name="product_order_report">ఉత్పత్తి ఆర్డర్ నివేదిక</string>
+    <string name="orders_over_time_report">కాలక్రమేణా నివేదిక</string>
+    <string name="customer_acquisition_report">కస్టమర్ సముపార్జన నివేదిక</string>
+    <string name="customer_order_report">కస్టమర్ ఆర్డర్ నివేదిక</string>
+    <string name="str_choose_image">చిత్రాన్ని ఎక్కడ నుండి ఎంచుకోవాలి?</string>
+    <string name="str_gallery">గ్యాలరీ</string>
+    <string name="str_camera">కెమెరా</string>
+    <string name="reports_and_statistics_coming_soon">నివేదికలు మరియు గణాంకాలు త్వరలో వస్తాయి!</string>
+    <string name="upload_file">ఫైల్‌ని అప్‌లోడ్ చేయండి</string>
+    <string name="something_went_wrong">ఎక్కడో తేడ జరిగింది. దయచేసి మళ్లీ ప్రయత్నించండి.</string>
+    <string name="categories_data_upload_success">వర్గాలు మరియు ఉత్పత్తి డేటా విజయవంతంగా అప్‌లోడ్ చేయబడింది.</string>
+
+</resources>

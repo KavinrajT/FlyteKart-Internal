@@ -155,7 +155,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
                 public void onFlytekartGenericErrorResponse(Call<BaseResponse<VariantStoreVariantDTO>> call) {
                     Logger.i("Variant API call failure.");
                     showProgress(false);
-                    Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -229,7 +229,7 @@ public class StoreVariantActivity extends AppCompatActivity implements View.OnCl
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<StoreVariant>> call) {
                 Logger.i("Store variant API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override

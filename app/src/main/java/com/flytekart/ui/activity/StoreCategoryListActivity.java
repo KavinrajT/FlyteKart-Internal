@@ -143,7 +143,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<CategoryStoreCategoryDTO>>> call) {
                 Logger.i("Store categories List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -282,7 +282,7 @@ public class StoreCategoryListActivity extends AppCompatActivity implements Cate
             public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<CategoryStoreCategoryDTO>> call) {
                 Logger.i("Save store category API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
         });
     }

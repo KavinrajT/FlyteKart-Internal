@@ -104,7 +104,7 @@ public class StoreListActivity extends AppCompatActivity {
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<Store>>> call) {
                 Logger.i("Store List API call failure.");
                 showProgress(false);
-                Toast.makeText(getApplicationContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
             }
 
             @Override
