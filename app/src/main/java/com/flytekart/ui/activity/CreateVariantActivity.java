@@ -1,11 +1,9 @@
 package com.flytekart.ui.activity;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,14 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
@@ -54,6 +49,7 @@ import com.flytekart.utils.PhotoUtils;
 import com.flytekart.utils.Utilities;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.kbeanie.multipicker.api.CacheLocation;
 import com.kbeanie.multipicker.api.CameraImagePicker;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
@@ -154,9 +150,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
         getSupportActionBar().setSubtitle(product.getName());
 
         ivVariantImage.setOnClickListener(v -> {
-            if (checkPermissions()) {
-                showImageDialog();
-            }
+            showImageDialog();
         });
     }
 
@@ -195,6 +189,7 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
             }
         };
         imagePicker = new ImagePicker(this);
+        imagePicker.setCacheLocation(CacheLocation.INTERNAL_APP_DIR);
         cameraImagePicker = new CameraImagePicker(this);
         if (isDevice) {
             imagePicker.setImagePickerCallback(imagePickerCallback);
@@ -739,44 +734,6 @@ public class CreateVariantActivity extends AppCompatActivity implements View.OnC
                 imagePicker.submit(data);
             } else if (requestCode == Picker.PICK_IMAGE_CAMERA && cameraImagePicker != null) {
                 cameraImagePicker.submit(data);
-            }
-        }
-    }
-
-    private boolean checkPermissions() {
-        boolean isPermissionGranted = true;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ArrayList<String> permissionsList = new ArrayList<>();
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                isPermissionGranted = false;
-            }
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-                isPermissionGranted = false;
-            }
-
-            if (permissionsList.size() > 0) {
-                ActivityCompat.requestPermissions(this,
-                        permissionsList.toArray(new String[0]),
-                        Constants.STORAGE_PERMISSION_REQUEST_CODE);
-            }
-        }
-        return isPermissionGranted;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Constants.STORAGE_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0) {
-                showImageDialog();
             }
         }
     }
