@@ -56,7 +56,7 @@ public class CustomerAcquisitionReportActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.product_order_report);
+        getSupportActionBar().setTitle(R.string.customer_acquisition_report);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 

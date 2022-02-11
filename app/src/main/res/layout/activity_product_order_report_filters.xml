@@ -27,57 +27,85 @@
         android:layout_above="@id/btn_apply_filters"
         android:orientation="horizontal">
 
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:divider="@drawable/divider_rv"
-            android:layout_weight="1">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/btn_filter_category"
                 android:layout_width="match_parent"
-                android:text="Category"
+                android:layout_height="wrap_content"
                 android:padding="4dp"
+                android:text="Category"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/btn_filter_product"
                 android:layout_width="match_parent"
-                android:text="Product"
+                android:layout_height="wrap_content"
                 android:padding="4dp"
+                android:text="Product"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/btn_filter_variant"
                 android:layout_width="match_parent"
-                android:text="Product"
+                android:layout_height="wrap_content"
                 android:padding="4dp"
+                android:text="Product"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/btn_filter_store"
                 android:layout_width="match_parent"
-                android:text="Store"
+                android:layout_height="wrap_content"
                 android:padding="4dp"
+                android:text="Store"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
-
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/dark_grey"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
+
+            <!-- Stores recycler view-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_stores_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp" />
+
+            <!-- Categories recycler view-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_categories_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp" />
+
+            <!-- Products recycler view-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_products_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp" />
+
+            <!-- Variants recycler view-->
+            <!-- start date and end date selection view-->
 
         </LinearLayout>
 

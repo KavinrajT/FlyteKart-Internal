@@ -87,6 +87,9 @@
             android:name=".ui.activity.CustomerAcquisitionReportActivity"
             android:theme="@style/ToolbarTheme" />
         <activity
+            android:name=".ui.activity.CustomerOrderReportActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
             android:name=".ui.activity.OrdersListActivity"
             android:theme="@style/ToolbarTheme" />
         <activity

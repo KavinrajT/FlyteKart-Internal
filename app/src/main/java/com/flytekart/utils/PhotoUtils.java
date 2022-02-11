@@ -82,10 +82,10 @@ public class PhotoUtils {
         ExifInterface ei = null;
         Bitmap imageBitmap = null;
         try {
-            InputStream in = context.getContentResolver().openInputStream(Uri.parse(path));
+            //InputStream in = context.getContentResolver().openInputStream(Uri.parse(path));
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                ei = new ExifInterface(in);
+                ei = new ExifInterface(path);
             } else {
                 ei = new ExifInterface(path);
             }
@@ -143,6 +143,8 @@ public class PhotoUtils {
             //int sizeInKb = byteArrayImage.length / 1024;
             //Logger.e("File size 2: " + sizeInKb);
         }
+        int sizeInKb = byteArrayImage.length / 1024;
+        Logger.e("File sizeeee: " + sizeInKb);
         return byteArrayImage;
     }
 
@@ -152,13 +154,15 @@ public class PhotoUtils {
         String fileName = System.currentTimeMillis() + Constants.STR_JPEG_FILE_EXTENSION;
         File file = new File(mContext.getFilesDir(), fileName);
 
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(byteArrayImage);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (byteArrayImage != null) {
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(byteArrayImage);
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return file;

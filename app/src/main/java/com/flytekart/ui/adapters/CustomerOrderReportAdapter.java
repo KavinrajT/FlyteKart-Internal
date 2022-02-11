@@ -37,7 +37,7 @@ public class CustomerOrderReportAdapter extends RecyclerView.Adapter<CustomerOrd
         holder.tvCustomerName.setText(customerOrderReportItem.getName());
         holder.tvOrderCount.setText(String.valueOf(customerOrderReportItem.getTotalOrderCount()));
         holder.tvOrderedValue.setText(Utilities.getFormattedMoney(customerOrderReportItem.getTotalOrderValue()));
-        holder.tvLastOrderedAt.setText(customerOrderReportItem.getLastOrderedAt());
+        holder.tvLastOrderedAt.setText(Utilities.getFormattedCalendarString(customerOrderReportItem.getLastOrderedAt(), "dd-MM-yyyy"));
     }
 
     @Override

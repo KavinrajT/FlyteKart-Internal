@@ -119,6 +119,7 @@
     <string name="category_info">Category info</string>
     <string name="category_name">Category name</string>
     <string name="product_name">Product name</string>
+    <string name="customer">Customer</string>
     <string name="variant_name">Variant name</string>
     <string name="date">Date</string>
     <string name="is_active">Is Active?</string>
@@ -175,6 +176,7 @@
     <string name="count">Count</string>
     <string name="dummy_zero_price">Rs 0.00</string>
     <string name="filters">Filters</string>
+    <string name="last_order">Last order</string>
 
     <!-- Progress string -->
     <string name="progress_please_wait">Please wait</string>

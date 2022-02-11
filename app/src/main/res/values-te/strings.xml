@@ -119,6 +119,7 @@
     <string name="category_info">వర్గం సమాచారం</string>
     <string name="category_name">వర్గం పేరు</string>
     <string name="product_name">ఉత్పత్తి పేరు</string>
+    <string name="customer">Customer</string>
     <string name="variant_name">వేరియంట్ పేరు</string>
     <string name="date">తేదీ</string>
     <string name="is_active">యాక్టివ్‌గా ఉంది?</string>
@@ -175,6 +176,7 @@
     <string name="count">సంఖ్యా</string>
     <string name="dummy_zero_price">₹ 0.00</string>
     <string name="filters">ఫిల్టర్లు</string>
+    <string name="last_order">Last order</string>
 
     <!-- Progress string -->
     <string name="progress_please_wait">దయచేసి వేచి ఉండండి</string>

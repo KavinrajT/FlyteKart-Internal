@@ -41,6 +41,19 @@ public class Utilities {
         return Constants.EMPTY;
     }
 
+    public static String getFormattedCalendarString(String timeString, String toFormat) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz", Locale.ENGLISH);
+        SimpleDateFormat resultSdf = new SimpleDateFormat(toFormat, Locale.ENGLISH);
+        try {
+            cal.setTime(sourceSdf.parse(timeString));
+            return resultSdf.format(cal.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Constants.EMPTY;
+    }
+
     public static String getFormattedOrderStatus(String orderStatus) {
         switch (orderStatus) {
             case Constants.OrderStatus.IN_PROGRESS:

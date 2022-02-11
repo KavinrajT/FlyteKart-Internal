@@ -69,6 +69,9 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
                 break;
             }
             case R.id.tv_summary:
+                Intent reportsIntent = new Intent(StoreActivity.this, ReportsActivity.class);
+                reportsIntent.putExtra(Constants.STORE, store);
+                startActivity(reportsIntent);
                 break;
             case R.id.tv_categories_products: {
                 Intent categoriesIntent = new Intent(this, StoreCategoryListActivity.class);

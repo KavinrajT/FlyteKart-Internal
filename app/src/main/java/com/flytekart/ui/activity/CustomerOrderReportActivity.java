@@ -20,6 +20,7 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.CustomerOrderReportItem;
 import com.flytekart.models.ProductOrderReportItem;
+import com.flytekart.models.Store;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -49,6 +50,7 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private int nextPageNumber = 0;
     private boolean isLoadingOrders = false;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,10 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
+        store = getIntent().getParcelableExtra(Constants.STORE);
+        if (store != null) {
+            getSupportActionBar().setSubtitle(store.getName());
+        }
 
         getData();
         //setListeners();
@@ -122,8 +128,14 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
 
     private void getData() {
         showProgress(true);
+        String storeId;
+        if (store == null) {
+            storeId = null;
+        } else {
+            storeId = store.getId();
+        }
         Call<BaseResponse<List<CustomerOrderReportItem>>> getCustomerOrderReportCall = Flytekart.getApiService()
-                .getCustomerOrderReport(accessToken, clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
+                .getCustomerOrderReport(accessToken, clientId, storeId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
         getCustomerOrderReportCall.enqueue(new CustomCallback<BaseResponse<List<CustomerOrderReportItem>>>() {
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<CustomerOrderReportItem>>> call, Response<BaseResponse<List<CustomerOrderReportItem>>> response) {

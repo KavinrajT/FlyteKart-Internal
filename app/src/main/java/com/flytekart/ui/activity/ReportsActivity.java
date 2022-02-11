@@ -42,6 +42,11 @@ public class ReportsActivity extends AppCompatActivity implements View.OnClickLi
         tvOrdersOverTimeReport.setOnClickListener(this);
         tvCustomerAcquisitionReport.setOnClickListener(this);
         tvCustomerOrderReport.setOnClickListener(this);
+
+        store = getIntent().getParcelableExtra(Constants.STORE);
+        if (store != null) {
+            tvCustomerAcquisitionReport.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -60,13 +65,13 @@ public class ReportsActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.tv_product_order_report: {
                 Intent intent = new Intent(this, ProductOrderReportActivity.class);
-                //storeIntent.putExtra(Constants.STORE, store);
+                intent.putExtra(Constants.STORE, store);
                 startActivity(intent);
                 break;
             }
             case R.id.tv_orders_over_time_report: {
                 Intent intent = new Intent(this, OrdersOverTimeReportActivity.class);
-                //storeIntent.putExtra(Constants.STORE, store);
+                intent.putExtra(Constants.STORE, store);
                 startActivity(intent);
                 break;
             }
@@ -78,7 +83,7 @@ public class ReportsActivity extends AppCompatActivity implements View.OnClickLi
             }
             case R.id.tv_customer_order_report: {
                 Intent intent = new Intent(this, CustomerOrderReportActivity.class);
-                //storeIntent.putExtra(Constants.STORE, store);
+                intent.putExtra(Constants.STORE, store);
                 startActivity(intent);
                 break;
             }

@@ -34,7 +34,7 @@ public class OrdersOverTimeReportAdapter extends RecyclerView.Adapter<OrdersOver
     @Override
     public void onBindViewHolder(@NonNull OrdersOverTimeViewHolder holder, int position) {
         OrdersOverTimeReportItem ordersOverTimeReportItem = ordersOverTimeReportItems.get(position);
-        holder.tvDate.setText(ordersOverTimeReportItem.getCreatedAt()); // TODO Do date formatting
+        holder.tvDate.setText(Utilities.getFormattedCalendarString(ordersOverTimeReportItem.getCreatedAt(), "dd-MM-yyyy"));
         holder.tvOrderedQuantity.setText(String.valueOf(ordersOverTimeReportItem.getPlacedOrders()));
         holder.tvOrderedUnits.setText(String.valueOf(ordersOverTimeReportItem.getTotalOrderedUnits()));
         holder.tvOrderedPrice.setText(Utilities.getFormattedMoney(ordersOverTimeReportItem.getTotalOrderedValue()));

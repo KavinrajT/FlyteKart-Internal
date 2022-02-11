@@ -342,6 +342,7 @@ public interface ApiService {
     Call<BaseResponse<List<ProductOrderReportItem>>> getProductOrderReport(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
+            @Query("storeId") String storeId,
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
 
@@ -349,6 +350,7 @@ public interface ApiService {
     Call<BaseResponse<List<OrdersOverTimeReportItem>>> getOrdersOverTimeReport(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
+            @Query("storeId") String storeId,
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
 
@@ -363,6 +365,7 @@ public interface ApiService {
     Call<BaseResponse<List<CustomerOrderReportItem>>> getCustomerOrderReport(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
+            @Query("storeId") String storeId,
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
 
