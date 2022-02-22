@@ -45,6 +45,15 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
+        android:id="@+id/tv_order_store"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey"
+        android:text="@string/store_address"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <TextView
         android:id="@+id/tv_order_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -86,7 +86,7 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
         store = getIntent().getParcelableExtra(Constants.STORE);
-        if (store != null) {
+        if (store != null && store.getName() != null) {
             getSupportActionBar().setSubtitle(store.getName());
         }
 

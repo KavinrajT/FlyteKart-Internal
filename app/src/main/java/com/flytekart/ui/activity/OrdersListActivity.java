@@ -84,6 +84,9 @@ public class OrdersListActivity extends AppCompatActivity {
         });
 
         store = getIntent().getParcelableExtra(Constants.STORE);
+        if (store != null && store.getName() != null) {
+            getSupportActionBar().setSubtitle(store.getName());
+        }
 
         SharedPreferences sharedPreferences = Utilities.getSharedPreferences();
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
@@ -148,8 +151,13 @@ public class OrdersListActivity extends AppCompatActivity {
     private void getData() {
         Logger.e("Loading data - page = " + nextPageNumber);
         showProgress(true);
-        Call<BaseResponse<List<OrderResponse>>> getOrdersByStoreCall = Flytekart.getApiService().getOrdersByStoreId(accessToken, store.getId(), clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
-        getOrdersByStoreCall.enqueue(new CustomCallback<BaseResponse<List<OrderResponse>>>() {
+        Call<BaseResponse<List<OrderResponse>>> getOrdersCall;
+        if (store == null) {
+            getOrdersCall = Flytekart.getApiService().getOrders(accessToken, clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
+        } else {
+            getOrdersCall = Flytekart.getApiService().getOrdersByStoreId(accessToken, store.getId(), clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
+        }
+        getOrdersCall.enqueue(new CustomCallback<BaseResponse<List<OrderResponse>>>() {
             @Override
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<OrderResponse>>> call) {
                 isLoadingOrders = false;
@@ -192,7 +200,11 @@ public class OrdersListActivity extends AppCompatActivity {
                 rvOrdersList.setVisibility(View.VISIBLE);
 
                 this.orderResponses = orderResponses;
-                adapter = new OrdersAdapter(orderResponses);
+                if (store == null) {
+                    adapter = new OrdersAdapter(orderResponses, true);
+                } else {
+                    adapter = new OrdersAdapter(orderResponses, false);
+                }
                 rvOrdersList.setAdapter(adapter);
             } else {
                 int initialSize = this.orderResponses.size();

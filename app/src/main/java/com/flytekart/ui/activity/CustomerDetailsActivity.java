@@ -147,7 +147,7 @@ public class CustomerDetailsActivity extends AppCompatActivity implements TitleB
                 rvOrdersList.setVisibility(View.VISIBLE);
 
                 this.orderResponses = orderResponses;
-                adapter = new OrdersAdapter(orderResponses);
+                adapter = new OrdersAdapter(orderResponses, true);
                 rvOrdersList.setAdapter(adapter);
             } else {
                 int initialSize = this.orderResponses.size();

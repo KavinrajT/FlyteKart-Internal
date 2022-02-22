@@ -168,8 +168,9 @@ public class HomeActivity extends BaseActivity {
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
                 Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
                 categoriesActivityResultLauncher.launch(intent);
-            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
-
+            } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.orderResponses))) {
+                Intent ordersIntent = new Intent(HomeActivity.this, OrdersListActivity.class);
+                startActivity(ordersIntent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.reports))) {
                 Intent intent = new Intent(HomeActivity.this, ReportsActivity.class);
                 startActivity(intent);

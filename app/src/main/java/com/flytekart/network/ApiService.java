@@ -166,6 +166,13 @@ public interface ApiService {
             @Query("clientId") String clientId,
             @Query("categoryId") String categoryId);
 
+    @GET("/api/orders/")
+    Call<BaseResponse<List<OrderResponse>>> getOrders(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
     @GET("/api/orders/getByStoreId/{storeId}")
     Call<BaseResponse<List<OrderResponse>>> getOrdersByStoreId(
             @Header(Constants.API_TOKEN_TAG) String apiToken,

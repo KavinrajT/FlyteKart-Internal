@@ -17,9 +17,11 @@ import java.util.List;
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewHolder> {
 
     private List<OrderResponse> orderResponses;
+    private boolean showStoreName;
 
-    public OrdersAdapter(List<OrderResponse> orderResponses) {
+    public OrdersAdapter(List<OrderResponse> orderResponses, boolean showStoreName) {
         this.orderResponses = orderResponses;
+        this.showStoreName = showStoreName;
     }
 
     @NonNull
@@ -38,6 +40,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         } else {
             holder.tvUserName.setText(orderResponse.getOrder().getEndUser().getPhoneNumber());
         }
+        if (showStoreName) {
+            holder.tvOrderStore.setVisibility(View.VISIBLE);
+            holder.tvOrderStore.setText(orderResponse.getOrder().getStore().getName());
+        }
         holder.tvOrderTime.setText(Utilities.getFormattedCalendarString(orderResponse.getOrder().getOrderPlacedAt()));
         holder.tvOrderSource.setText(orderResponse.getOrder().getOrderSource().getName());
         holder.tvOrderStatus.setText(Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
@@ -55,6 +61,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         private TextView tvOrderSource;
         private TextView tvOrderStatus;
         private TextView tvOrderTotal;
+        private TextView tvOrderStore;
 
         public OrderViewHolder(View view) {
             super(view);
@@ -63,6 +70,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
             tvOrderSource = view.findViewById(R.id.tv_order_source);
             tvOrderStatus = view.findViewById(R.id.tv_order_status);
             tvOrderTotal = view.findViewById(R.id.tv_order_total);
+            tvOrderStore = view.findViewById(R.id.tv_order_store);
         }
     }
 }
