@@ -5,6 +5,7 @@ import com.flytekart.models.Category;
 import com.flytekart.models.CategoryStoreCategoryDTO;
 import com.flytekart.models.CustomerAcquisitionReportItem;
 import com.flytekart.models.CustomerOrderReportItem;
+import com.flytekart.models.Discount;
 import com.flytekart.models.EmployeePushToken;
 import com.flytekart.models.OrderResponse;
 import com.flytekart.models.OrdersOverTimeReportItem;
@@ -380,5 +381,11 @@ public interface ApiService {
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
             @Body MultipartBody multipartBody);
+
+    // TODO Use pagination
+    @GET("/api/discounts/")
+    Call<BaseResponse<List<Discount>>> getDiscounts(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId);
 }
 

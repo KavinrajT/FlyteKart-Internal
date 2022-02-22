@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +36,7 @@ public class SubCategoryListActivity extends AppCompatActivity implements TitleB
     private RecyclerView rvSubCategoryList;
     private SubCategoryRecyclerListAdapter adapter;
     private ProgressDialog progressDialog;
+    private ActivityResultLauncher<Intent> createSubCategoryActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,21 @@ public class SubCategoryListActivity extends AppCompatActivity implements TitleB
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
         rvSubCategoryList = findViewById(R.id.rv_sub_category_list);
 
+        registerForActivityResults();
         setData();
+    }
+
+    private void registerForActivityResults() {
+        createSubCategoryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            setData();
+                        }
+                    }
+                });
     }
 
     private void setData() {
@@ -57,7 +77,7 @@ public class SubCategoryListActivity extends AppCompatActivity implements TitleB
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
                 Intent intent = new Intent(SubCategoryListActivity.this, CreateSubCategoryActivity.class);
-                startActivityForResult(intent, Constants.ADD_SUB_CATEGORY_ACTIVITY_REQUEST_CODE);
+                createSubCategoryActivityResultLauncher.launch(intent);
             });
 
         } else {
@@ -83,13 +103,7 @@ public class SubCategoryListActivity extends AppCompatActivity implements TitleB
     @Override
     public void onTitleBarRightIconClicked(View view) {
         Intent intent = new Intent(SubCategoryListActivity.this, CreateSubCategoryActivity.class);
-        startActivityForResult(intent, Constants.ADD_SUB_CATEGORY_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        setData();
+        createSubCategoryActivityResultLauncher.launch(intent);
     }
 
     public void showProgress(boolean show) {

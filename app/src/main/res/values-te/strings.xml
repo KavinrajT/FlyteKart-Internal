@@ -119,6 +119,7 @@
     <string name="category_info">వర్గం సమాచారం</string>
     <string name="category_name">వర్గం పేరు</string>
     <string name="product_name">ఉత్పత్తి పేరు</string>
+    <string name="discount_code">Discount code</string>
     <string name="customer">Customer</string>
     <string name="variant_name">వేరియంట్ పేరు</string>
     <string name="date">తేదీ</string>
@@ -158,6 +159,7 @@
     <string name="plus">+</string>
     <string name="edit_category">వర్గాన్ని సవరించండి</string>
     <string name="categories">కేటగిరీలు</string>
+    <string name="discounts">Discounts</string>
     <string name="order_details">ఆర్డర్ వివరాలు</string>
     <string name="orders">ఆర్డర్స్</string>
     <string name="products">ఉత్పత్తులు</string>

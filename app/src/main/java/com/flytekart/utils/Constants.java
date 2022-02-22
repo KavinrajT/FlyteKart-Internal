@@ -32,6 +32,8 @@ public class Constants {
     public static final int CATEGORY_LIST_ACTIVITY_REQUEST_CODE = 601;
     public static final int EDIT_ORDER_ACTIVITY_REQUEST_CODE = 701;
     public static final int PRODUCT_ORDER_REPORT_FILTERS_ACTIVITY_REQUEST_CODE = 801;
+    public static final int ADD_DISCOUNT_ACTIVITY_REQUEST_CODE = 901;
+    public static final int EDIT_DISCOUNT_ACTIVITY_REQUEST_CODE = 902;
 
     public static final String API_TOKEN_TAG = "Authorization";
     public static final String LOGIN_TYPE_MAIN_ACCOUNT = "Main Account";
@@ -45,6 +47,7 @@ public class Constants {
     public static final String STORE = "store";
     public static final String END_USER = "endUser";
     public static final String CATEGORY = "category";
+    public static final String DISCOUNT = "discount";
     public static final String POSITION = "position";
     public static final String PRODUCT = "product";
     public static final String VARIANT = "variant";

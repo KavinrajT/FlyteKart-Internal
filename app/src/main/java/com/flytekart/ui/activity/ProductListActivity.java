@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +13,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -23,8 +27,6 @@ import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
 import com.flytekart.models.Product;
-import com.flytekart.models.Variant;
-import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
@@ -32,11 +34,9 @@ import com.flytekart.ui.adapters.ProductsAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +51,8 @@ public class ProductListActivity extends AppCompatActivity {
     private Category category;
     private List<Product> products;
     private ProgressDialog progressDialog;
+    private ActivityResultLauncher<Intent> createProductActivityResultLauncher;
+    private ActivityResultLauncher<Intent> editProductActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +75,36 @@ public class ProductListActivity extends AppCompatActivity {
         category = getIntent().getParcelableExtra(Constants.CATEGORY);
         getSupportActionBar().setSubtitle(category.getName());
 
+        registerForActivityResults();
         getData();
         setListeners();
         //setData();
+    }
+
+    private void registerForActivityResults() {
+        createProductActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            updateProductsOnCreate(data);
+                        }
+                    }
+                });
+
+        editProductActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            updateProductsOnEdit(data);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -98,7 +127,7 @@ public class ProductListActivity extends AppCompatActivity {
             case R.id.menu_create: {
                 Intent createProductIntent = new Intent(this, CreateProductActivity.class);
                 createProductIntent.putExtra(Constants.CATEGORY, category);
-                startActivityForResult(createProductIntent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
+                createProductActivityResultLauncher.launch(createProductIntent);
                 return true;
             }
             default:
@@ -146,7 +175,7 @@ public class ProductListActivity extends AppCompatActivity {
             llNoRecordsFound.setOnClickListener(v -> {
                 Intent intent = new Intent(ProductListActivity.this, CreateProductActivity.class);
                 intent.putExtra(Constants.CATEGORY, category);
-                startActivityForResult(intent, Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE);
+                createProductActivityResultLauncher.launch(intent);
             });
 
         } else {
@@ -201,35 +230,33 @@ public class ProductListActivity extends AppCompatActivity {
         itemIntent.putExtra(Constants.CATEGORY, category);
         itemIntent.putExtra(Constants.PRODUCT, product);
         itemIntent.putExtra(Constants.POSITION, position);
-        startActivityForResult(itemIntent, Constants.EDIT_PRODUCT_ACTIVITY_REQUEST_CODE);
+        editProductActivityResultLauncher.launch(itemIntent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.ADD_PRODUCT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Product addedProduct = data.getParcelableExtra(Constants.PRODUCT);
-            if (addedProduct != null) {
-                if (products == null) {
-                    products = new ArrayList<>(10);
-                    products.add(addedProduct);
-                    setProductsData();
-                } else {
-                    products.add(addedProduct);
-                    if (adapter == null){
-                        adapter = new ProductsAdapter(products, category);
-                    }
-                    adapter.notifyItemInserted(products.size() - 1);
+    private void updateProductsOnCreate(Intent data) {
+        Product addedProduct = data.getParcelableExtra(Constants.PRODUCT);
+        if (addedProduct != null) {
+            if (products == null) {
+                products = new ArrayList<>(10);
+                products.add(addedProduct);
+                setProductsData();
+            } else {
+                products.add(addedProduct);
+                if (adapter == null){
+                    adapter = new ProductsAdapter(products, category);
                 }
+                adapter.notifyItemInserted(products.size() - 1);
             }
-        } else if (requestCode == Constants.EDIT_PRODUCT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            int position = data.getIntExtra(Constants.POSITION, -1);
-            Product editedProduct = data.getParcelableExtra(Constants.PRODUCT);
-            if (position != -1 && editedProduct != null) {
-                products.remove(position);
-                products.add(position, editedProduct);
-                adapter.notifyItemChanged(position);
-            }
+        }
+    }
+
+    private void updateProductsOnEdit(Intent data) {
+        int position = data.getIntExtra(Constants.POSITION, -1);
+        Product editedProduct = data.getParcelableExtra(Constants.PRODUCT);
+        if (position != -1 && editedProduct != null) {
+            products.remove(position);
+            products.add(position, editedProduct);
+            adapter.notifyItemChanged(position);
         }
     }
 

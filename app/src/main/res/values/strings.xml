@@ -119,6 +119,7 @@
     <string name="category_info">Category info</string>
     <string name="category_name">Category name</string>
     <string name="product_name">Product name</string>
+    <string name="discount_code">Discount code</string>
     <string name="customer">Customer</string>
     <string name="variant_name">Variant name</string>
     <string name="date">Date</string>
@@ -158,6 +159,7 @@
     <string name="plus">+</string>
     <string name="edit_category">Edit category</string>
     <string name="categories">Categories</string>
+    <string name="discounts">Discounts</string>
     <string name="order_details">Order details</string>
     <string name="orders">Orders</string>
     <string name="products">Products</string>

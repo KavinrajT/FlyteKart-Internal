@@ -16,11 +16,13 @@
         <entry key="app/src/main/res/layout-land/activity_otp_verification.xml" value="0.10361552028218694" />
         <entry key="app/src/main/res/layout/activity_category_list.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_create_category.xml" value="0.10663627152988855" />
+        <entry key="app/src/main/res/layout/activity_create_discount.xml" value="0.14739583333333334" />
         <entry key="app/src/main/res/layout/activity_create_product.xml" value="0.11372451699613893" />
         <entry key="app/src/main/res/layout/activity_create_store.xml" value="0.11911231884057971" />
         <entry key="app/src/main/res/layout/activity_create_variant.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_customer_acquisition_report.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/activity_customer_order_report.xml" value="0.11041666666666666" />
+        <entry key="app/src/main/res/layout/activity_discount_list.xml" value="0.11770833333333333" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.10552536231884058" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10552536231884058" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.165" />
@@ -46,6 +48,7 @@
         <entry key="app/src/main/res/layout/list_item_category.xml" value="0.10663627152988855" />
         <entry key="app/src/main/res/layout/list_item_customer_acquisition.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/list_item_customer_order.xml" value="0.11041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_discount.xml" value="0.11770833333333333" />
         <entry key="app/src/main/res/layout/list_item_order.xml" value="0.10778985507246377" />
         <entry key="app/src/main/res/layout/list_item_orders_over_time.xml" value="0.21614583333333334" />
         <entry key="app/src/main/res/layout/list_item_product_order.xml" value="0.15572916666666667" />

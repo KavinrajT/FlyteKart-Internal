@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -43,6 +48,7 @@ public class StoreListActivity extends AppCompatActivity {
     private StoresAdapter adapter;
     private List<Store> stores;
     private ProgressDialog progressDialog;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +67,23 @@ public class StoreListActivity extends AppCompatActivity {
         rvStoresList.setLayoutManager(new LinearLayoutManager(this));
         rvStoresList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
+        registerForActivityResults();
         getData();
         setListeners();
         //setData();
+    }
+
+    private void registerForActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            updateStoresDataOnCreate(result.getData());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -85,7 +105,7 @@ public class StoreListActivity extends AppCompatActivity {
             }
             case R.id.menu_create: {
                 Intent createStoreIntent = new Intent(this, CreateStoreActivity.class);
-                startActivityForResult(createStoreIntent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
+                activityResultLauncher.launch(createStoreIntent);
                 return true;
             }
             default:
@@ -129,7 +149,7 @@ public class StoreListActivity extends AppCompatActivity {
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
                 Intent intent = new Intent(StoreListActivity.this, CreateStoreActivity.class);
-                startActivityForResult(intent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
+                activityResultLauncher.launch(intent);
             });
 
         } else {
@@ -181,32 +201,38 @@ public class StoreListActivity extends AppCompatActivity {
         startActivity(itemIntent);
     }
 
+    private void updateStoresDataOnCreate(Intent data) {
+        Store addedStore = data.getParcelableExtra(Constants.STORE);
+        if (addedStore != null) {
+            if (stores == null) {
+                stores = new ArrayList<>();
+                stores.add(addedStore);
+                setStoresData();
+            } else {
+                stores.add(addedStore);
+                if (adapter == null) {
+                    adapter = new StoresAdapter(stores);
+                }
+                adapter.notifyItemInserted(stores.size() - 1);
+            }
+        }
+    }
+
+    private void updateStoresDataOnEdit(Intent data) {
+        int position = data.getIntExtra(Constants.POSITION, -1);
+        Store editedStore = data.getParcelableExtra(Constants.STORE);
+        if (position != -1 && editedStore != null) {
+            stores.remove(position);
+            stores.add(position, editedStore);
+            adapter.notifyItemChanged(position);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.ADD_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Store addedStore = data.getParcelableExtra(Constants.STORE);
-            if (addedStore != null) {
-                if (stores == null) {
-                    stores = new ArrayList<>();
-                    stores.add(addedStore);
-                    setStoresData();
-                } else {
-                    stores.add(addedStore);
-                    if (adapter == null) {
-                        adapter = new StoresAdapter(stores);
-                    }
-                    adapter.notifyItemInserted(stores.size() - 1);
-                }
-            }
-        } else if (requestCode == Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            int position = data.getIntExtra(Constants.POSITION, -1);
-            Store editedStore = data.getParcelableExtra(Constants.STORE);
-            if (position != -1 && editedStore != null) {
-                stores.remove(position);
-                stores.add(position, editedStore);
-                adapter.notifyItemChanged(position);
-            }
+        if (requestCode == Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            updateStoresDataOnEdit(data);
         }
     }
 

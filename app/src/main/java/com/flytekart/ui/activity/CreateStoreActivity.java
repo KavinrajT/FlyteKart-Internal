@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -42,6 +47,7 @@ public class CreateStoreActivity extends AppCompatActivity implements View.OnCli
     private Store store;
     private Address storeAddress;
     private ProgressDialog progressDialog;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,7 @@ public class CreateStoreActivity extends AppCompatActivity implements View.OnCli
         } else {
             getSupportActionBar().setTitle(R.string.add_store);
         }
+        registerForActivityResults();
     }
 
     @Override
@@ -120,28 +127,36 @@ public class CreateStoreActivity extends AppCompatActivity implements View.OnCli
         Toast.makeText(getApplicationContext(), messageStr, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void updateStoreAddressFromIntent(Intent data) {
+        storeAddress = data.getParcelableExtra(Constants.ADDRESS);
+        tvLocation.setVisibility(View.VISIBLE);
+        StringBuilder builder = new StringBuilder();
+        builder.append(storeAddress.getLine1()).append(Constants.COMMA_SPACE);
+        builder.append(storeAddress.getLine2()).append(Constants.COMMA_SPACE);
+        builder.append(storeAddress.getCity()).append(Constants.COMMA_SPACE);
+        builder.append(storeAddress.getState()).append(Constants.COMMA_SPACE);
+        builder.append(storeAddress.getCountry()).append(Constants.COMMA_SPACE);
+        builder.append(storeAddress.getZip());
+        tvLocation.setText(builder.toString());
+    }
 
-        if (requestCode == Constants.MAPS_ACTIVITY_REQUEST_CODE && data != null) {
-            storeAddress = data.getParcelableExtra(Constants.ADDRESS);
-            tvLocation.setVisibility(View.VISIBLE);
-            StringBuilder builder = new StringBuilder();
-            builder.append(storeAddress.getLine1()).append(Constants.COMMA_SPACE);
-            builder.append(storeAddress.getLine2()).append(Constants.COMMA_SPACE);
-            builder.append(storeAddress.getCity()).append(Constants.COMMA_SPACE);
-            builder.append(storeAddress.getState()).append(Constants.COMMA_SPACE);
-            builder.append(storeAddress.getCountry()).append(Constants.COMMA_SPACE);
-            builder.append(storeAddress.getZip());
-            tvLocation.setText(builder.toString());
-        }
+    private void registerForActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            updateStoreAddressFromIntent(result.getData());
+                        }
+                    }
+                });
     }
 
     private void openMaps() {
         Intent intent = new Intent(CreateStoreActivity.this, MapsActivity.class);
         intent.putExtra(Constants.ADDRESS, storeAddress);
-        startActivityForResult(intent, Constants.MAPS_ACTIVITY_REQUEST_CODE);
+        activityResultLauncher.launch(intent);
     }
 
     private void saveStore() {

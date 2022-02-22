@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,10 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -63,6 +68,9 @@ public class HomeActivity extends BaseActivity {
     private String clientId;
     private UserDetails userDetails;
 
+    private ActivityResultLauncher<Intent> storesActivityResultLauncher;
+    private ActivityResultLauncher<Intent> categoriesActivityResultLauncher;
+
     private Organisation organisation;
 
     @Override
@@ -92,6 +100,7 @@ public class HomeActivity extends BaseActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.addDrawerListener(drawerToggle);
         setupDrawerToggle();
+        registerForActivityResults();
 
         //getAllOrganisations();
     }
@@ -124,6 +133,30 @@ public class HomeActivity extends BaseActivity {
         headerList.add(new MenuModel(getString(R.string.sign_out), true, true, null));
     }
 
+    private void registerForActivityResults() {
+        storesActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // TODO Do nothing for now
+                        }
+                    }
+                });
+
+        categoriesActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // TODO Do nothing for now
+                        }
+                    }
+                });
+    }
+
     private class GroupClickListener implements ExpandableListView.OnGroupClickListener {
 
         @Override
@@ -131,10 +164,10 @@ public class HomeActivity extends BaseActivity {
             MenuModel menuModel = headerList.get(groupPosition);
             if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.stores))) {
                 Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
-                startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
+                storesActivityResultLauncher.launch(intent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
                 Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
-                startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
+                categoriesActivityResultLauncher.launch(intent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.reports))) {
@@ -164,10 +197,10 @@ public class HomeActivity extends BaseActivity {
             MenuModel menuModel = headerList.get(position);
             if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.stores))) {
                 Intent intent = new Intent(HomeActivity.this, StoreListActivity.class);
-                startActivityForResult(intent, Constants.STORE_LIST_ACTIVITY_REQUEST_CODE);
+                storesActivityResultLauncher.launch(intent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.categories_products))) {
                 Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
-                startActivityForResult(intent, Constants.CATEGORY_LIST_ACTIVITY_REQUEST_CODE);
+                categoriesActivityResultLauncher.launch(intent);
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.change_password))) {
 
             } else if (TextUtils.equals(menuModel.getMenuName(), getString(R.string.sign_out))) {

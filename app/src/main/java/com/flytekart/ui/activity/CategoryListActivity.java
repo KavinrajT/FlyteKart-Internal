@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.flytekart.Flytekart;
 import com.flytekart.R;
 import com.flytekart.models.Category;
+import com.flytekart.models.Store;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.models.response.FileUploadResponse;
@@ -33,17 +39,11 @@ import com.flytekart.ui.adapters.CategoriesAdapter;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.FileUtils;
 import com.flytekart.utils.Logger;
-import com.flytekart.utils.PhotoUtils;
 import com.flytekart.utils.Utilities;
-import com.kbeanie.multipicker.api.CameraImagePicker;
 import com.kbeanie.multipicker.api.FilePicker;
-import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.callbacks.FilePickerCallback;
-import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenFile;
-import com.kbeanie.multipicker.api.entity.ChosenImage;
-import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +68,8 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
     private String accessToken;
     private ProgressDialog progressDialog;
     private FilePicker filePicker;
+    private ActivityResultLauncher<Intent> editCategoryActivityResultLauncher;
+    private ActivityResultLauncher<Intent> createCategoryActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
 
+        registerForActivityResults();
         getData();
         //setListeners();
         //setData();
@@ -115,11 +118,11 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
             }
             case R.id.menu_create: {
                 Intent createCategoryIntent = new Intent(this, CreateCategoryActivity.class);
-                startActivityForResult(createCategoryIntent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
+                createCategoryActivityResultLauncher.launch(createCategoryIntent);
                 return true;
             }
             case R.id.menu_upload: {
-                pickFile();
+                //pickFile();
                 return true;
             }
             default:
@@ -127,7 +130,24 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         }
     }
 
-    private void pickFile() {
+    private void updateCategoriesData(Intent data) {
+        Category addedCategory = data.getParcelableExtra(Constants.CATEGORY);
+        if (addedCategory != null) {
+            if (categories == null) {
+                categories = new ArrayList<>(10);
+                categories.add(addedCategory);
+                setCategoriesData();
+            } else {
+                categories.add(addedCategory);
+                if (adapter == null) {
+                    adapter = new CategoriesAdapter(this, categories);
+                }
+                adapter.notifyItemInserted(categories.size() - 1);
+            }
+        }
+    }
+
+    /*private void pickFile() {
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFilesChosen(List<ChosenFile> list) {
@@ -147,7 +167,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         filePicker.setMimeType("text/csv");
         filePicker.setFilePickerCallback(callback);
         filePicker.pickFile();
-    }
+    }*/
 
     public void uploadFile(File file, Uri uri) {
         RequestBody fileBody = RequestBody.create(MediaType.parse("text/csv"), file);
@@ -185,36 +205,13 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         });
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Category addedCategory = data.getParcelableExtra(Constants.CATEGORY);
-            if (addedCategory != null) {
-                if (categories == null) {
-                    categories = new ArrayList<>(10);
-                    categories.add(addedCategory);
-                    setCategoriesData();
-                } else {
-                    categories.add(addedCategory);
-                    if (adapter == null) {
-                        adapter = new CategoriesAdapter(this, categories);
-                    }
-                    adapter.notifyItemInserted(categories.size() - 1);
-                }
-            }
-        } else if (requestCode == Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            int position = data.getIntExtra(Constants.POSITION, -1);
-            Category editedCategory = data.getParcelableExtra(Constants.CATEGORY);
-            if (position != -1 && editedCategory != null) {
-                categories.remove(position);
-                categories.add(position, editedCategory);
-                adapter.notifyItemChanged(position);
-            }
-        } else if (requestCode == Picker.PICK_FILE && resultCode == RESULT_OK) {
+        if (requestCode == Picker.PICK_FILE && resultCode == RESULT_OK) {
             filePicker.submit(data);
         }
-    }
+    }*/
 
     private void getData() {
         showProgress(true);
@@ -252,7 +249,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
                 Intent intent = new Intent(CategoryListActivity.this, CreateCategoryActivity.class);
-                startActivityForResult(intent, Constants.ADD_CATEGORY_ACTIVITY_REQUEST_CODE);
+                createCategoryActivityResultLauncher.launch(intent);
             });
 
         } else {
@@ -297,6 +294,36 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         });
     }
 
+    private void registerForActivityResults() {
+        editCategoryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            int position = data.getIntExtra(Constants.POSITION, -1);
+                            Category editedCategory = data.getParcelableExtra(Constants.CATEGORY);
+                            if (position != -1 && editedCategory != null) {
+                                categories.remove(position);
+                                categories.add(position, editedCategory);
+                                adapter.notifyItemChanged(position);
+                            }
+                        }
+                    }
+                });
+        createCategoryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            updateCategoriesData(result.getData());
+                        }
+                    }
+                });
+    }
+
     /**
      * Open products list of this category
      *
@@ -315,7 +342,7 @@ public class CategoryListActivity extends AppCompatActivity implements Categorie
         Intent editCategoryIntent = new Intent(this, CreateCategoryActivity.class);
         editCategoryIntent.putExtra(Constants.CATEGORY, categories.get(position));
         editCategoryIntent.putExtra(Constants.POSITION, position);
-        startActivityForResult(editCategoryIntent, Constants.EDIT_CATEGORY_ACTIVITY_REQUEST_CODE);
+        editCategoryActivityResultLauncher.launch(editCategoryIntent);
     }
 
     @Override

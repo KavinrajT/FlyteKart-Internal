@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,9 +71,9 @@ public class OTPVerificationActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private SharedPreferences sharedPreferences;
     private SmsBroadcastReceiver smsBroadcastReceiver;
-    private final int REQ_USER_CONSENT = 1000;
 
     String loginType;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -133,6 +138,21 @@ public class OTPVerificationActivity extends AppCompatActivity {
             checkInputAndVerifyOTP();
         });
         startSmsUserConsent();
+        registerForActivityResults();
+    }
+
+    private void registerForActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            String message = result.getData().getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE);
+                            getOtpFromMessage(message);
+                        }
+                    }
+                });
     }
 
     private void checkInputAndVerifyOTP() {
@@ -377,7 +397,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 new SmsBroadcastReceiver.SmsBroadcastReceiverListener() {
                     @Override
                     public void onSuccess(Intent intent) {
-                        startActivityForResult(intent, REQ_USER_CONSENT);
+                        activityResultLauncher.launch(intent);
                     }
 
                     @Override
@@ -399,17 +419,6 @@ public class OTPVerificationActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(smsBroadcastReceiver);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_USER_CONSENT) {
-            if ((resultCode == RESULT_OK) && (data != null)) {
-                String message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE);
-                getOtpFromMessage(message);
-            }
-        }
     }
 
     private void getOtpFromMessage(String message) {

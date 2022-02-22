@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -51,6 +56,7 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
     private int nextPageNumber = 0;
     private boolean isLoadingOrders = false;
     private Store store;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +90,23 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
             getSupportActionBar().setSubtitle(store.getName());
         }
 
+        registerForActivityResults();
         getData();
         //setListeners();
         //setData();
+    }
+
+    private void registerForActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // TODO Need to update data based on filters
+                        }
+                    }
+                });
     }
 
     @Override
@@ -108,7 +128,7 @@ public class CustomerOrderReportActivity extends AppCompatActivity {
             }
             case R.id.menu_filters: {
                 Intent filtersIntent = new Intent(this, ProductOrderReportFiltersActivity.class);
-                startActivityForResult(filtersIntent, Constants.PRODUCT_ORDER_REPORT_FILTERS_ACTIVITY_REQUEST_CODE);
+                activityResultLauncher.launch(filtersIntent);
                 return true;
             }
             default:

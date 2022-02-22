@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +35,7 @@ import com.flytekart.ui.views.EndlessRecyclerOnScrollListener;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
 
 import java.util.List;
 
@@ -49,6 +55,8 @@ public class OrdersListActivity extends AppCompatActivity {
     private String clientId;
     private int nextPageNumber = 0;
     private ProgressDialog progressDialog;
+    private ActivityResultLauncher<Intent> storeActivityResultLauncher;
+    private ActivityResultLauncher<Intent> orderDetailsActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +89,39 @@ public class OrdersListActivity extends AppCompatActivity {
         accessToken = sharedPreferences.getString(Constants.SHARED_PREF_KEY_ACCESS_TOKEN, Constants.EMPTY);
         clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
 
+        registerForActivityResults();
         getData();
         setListeners();
         //setData();
+    }
+
+    private void registerForActivityResults() {
+        storeActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            // Do nothing for now
+                        }
+                    }
+                });
+
+        orderDetailsActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            int position = data.getIntExtra(Constants.POSITION, 0);
+                            OrderResponse orderResponse = data.getParcelableExtra(Constants.ORDER);
+                            orderResponses.remove(position);
+                            orderResponses.add(position, orderResponse);
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -146,7 +184,7 @@ public class OrdersListActivity extends AppCompatActivity {
             llNoRecordsFound.setVisibility(View.VISIBLE);
             llNoRecordsFound.setOnClickListener(v -> {
                 Intent intent = new Intent(OrdersListActivity.this, CreateStoreActivity.class);
-                startActivityForResult(intent, Constants.ADD_STORE_ACTIVITY_REQUEST_CODE);
+                storeActivityResultLauncher.launch(intent);
             });
         } else {
             if (adapter == null) {
@@ -206,21 +244,7 @@ public class OrdersListActivity extends AppCompatActivity {
         Intent itemIntent = new Intent(this, OrderDetailsActivity.class);
         itemIntent.putExtra(Constants.ORDER, orderResponse);
         itemIntent.putExtra(Constants.POSITION, position);
-        startActivityForResult(itemIntent, Constants.EDIT_ORDER_ACTIVITY_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.EDIT_ORDER_ACTIVITY_REQUEST_CODE) {
-            if (data != null) {
-                int position = data.getIntExtra(Constants.POSITION, 0);
-                OrderResponse orderResponse = data.getParcelableExtra(Constants.ORDER);
-                orderResponses.remove(position);
-                orderResponses.add(position, orderResponse);
-                adapter.notifyItemChanged(position);
-            }
-        }
+        orderDetailsActivityResultLauncher.launch(itemIntent);
     }
 
     public void showProgress(boolean show) {

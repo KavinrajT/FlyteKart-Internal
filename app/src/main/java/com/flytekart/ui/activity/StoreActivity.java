@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,6 +28,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
     private TextView tvCategoriesProducts;
     private TextView tvOrders;
     private Store store;
+    private ActivityResultLauncher<Intent> createStoreActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +50,26 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         tvCategoriesProducts.setOnClickListener(this);
         tvOrders.setOnClickListener(this);
 
+        registerForActivityResults();
         store = getIntent().getParcelableExtra(Constants.STORE);
         getSupportActionBar().setTitle(store.getName());
+    }
+
+    private void registerForActivityResults() {
+        createStoreActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Store editedStore = result.getData().getParcelableExtra(Constants.STORE);
+                            if (editedStore != null) {
+                                store = editedStore;
+                                getSupportActionBar().setTitle(store.getName());
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -65,7 +89,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
             case R.id.tv_store_details: {
                 Intent storeIntent = new Intent(this, CreateStoreActivity.class);
                 storeIntent.putExtra(Constants.STORE, store);
-                startActivityForResult(storeIntent, Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE);
+                createStoreActivityResultLauncher.launch(storeIntent);
                 break;
             }
             case R.id.tv_summary:
@@ -84,18 +108,6 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
                 ordersIntent.putExtra(Constants.STORE, store);
                 startActivity(ordersIntent);
                 break;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.EDIT_STORE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Store editedStore = data.getParcelableExtra(Constants.STORE);
-            if (editedStore != null) {
-                store = editedStore;
-                getSupportActionBar().setTitle(store.getName());
-            }
         }
     }
 }

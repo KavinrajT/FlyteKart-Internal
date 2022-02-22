@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,6 +54,7 @@ public class CreateOrgActivity extends AppCompatActivity {
     private String strStoreType;
     private String strBusinessType;
     private String strAddress;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
 
     @Override
@@ -68,7 +74,7 @@ public class CreateOrgActivity extends AppCompatActivity {
 
         btnLocateMe.setOnClickListener(arg0 -> {
             Intent intent = new Intent(CreateOrgActivity.this, MapsActivity.class);
-            startActivityForResult(intent, Constants.MAPS_ACTIVITY_REQUEST_CODE);
+            activityResultLauncher.launch(intent);
         });
 
         btnCreateOrg.setOnClickListener(v -> {
@@ -146,6 +152,22 @@ public class CreateOrgActivity extends AppCompatActivity {
 
             }
         });
+        registerForActivityResults();
+    }
+
+    private void registerForActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            strAddress = result.getData().getStringExtra("address");
+                            tvLocation.setVisibility(View.VISIBLE);
+                            tvLocation.setText(strAddress);
+                        }
+                    }
+                });
     }
 
     private void showErrorToast(int messageStr) {

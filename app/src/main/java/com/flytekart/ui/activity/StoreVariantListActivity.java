@@ -1,5 +1,6 @@
 package com.flytekart.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -50,6 +55,7 @@ public class StoreVariantListActivity extends AppCompatActivity {
     private Store store;
     private ProductStoreProductDTO product;
     private ProgressDialog progressDialog;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +83,24 @@ public class StoreVariantListActivity extends AppCompatActivity {
         product = getIntent().getParcelableExtra(Constants.PRODUCT);
         getSupportActionBar().setSubtitle(product.getName());
 
+        registerForActivityResults();
         getData();
         setListeners();
         //setData();
+    }
+
+    private void registerForActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            updateVariantsOnEdit(data);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -97,17 +118,13 @@ public class StoreVariantListActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.EDIT_VARIANT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            int position = data.getIntExtra(Constants.POSITION, -1);
-            VariantStoreVariantDTO editedVariant = data.getParcelableExtra(Constants.VARIANT);
-            if (position != -1 && editedVariant != null) {
-                variants.remove(position);
-                variants.add(position, editedVariant);
-                adapter.notifyItemChanged(position);
-            }
+    private void updateVariantsOnEdit(Intent data) {
+        int position = data.getIntExtra(Constants.POSITION, -1);
+        VariantStoreVariantDTO editedVariant = data.getParcelableExtra(Constants.VARIANT);
+        if (position != -1 && editedVariant != null) {
+            variants.remove(position);
+            variants.add(position, editedVariant);
+            adapter.notifyItemChanged(position);
         }
     }
 
@@ -200,7 +217,7 @@ public class StoreVariantListActivity extends AppCompatActivity {
         itemIntent.putExtra(Constants.PRODUCT, product);
         itemIntent.putExtra(Constants.VARIANT, variantStoreVariantDTO);
         itemIntent.putExtra(Constants.POSITION, position);
-        startActivityForResult(itemIntent, Constants.EDIT_VARIANT_ACTIVITY_REQUEST_CODE);
+        activityResultLauncher.launch(itemIntent);
     }
 
     public void showProgress(boolean show) {

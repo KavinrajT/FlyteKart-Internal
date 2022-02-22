@@ -134,6 +134,12 @@
         <activity
             android:name=".ui.activity.StoreVariantActivity"
             android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.DiscountListActivity"
+            android:theme="@style/ToolbarTheme" />
+        <activity
+            android:name=".ui.activity.CreateDiscountActivity"
+            android:theme="@style/ToolbarTheme" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
