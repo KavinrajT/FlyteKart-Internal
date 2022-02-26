@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +27,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
+import com.flytekart.models.CustomerAcquisitionReportItem;
 import com.flytekart.models.EmployeePushToken;
 import com.flytekart.models.MenuModel;
+import com.flytekart.models.OrdersOverTimeReportItem;
 import com.flytekart.models.Organisation;
+import com.flytekart.models.ProductOrderReportItem;
 import com.flytekart.models.UserDetails;
 import com.flytekart.models.request.DeleteEmployeePushTokenRequest;
 import com.flytekart.models.response.APIError;
@@ -51,7 +56,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private DrawerLayout drawerLayout;
     ExpandableListAdapter expandableListAdapter;
@@ -67,6 +72,22 @@ public class HomeActivity extends BaseActivity {
     private String accessToken;
     private String clientId;
     private UserDetails userDetails;
+
+    private TextView tvTotalOrdersValue;
+    private TextView tvTotalOrders;
+    private TextView tvTodayAcquisition;
+    private TextView tvProductName;
+    private TextView tvVariantName;
+    private TextView tvCategoryName;
+    private ProgressBar pgTotalOrders;
+    private ProgressBar pgTodayAcquisition;
+    private ProgressBar pgMostSoldToday;
+    private ImageView ivMostSoldTodayRefresh;
+    private ImageView ivMostSoldTodayOpen;
+    private ImageView ivTotalOrderRefresh;
+    private ImageView ivTotalOrderOpen;
+    private ImageView ivTodayAcquisitionRefresh;
+    private ImageView ivTodayAcquisitionOpen;
 
     private ActivityResultLauncher<Intent> storesActivityResultLauncher;
     private ActivityResultLauncher<Intent> categoriesActivityResultLauncher;
@@ -97,12 +118,211 @@ public class HomeActivity extends BaseActivity {
         expandableListView.setAdapter(expandableListAdapter);
         expandableListView.setOnItemClickListener(new DrawerItemClickListener());
         expandableListView.setOnGroupClickListener(new GroupClickListener());
+        tvTotalOrdersValue = findViewById(R.id.tv_total_orders_value);
+        tvTotalOrders = findViewById(R.id.tv_total_orders);
+        tvTodayAcquisition = findViewById(R.id.tv_today_acquisition);
+        tvProductName = findViewById(R.id.tv_product_name);
+        tvVariantName = findViewById(R.id.tv_variant_name);
+        tvCategoryName = findViewById(R.id.tv_category_name);
+        pgTotalOrders = findViewById(R.id.pg_total_orders);
+        pgTodayAcquisition = findViewById(R.id.pg_today_acquisition);
+        pgMostSoldToday = findViewById(R.id.pg_most_sold_today);
+        ivMostSoldTodayRefresh = findViewById(R.id.iv_most_sold_today_refresh);
+        ivMostSoldTodayOpen = findViewById(R.id.iv_most_sold_today_open);
+        ivMostSoldTodayRefresh.setOnClickListener(this);
+        ivMostSoldTodayOpen.setOnClickListener(this);
+        ivTotalOrderRefresh = findViewById(R.id.iv_total_order_refresh);
+        ivTotalOrderOpen = findViewById(R.id.iv_total_order_open);
+        ivTotalOrderRefresh.setOnClickListener(this);
+        ivTotalOrderOpen.setOnClickListener(this);
+        ivTodayAcquisitionRefresh = findViewById(R.id.iv_today_acquisition_refresh);
+        ivTodayAcquisitionOpen = findViewById(R.id.iv_today_acquisition_open);
+        ivTodayAcquisitionRefresh.setOnClickListener(this);
+        ivTodayAcquisitionOpen.setOnClickListener(this);
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.addDrawerListener(drawerToggle);
         setupDrawerToggle();
         registerForActivityResults();
 
         //getAllOrganisations();
+        getReports();
+    }
+
+    private void getReports() {
+        getOrdersOverTimeReportForToday();
+        getCustomerAcquisitionReportData();
+        getProductOrderReportData();
+    }
+
+    private void getOrdersOverTimeReportForToday() {
+        pgTotalOrders.setVisibility(View.VISIBLE);
+        tvTotalOrders.setVisibility(View.GONE);
+        tvTotalOrdersValue.setVisibility(View.GONE);
+        ivTotalOrderRefresh.setOnClickListener(null);
+        ivTotalOrderOpen.setOnClickListener(null);
+        String todayDate = Utilities.getFormattedTodayCalendarString(Constants.DATE_FORMAT_YYYY_MM_DD);
+        Call<BaseResponse<List<OrdersOverTimeReportItem>>> getOrdersOverTimeReportCall = Flytekart.getApiService()
+                .getOrdersOverTimeReport(accessToken, clientId, null, todayDate, todayDate,
+                        0, 1);
+        getOrdersOverTimeReportCall.enqueue(new CustomCallback<BaseResponse<List<OrdersOverTimeReportItem>>>() {
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<OrdersOverTimeReportItem>>> call, Response<BaseResponse<List<OrdersOverTimeReportItem>>> response) {
+                Logger.i("ProductOrderReportItem response received.");
+                pgTotalOrders.setVisibility(View.GONE);
+                ivTotalOrderRefresh.setOnClickListener(HomeActivity.this);
+                ivTotalOrderOpen.setOnClickListener(HomeActivity.this);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<OrdersOverTimeReportItem> ordersOverTimeReportItems = response.body().getBody();
+                    tvTotalOrders.setVisibility(View.VISIBLE);
+                    tvTotalOrdersValue.setVisibility(View.VISIBLE);
+                    setOrdersOverTimeReportData(ordersOverTimeReportItems);
+                }
+                Logger.e("ProductOrderReportItem API call response status code : " + response.code());
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<OrdersOverTimeReportItem>>> call, APIError responseBody) {
+                Logger.e("ProductOrderReportItem API call failed.");
+                pgTotalOrders.setVisibility(View.GONE);
+                ivTotalOrderRefresh.setOnClickListener(HomeActivity.this);
+                ivTotalOrderOpen.setOnClickListener(HomeActivity.this);
+            }
+
+            @Override
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<OrdersOverTimeReportItem>>> call) {
+                Logger.i("ProductOrderReportItem call failure.");
+                pgTotalOrders.setVisibility(View.GONE);
+                ivTotalOrderRefresh.setOnClickListener(null);
+                ivTotalOrderOpen.setOnClickListener(null);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setOrdersOverTimeReportData(List<OrdersOverTimeReportItem> ordersOverTimeReportItems) {
+        if (ordersOverTimeReportItems != null && ordersOverTimeReportItems.size() > 0) {
+            // TODO Follow different formatting to support large money numbers
+            tvTotalOrdersValue.setText(Utilities.getFormattedMoney(ordersOverTimeReportItems.get(0).getTotalOrderedValue()));
+            tvTotalOrders.setText(String.valueOf(ordersOverTimeReportItems.get(0).getPlacedOrders()));
+        } else {
+            // Show 0 value
+            tvTotalOrdersValue.setText(Utilities.getFormattedMoney(0));
+            tvTotalOrders.setText(String.valueOf(0));
+        }
+    }
+
+    private void getCustomerAcquisitionReportData() {
+        pgTodayAcquisition.setVisibility(View.VISIBLE);
+        tvTodayAcquisition.setVisibility(View.GONE);
+        ivTodayAcquisitionRefresh.setOnClickListener(null);
+        ivTodayAcquisitionOpen.setOnClickListener(null);
+        String todayDate = Utilities.getFormattedTodayCalendarString(Constants.DATE_FORMAT_YYYY_MM_DD);
+        Call<BaseResponse<List<CustomerAcquisitionReportItem>>> getCustomerAcquisitionReportCall = Flytekart.getApiService()
+                .getCustomerAcquisitionReport(accessToken, clientId, todayDate, todayDate, 0, 1);
+        getCustomerAcquisitionReportCall.enqueue(new CustomCallback<BaseResponse<List<CustomerAcquisitionReportItem>>>() {
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<CustomerAcquisitionReportItem>>> call, Response<BaseResponse<List<CustomerAcquisitionReportItem>>> response) {
+                Logger.i("CustomerAcquisitionReport response received.");
+                pgTodayAcquisition.setVisibility(View.GONE);
+                ivTodayAcquisitionRefresh.setOnClickListener(HomeActivity.this);
+                ivTodayAcquisitionOpen.setOnClickListener(HomeActivity.this);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<CustomerAcquisitionReportItem> customerAcquisitionReportItems = response.body().getBody();
+                    tvTodayAcquisition.setVisibility(View.VISIBLE);
+                    setCustomerAcquisitionReportData(customerAcquisitionReportItems);
+                }
+                Logger.e("CustomerAcquisitionReport API call response status code : " + response.code());
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<CustomerAcquisitionReportItem>>> call, APIError responseBody) {
+                Logger.e("CustomerAcquisitionReport API call failed.");
+                pgTodayAcquisition.setVisibility(View.GONE);
+                ivTodayAcquisitionRefresh.setOnClickListener(HomeActivity.this);
+                ivTodayAcquisitionOpen.setOnClickListener(HomeActivity.this);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<CustomerAcquisitionReportItem>>> call) {
+                Logger.i("CustomerAcquisitionReport call failure.");
+                pgTodayAcquisition.setVisibility(View.GONE);
+                ivTodayAcquisitionRefresh.setOnClickListener(HomeActivity.this);
+                ivTodayAcquisitionOpen.setOnClickListener(HomeActivity.this);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setCustomerAcquisitionReportData(List<CustomerAcquisitionReportItem> customerAcquisitionReportItems) {
+        if (customerAcquisitionReportItems != null && customerAcquisitionReportItems.size() > 0) {
+            // TODO Follow different formatting to support large money numbers
+            tvTodayAcquisition.setText(String.valueOf(customerAcquisitionReportItems.get(0).getTotal()));
+        } else {
+            // Show 0 value
+            tvTodayAcquisition.setText(String.valueOf(0));
+        }
+    }
+
+    private void getProductOrderReportData() {
+        pgMostSoldToday.setVisibility(View.VISIBLE);
+        tvProductName.setVisibility(View.GONE);
+        tvVariantName.setVisibility(View.GONE);
+        tvCategoryName.setVisibility(View.GONE);
+        ivMostSoldTodayRefresh.setOnClickListener(null);
+        ivMostSoldTodayOpen.setOnClickListener(null);
+        String todayDate = Utilities.getFormattedTodayCalendarString(Constants.DATE_FORMAT_YYYY_MM_DD);
+        Call<BaseResponse<List<ProductOrderReportItem>>> getProductOrderReportCall = Flytekart.getApiService()
+                .getProductOrderReport(accessToken, clientId, null, todayDate, todayDate,
+                        0, 1);
+        getProductOrderReportCall.enqueue(new CustomCallback<BaseResponse<List<ProductOrderReportItem>>>() {
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<ProductOrderReportItem>>> call, Response<BaseResponse<List<ProductOrderReportItem>>> response) {
+                Logger.i("ProductOrderReport response received.");
+                pgMostSoldToday.setVisibility(View.GONE);
+                ivMostSoldTodayRefresh.setOnClickListener(HomeActivity.this);
+                ivMostSoldTodayOpen.setOnClickListener(HomeActivity.this);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ProductOrderReportItem> productOrderReportItems = response.body().getBody();
+                    tvProductName.setVisibility(View.VISIBLE);
+                    tvVariantName.setVisibility(View.VISIBLE);
+                    tvCategoryName.setVisibility(View.VISIBLE);
+                    setProductOrderReportData(productOrderReportItems);
+                }
+                Logger.e("ProductOrderReport API call response status code : " + response.code());
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<ProductOrderReportItem>>> call, APIError responseBody) {
+                Logger.e("ProductOrderReport API call failed.");
+                pgMostSoldToday.setVisibility(View.GONE);
+                ivMostSoldTodayRefresh.setOnClickListener(HomeActivity.this);
+                ivMostSoldTodayOpen.setOnClickListener(HomeActivity.this);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartGenericErrorResponse(@NotNull Call<BaseResponse<List<ProductOrderReportItem>>> call) {
+                Logger.i("ProductOrderReport call failure.");
+                pgMostSoldToday.setVisibility(View.GONE);
+                ivMostSoldTodayRefresh.setOnClickListener(HomeActivity.this);
+                ivMostSoldTodayOpen.setOnClickListener(HomeActivity.this);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setProductOrderReportData(List<ProductOrderReportItem> productOrderReportItems) {
+        if (productOrderReportItems != null && productOrderReportItems.size() > 0) {
+            tvProductName.setText(productOrderReportItems.get(0).getProductName());
+            tvVariantName.setText(productOrderReportItems.get(0).getVariantName());
+            tvCategoryName.setText(productOrderReportItems.get(0).getCategoryName());
+        } else {
+            // Show 0 value
+            tvProductName.setText(Constants.HYPHEN);
+            tvVariantName.setText(Constants.HYPHEN);
+            tvCategoryName.setText(Constants.HYPHEN);
+        }
     }
 
     private void getUserDetails() {
@@ -155,6 +375,39 @@ public class HomeActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_total_order_refresh: {
+                getOrdersOverTimeReportForToday();
+                break;
+            }
+            case R.id.iv_total_order_open: {
+                Intent intent = new Intent(HomeActivity.this, OrdersOverTimeReportActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.iv_today_acquisition_refresh: {
+                getCustomerAcquisitionReportData();
+                break;
+            }
+            case R.id.iv_today_acquisition_open: {
+                Intent intent = new Intent(HomeActivity.this, CustomerAcquisitionReportActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.iv_most_sold_today_refresh: {
+                getProductOrderReportData();
+                break;
+            }
+            case R.id.iv_most_sold_today_open: {
+                Intent intent = new Intent(HomeActivity.this, ProductOrderReportActivity.class);
+                startActivity(intent);
+                break;
+            }
+        }
     }
 
     private class GroupClickListener implements ExpandableListView.OnGroupClickListener {

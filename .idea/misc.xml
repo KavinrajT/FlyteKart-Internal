@@ -12,7 +12,10 @@
         <entry key="app/src/main/res/drawable/ic_home_work_.xml" value="0.12291666666666666" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1259259259259259" />
         <entry key="app/src/main/res/drawable/ic_my_location.xml" value="0.23541666666666666" />
+        <entry key="app/src/main/res/drawable/selector_blue_button.xml" value="0.156" />
         <entry key="app/src/main/res/drawable/selector_my_location.xml" value="0.12291666666666666" />
+        <entry key="app/src/main/res/drawable/selector_red_button_num_1.xml" value="0.156" />
+        <entry key="app/src/main/res/drawable/selector_white_button.xml" value="0.156" />
         <entry key="app/src/main/res/layout-land/activity_otp_verification.xml" value="0.10361552028218694" />
         <entry key="app/src/main/res/layout/activity_category_list.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_create_category.xml" value="0.10663627152988855" />
@@ -23,7 +26,7 @@
         <entry key="app/src/main/res/layout/activity_customer_acquisition_report.xml" value="0.1328125" />
         <entry key="app/src/main/res/layout/activity_customer_order_report.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/activity_discount_list.xml" value="0.11770833333333333" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.10552536231884058" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.13298187255859376" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.10552536231884058" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_order_details.xml" value="0.25" />

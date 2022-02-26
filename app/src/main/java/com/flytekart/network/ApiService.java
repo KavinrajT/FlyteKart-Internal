@@ -354,6 +354,16 @@ public interface ApiService {
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
 
+    @GET("/api/reports/orders")
+    Call<BaseResponse<List<ProductOrderReportItem>>> getProductOrderReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("storeId") String storeId,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
     @GET("/api/reports/ordersovertime")
     Call<BaseResponse<List<OrdersOverTimeReportItem>>> getOrdersOverTimeReport(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
@@ -362,10 +372,29 @@ public interface ApiService {
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
 
+    @GET("/api/reports/ordersovertime")
+    Call<BaseResponse<List<OrdersOverTimeReportItem>>> getOrdersOverTimeReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("storeId") String storeId,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
     @GET("/api/reports/customer")
     Call<BaseResponse<List<CustomerAcquisitionReportItem>>> getCustomerAcquisitionReport(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/reports/customer")
+    Call<BaseResponse<List<CustomerAcquisitionReportItem>>> getCustomerAcquisitionReport(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate,
             @Query("pageNumber") int pageNumber,
             @Query("pageSize") int pageSize);
 

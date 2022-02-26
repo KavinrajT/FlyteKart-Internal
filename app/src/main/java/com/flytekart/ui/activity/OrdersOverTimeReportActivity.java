@@ -152,9 +152,9 @@ public class OrdersOverTimeReportActivity extends AppCompatActivity {
         } else {
             storeId = store.getId();
         }
-        Call<BaseResponse<List<OrdersOverTimeReportItem>>> getProductOrderReportCall = Flytekart.getApiService()
+        Call<BaseResponse<List<OrdersOverTimeReportItem>>> getOrdersOverTimeReportCall = Flytekart.getApiService()
                 .getOrdersOverTimeReport(accessToken, clientId, storeId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
-        getProductOrderReportCall.enqueue(new CustomCallback<BaseResponse<List<OrdersOverTimeReportItem>>>() {
+        getOrdersOverTimeReportCall.enqueue(new CustomCallback<BaseResponse<List<OrdersOverTimeReportItem>>>() {
             @Override
             public void onFlytekartSuccessResponse(Call<BaseResponse<List<OrdersOverTimeReportItem>>> call, Response<BaseResponse<List<OrdersOverTimeReportItem>>> response) {
                 Logger.i("ProductOrderReportItem response received.");

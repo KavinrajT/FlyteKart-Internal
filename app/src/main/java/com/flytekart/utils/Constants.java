@@ -57,6 +57,7 @@ public class Constants {
     public static final String CLIENT_ID = "clientId";
     public static final String USERNAME = "username";
     public static final String MULTIPLE = "MULTIPLE";
+    public static final String HYPHEN = "-";
 
     public static final int DEFAULT_PAGE_SIZE = 10;
     public static final String SHARED_PREF_EMPLOYEE_PUSH_TOKEN_ID = "EMPLOYEE_PUSH_TOKEN_ID";
@@ -64,6 +65,8 @@ public class Constants {
     public static final String STR_JPEG_FILE_EXTENSION = ".jpeg";
     public static final int MAX_IMAGE_SIZE = 200 ;// IN KB
     public static final int IMAGE_MAX_DIM = 500;
+
+    public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 
     public static final class OrderStatus {
         public static final String IN_PROGRESS = "IN_PROGRESS";

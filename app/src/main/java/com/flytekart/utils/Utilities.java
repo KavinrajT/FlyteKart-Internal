@@ -54,6 +54,12 @@ public class Utilities {
         return Constants.EMPTY;
     }
 
+    public static String getFormattedTodayCalendarString(String toFormat) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat resultSdf = new SimpleDateFormat(toFormat, Locale.ENGLISH);
+        return resultSdf.format(cal.getTime());
+    }
+
     public static String getFormattedOrderStatus(String orderStatus) {
         switch (orderStatus) {
             case Constants.OrderStatus.IN_PROGRESS:
