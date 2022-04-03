@@ -161,6 +161,7 @@
     <string name="categories">కేటగిరీలు</string>
     <string name="discounts">Discounts</string>
     <string name="order_details">ఆర్డర్ వివరాలు</string>
+    <string name="push_notifications">Push Notifications</string>
     <string name="orders">ఆర్డర్స్</string>
     <string name="products">ఉత్పత్తులు</string>
     <string name="variants">వేరియంట్‌లు</string>
@@ -185,6 +186,7 @@
 
     <string name="collection_payment">చెల్లింపును సేకరించండి</string>
     <string name="update_order_status">ఆర్డర్ స్థితి సవరించండి</string>
+    <string name="get_borzo_estimate">GET BORZO ESTIMATE</string>
     <string name="product_order_report">ఉత్పత్తి ఆర్డర్ నివేదిక</string>
     <string name="orders_over_time_report">కాలక్రమేణా నివేదిక</string>
     <string name="customer_acquisition_report">కస్టమర్ సముపార్జన నివేదిక</string>

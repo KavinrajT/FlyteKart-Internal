@@ -37,6 +37,7 @@
         <entry key="app/src/main/res/layout/activity_product_order_report.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_product_order_report_filters.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_product_order_reports.xml" value="0.10520833333333333" />
+        <entry key="app/src/main/res/layout/activity_push_notifications_list.xml" value="0.20697463768115942" />
         <entry key="app/src/main/res/layout/activity_reports.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_store.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_store_category_list.xml" value="0.2006340579710145" />
@@ -55,6 +56,7 @@
         <entry key="app/src/main/res/layout/list_item_order.xml" value="0.10778985507246377" />
         <entry key="app/src/main/res/layout/list_item_orders_over_time.xml" value="0.21614583333333334" />
         <entry key="app/src/main/res/layout/list_item_product_order.xml" value="0.15572916666666667" />
+        <entry key="app/src/main/res/layout/list_item_push_notification.xml" value="0.20697463768115942" />
         <entry key="app/src/main/res/layout/list_item_store.xml" value="0.11730072463768115" />
         <entry key="app/src/main/res/layout/list_item_store_category.xml" value="0.25" />
         <entry key="app/src/main/res/layout/list_item_store_product.xml" value="0.19655797101449277" />

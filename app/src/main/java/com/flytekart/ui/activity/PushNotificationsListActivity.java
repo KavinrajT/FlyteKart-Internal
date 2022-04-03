@@ -16,7 +16,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,31 +24,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.flytekart.Flytekart;
 import com.flytekart.R;
-import com.flytekart.models.OrderResponse;
+import com.flytekart.models.PushNotification;
 import com.flytekart.models.Store;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
 import com.flytekart.network.CustomCallback;
-import com.flytekart.ui.adapters.OrdersAdapter;
+import com.flytekart.ui.adapters.PushNotificationsAdapter;
 import com.flytekart.ui.views.EndlessRecyclerOnScrollListener;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
 import com.flytekart.utils.Utilities;
-import com.google.android.gms.auth.api.phone.SmsRetriever;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class OrdersListActivity extends AppCompatActivity {
+public class PushNotificationsListActivity extends AppCompatActivity {
 
     private LinearLayout llNoRecordsFound;
-    private LinearLayoutManager ordersLayoutManager;
-    private RecyclerView rvOrdersList;
-    private OrdersAdapter adapter;
+    private LinearLayoutManager pushNotificationsLayoutManager;
+    private RecyclerView rvPushNotificationsList;
+    private PushNotificationsAdapter adapter;
     private Store store;
-    private List<OrderResponse> orderResponses;
+    private List<PushNotification> pushNotifications;
     private boolean isLoadingOrders = false;
     private String accessToken;
     private String clientId;
@@ -61,22 +59,22 @@ public class OrdersListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orders_list);
+        setContentView(R.layout.activity_push_notifications_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.orders);
+        getSupportActionBar().setTitle(R.string.push_notifications);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         llNoRecordsFound = findViewById(R.id.ll_no_records_found);
-        rvOrdersList = findViewById(R.id.rv_orders_list);
-        rvOrdersList.setHasFixedSize(true);
-        ordersLayoutManager = new LinearLayoutManager(this);
-        rvOrdersList.setLayoutManager(ordersLayoutManager);
+        rvPushNotificationsList = findViewById(R.id.rv_push_notifications_list);
+        rvPushNotificationsList.setHasFixedSize(true);
+        pushNotificationsLayoutManager = new LinearLayoutManager(this);
+        rvPushNotificationsList.setLayoutManager(pushNotificationsLayoutManager);
         //rvOrdersList.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(this, R.drawable.divider_rv)));
-        rvOrdersList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        rvOrdersList.addOnScrollListener(new EndlessRecyclerOnScrollListener(ordersLayoutManager) {
+        rvPushNotificationsList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvPushNotificationsList.addOnScrollListener(new EndlessRecyclerOnScrollListener(pushNotificationsLayoutManager) {
             @Override
             public void onLoadMore() {
                 loadMoreData();
@@ -118,9 +116,9 @@ public class OrdersListActivity extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                             Intent data = result.getData();
                             int position = data.getIntExtra(Constants.POSITION, 0);
-                            OrderResponse orderResponse = data.getParcelableExtra(Constants.ORDER);
-                            orderResponses.remove(position);
-                            orderResponses.add(position, orderResponse);
+                            PushNotification pushNotification = data.getParcelableExtra(Constants.PUSH_NOTIFICATION);
+                            pushNotifications.remove(position);
+                            pushNotifications.add(position, pushNotification);
                             adapter.notifyItemChanged(position);
                         }
                     }
@@ -140,7 +138,7 @@ public class OrdersListActivity extends AppCompatActivity {
 
     private void loadMoreData() {
         if (nextPageNumber > 0
-                && (nextPageNumber * Constants.DEFAULT_PAGE_SIZE) == orderResponses.size()) {
+                && (nextPageNumber * Constants.DEFAULT_PAGE_SIZE) == pushNotifications.size()) {
             if (!isLoadingOrders) {
                 isLoadingOrders = true;
                 getData();
@@ -151,15 +149,12 @@ public class OrdersListActivity extends AppCompatActivity {
     private void getData() {
         Logger.e("Loading data - page = " + nextPageNumber);
         showProgress(true);
-        Call<BaseResponse<List<OrderResponse>>> getOrdersCall;
-        if (store == null) {
-            getOrdersCall = Flytekart.getApiService().getOrders(accessToken, clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
-        } else {
-            getOrdersCall = Flytekart.getApiService().getOrdersByStoreId(accessToken, store.getId(), clientId, nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
-        }
-        getOrdersCall.enqueue(new CustomCallback<BaseResponse<List<OrderResponse>>>() {
+        Call<BaseResponse<List<PushNotification>>> getPushNotificationsCall =
+                Flytekart.getApiService().getPushNotifications(accessToken, clientId,
+                        nextPageNumber, Constants.DEFAULT_PAGE_SIZE);
+        getPushNotificationsCall.enqueue(new CustomCallback<BaseResponse<List<PushNotification>>>() {
             @Override
-            public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<OrderResponse>>> call) {
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<PushNotification>>> call) {
                 isLoadingOrders = false;
                 Logger.e("Store List API call failure.");
                 showProgress(false);
@@ -167,16 +162,16 @@ public class OrdersListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFlytekartSuccessResponse(Call<BaseResponse<List<OrderResponse>>> call, Response<BaseResponse<List<OrderResponse>>> response) {
+            public void onFlytekartSuccessResponse(Call<BaseResponse<List<PushNotification>>> call, Response<BaseResponse<List<PushNotification>>> response) {
                 isLoadingOrders = false;
-                Logger.e("Order list API success");
+                Logger.e("PushNotification list API success");
                 showProgress(false);
-                List<OrderResponse> orderResponses = response.body().getBody();
-                setOrdersData(orderResponses);
+                List<PushNotification> pushNotifications = response.body().getBody();
+                setPushNotificationsData(pushNotifications);
             }
 
             @Override
-            public void onFlytekartErrorResponse(Call<BaseResponse<List<OrderResponse>>> call, APIError responseBody) {
+            public void onFlytekartErrorResponse(Call<BaseResponse<List<PushNotification>>> call, APIError responseBody) {
                 isLoadingOrders = false;
                 Logger.e("Order List API call  response status code : " + responseBody.getStatus());
                 showProgress(false);
@@ -185,31 +180,27 @@ public class OrdersListActivity extends AppCompatActivity {
         });
     }
 
-    private void setOrdersData(List<OrderResponse> orderResponses) {
-        if ((this.orderResponses == null || this.orderResponses.isEmpty()) &&
-                (orderResponses == null || orderResponses.isEmpty())) {
-            rvOrdersList.setVisibility(View.GONE);
+    private void setPushNotificationsData(List<PushNotification> pushNotifications) {
+        if ((this.pushNotifications == null || this.pushNotifications.isEmpty()) &&
+                (pushNotifications == null || pushNotifications.isEmpty())) {
+            rvPushNotificationsList.setVisibility(View.GONE);
             llNoRecordsFound.setVisibility(View.VISIBLE);
-            /*llNoRecordsFound.setOnClickListener(v -> {
-                Intent intent = new Intent(OrdersListActivity.this, CreateStoreActivity.class);
+            llNoRecordsFound.setOnClickListener(v -> {
+                Intent intent = new Intent(PushNotificationsListActivity.this, CreatePushNotificationActivity.class);
                 storeActivityResultLauncher.launch(intent);
-            });*/
+            });
         } else {
             if (adapter == null) {
                 llNoRecordsFound.setVisibility(View.GONE);
-                rvOrdersList.setVisibility(View.VISIBLE);
+                rvPushNotificationsList.setVisibility(View.VISIBLE);
 
-                this.orderResponses = orderResponses;
-                if (store == null) {
-                    adapter = new OrdersAdapter(orderResponses, true);
-                } else {
-                    adapter = new OrdersAdapter(orderResponses, false);
-                }
-                rvOrdersList.setAdapter(adapter);
+                this.pushNotifications = pushNotifications;
+                adapter = new PushNotificationsAdapter(pushNotifications);
+                rvPushNotificationsList.setAdapter(adapter);
             } else {
-                int initialSize = this.orderResponses.size();
-                this.orderResponses.addAll(orderResponses);
-                adapter.notifyItemRangeInserted(initialSize, this.orderResponses.size() - 1);
+                int initialSize = this.pushNotifications.size();
+                this.pushNotifications.addAll(pushNotifications);
+                adapter.notifyItemRangeInserted(initialSize, this.pushNotifications.size() - 1);
             }
             nextPageNumber++;
         }
@@ -225,13 +216,13 @@ public class OrdersListActivity extends AppCompatActivity {
 
         });
 
-        rvOrdersList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        rvPushNotificationsList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int pos = rv.getChildAdapterPosition(child);
-                    onOrderClicked(orderResponses.get(pos), pos);
+                    onPushNotificationClicked(pushNotifications.get(pos), pos);
                 }
                 return false;
             }
@@ -249,12 +240,12 @@ public class OrdersListActivity extends AppCompatActivity {
     }
 
     /**
-     * Take user to order details screen
-     * @param orderResponse
+     * Take user to push notification details screen
+     * @param pushNotification
      */
-    private void onOrderClicked(OrderResponse orderResponse, int position) {
-        Intent itemIntent = new Intent(this, OrderDetailsActivity.class);
-        itemIntent.putExtra(Constants.ORDER, orderResponse);
+    private void onPushNotificationClicked(PushNotification pushNotification, int position) {
+        Intent itemIntent = new Intent(this, CreatePushNotificationActivity.class);
+        itemIntent.putExtra(Constants.PUSH_NOTIFICATION, pushNotification);
         itemIntent.putExtra(Constants.POSITION, position);
         orderDetailsActivityResultLauncher.launch(itemIntent);
     }

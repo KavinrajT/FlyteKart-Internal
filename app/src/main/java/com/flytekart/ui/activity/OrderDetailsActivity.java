@@ -27,6 +27,7 @@ import com.flytekart.models.request.CODPaymentRequest;
 import com.flytekart.models.request.UpdateOrderStatusRequest;
 import com.flytekart.models.response.APIError;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.models.response.BorzoOrderPriceCalculationResponse;
 import com.flytekart.network.CustomCallback;
 import com.flytekart.utils.Constants;
 import com.flytekart.utils.Logger;
@@ -57,9 +58,12 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     private TextView tvPaid;
     private TextView tvBalance;
     private TextView tvUpdateOrderStatus;
+    private TextView tvDeliveryPartner;
     private LinearLayout llCustomerDetails;
+    private LinearLayout llDeliveryPartner;
     private LayoutInflater layoutInflater;
     private ProgressDialog progressDialog;
+    private String deliveryPartner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,9 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         tvPaid = findViewById(R.id.tv_paid);
         tvBalance = findViewById(R.id.tv_balance);
         tvUpdateOrderStatus = findViewById(R.id.tv_update_order_status);
+        tvDeliveryPartner = findViewById(R.id.tv_delivery_partner);
         llCustomerDetails = findViewById(R.id.ll_customer_details);
+        llDeliveryPartner = findViewById(R.id.ll_delivery_partner);
         layoutInflater = LayoutInflater.from(this);
 
         orderResponse = getIntent().getParcelableExtra(Constants.ORDER);
@@ -195,6 +201,19 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
                 tvUpdateOrderStatus.setVisibility(View.VISIBLE);
                 tvUpdateOrderStatus.setOnClickListener(this);
             }
+            if (orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.PROCESSED)) {
+                llDeliveryPartner.setVisibility(View.VISIBLE);
+                llDeliveryPartner.setOnClickListener(this);
+                // TODO Need to update based on selected delivery partner
+                tvUpdateOrderStatus.setText(R.string.update_order_status);
+                tvDeliveryPartner.setText(Constants.DeliveryPartner.NONE);
+                deliveryPartner = Constants.DeliveryPartner.NONE;
+            } else {
+                llDeliveryPartner.setVisibility(View.GONE);
+                tvUpdateOrderStatus.setText(R.string.update_order_status);
+                tvDeliveryPartner.setText(Constants.DeliveryPartner.NONE);
+                deliveryPartner = Constants.DeliveryPartner.NONE;
+            }
             llCustomerDetails.setOnClickListener(this);
 
             setDeliveryAddressToUI();
@@ -254,60 +273,66 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_update_order_status: {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Update order status");
-                double paid = getPaidAmount();
-                double balance = orderResponse.getOrderTotal().getTotal() - paid;
-                String message;
-                if (balance > 0 && orderResponse.getOrder().getOrderStatus().getName()
-                        .equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
-                    message = "Do you want collect all payment amount?";
+                if (orderResponse.getOrder().getOrderStatus().getName().equalsIgnoreCase(Constants.OrderStatus.PROCESSED)
+                        && deliveryPartner.equalsIgnoreCase(Constants.DeliveryPartner.BORZO)) {
+                    getBorzoEstimate();
                 } else {
-                    message = "Do you want to update the order status from %1$s to %2$s?";
-                    message = String.format(message,
-                            Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()),
-                            Utilities.getNextFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
-                }
-                builder.setMessage(message);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (Utilities.getNextOrderStatus(
-                                orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase(Constants.OrderStatus.ACCEPTED)) {
-                            acceptOrder();
-                        } else if (Utilities.getNextOrderStatus(
-                                orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase(Constants.OrderStatus.PROCESSING)) {
-                            processOrder();
-                        } else if (Utilities.getNextOrderStatus(
-                                orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase(Constants.OrderStatus.PROCESSED)) {
-                            processedOrder();
-                        } else if (Utilities.getNextOrderStatus(
-                                orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
-                            outForDeliveryOrder();
-                        } else if (Utilities.getNextOrderStatus(
-                                orderResponse.getOrder().getOrderStatus().getName())
-                                .equalsIgnoreCase(Constants.OrderStatus.DELIVERED)) {
-                            double paid = getPaidAmount();
-                            double balance = orderResponse.getOrderTotal().getTotal() - paid;
-                            if (balance <= 0) {
-                                deliverOrder();
-                            } else {
-                                collectPayment(balance);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Update order status");
+                    double paid = getPaidAmount();
+                    double balance = orderResponse.getOrderTotal().getTotal() - paid;
+                    String message;
+                    if (balance > 0 && orderResponse.getOrder().getOrderStatus().getName()
+                            .equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
+                        message = "Do you want collect all payment amount?";
+                    } else {
+                        message = "Do you want to update the order status from %1$s to %2$s?";
+                        message = String.format(message,
+                                Utilities.getFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()),
+                                Utilities.getNextFormattedOrderStatus(orderResponse.getOrder().getOrderStatus().getName()));
+                    }
+                    builder.setMessage(message);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //getBorzoEstimate();
+                            if (Utilities.getNextOrderStatus(
+                                    orderResponse.getOrder().getOrderStatus().getName())
+                                    .equalsIgnoreCase(Constants.OrderStatus.ACCEPTED)) {
+                                acceptOrder();
+                            } else if (Utilities.getNextOrderStatus(
+                                    orderResponse.getOrder().getOrderStatus().getName())
+                                    .equalsIgnoreCase(Constants.OrderStatus.PROCESSING)) {
+                                processOrder();
+                            } else if (Utilities.getNextOrderStatus(
+                                    orderResponse.getOrder().getOrderStatus().getName())
+                                    .equalsIgnoreCase(Constants.OrderStatus.PROCESSED)) {
+                                processedOrder();
+                            } else if (Utilities.getNextOrderStatus(
+                                    orderResponse.getOrder().getOrderStatus().getName())
+                                    .equalsIgnoreCase(Constants.OrderStatus.OUT_FOR_DELIVERY)) {
+                                outForDeliveryOrder();
+                            } else if (Utilities.getNextOrderStatus(
+                                    orderResponse.getOrder().getOrderStatus().getName())
+                                    .equalsIgnoreCase(Constants.OrderStatus.DELIVERED)) {
+                                double paid = getPaidAmount();
+                                double balance = orderResponse.getOrderTotal().getTotal() - paid;
+                                if (balance <= 0) {
+                                    deliverOrder();
+                                } else {
+                                    collectPayment(balance);
+                                }
                             }
                         }
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing. Just close the dialog
-                    }
-                });
-                builder.show();
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing. Just close the dialog
+                        }
+                    });
+                    builder.show();
+                }
                 break;
             }
             case R.id.ll_customer_details: {
@@ -316,7 +341,140 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
                 startActivity(customerDetailsIntent);
                 break;
             }
+            case R.id.ll_delivery_partner: {
+                showDeliveryPartnerAlertDialog();
+                break;
+            }
         }
+    }
+
+    private void showDeliveryPartnerAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(OrderDetailsActivity.this);
+        alertDialog.setTitle("AlertDialog");
+        String[] items = {"None", "Self", "Borzo"};
+        alertDialog.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        deliveryPartner = Constants.DeliveryPartner.NONE;
+                        tvDeliveryPartner.setText(Constants.DeliveryPartner.NONE);
+                        tvUpdateOrderStatus.setText(R.string.update_order_status);
+                        Toast.makeText(OrderDetailsActivity.this, "No delivery partner selected", Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        deliveryPartner = Constants.DeliveryPartner.SELF;
+                        tvDeliveryPartner.setText(Constants.DeliveryPartner.SELF);
+                        tvUpdateOrderStatus.setText(R.string.update_order_status);
+                        Toast.makeText(OrderDetailsActivity.this, "Own fleet delivery selected", Toast.LENGTH_LONG).show();
+                        break;
+                    case 2:
+                        deliveryPartner = Constants.DeliveryPartner.BORZO;
+                        tvDeliveryPartner.setText(Constants.DeliveryPartner.BORZO);
+                        tvUpdateOrderStatus.setText(R.string.get_borzo_estimate);
+                        Toast.makeText(OrderDetailsActivity.this, "Borzo delivery selected", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(true);
+        alert.show();
+    }
+
+    private void getBorzoEstimate() {
+        showProgress(true);
+        Call<BaseResponse<BorzoOrderPriceCalculationResponse>> getBorzoEstimate = Flytekart.getApiService().getBorzoEstimate(accessToken, clientId, orderResponse.getOrder().getId());
+        getBorzoEstimate.enqueue(new CustomCallback<BaseResponse<BorzoOrderPriceCalculationResponse>>() {
+            @Override
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<BorzoOrderPriceCalculationResponse>> call) {
+                Logger.e("Borzo estimate API call failure.");
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<BorzoOrderPriceCalculationResponse>> call, Response<BaseResponse<BorzoOrderPriceCalculationResponse>> response) {
+                Logger.e("Borzo estimate API success");
+                showProgress(false);
+                BorzoOrderPriceCalculationResponse calculationResponse = response.body().getBody();
+                showBorzoEstimate(calculationResponse);
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<BorzoOrderPriceCalculationResponse>> call, APIError responseBody) {
+                Logger.e("Borzo estimate API call response status code : " + responseBody.getStatus());
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showBorzoEstimate(BorzoOrderPriceCalculationResponse calculationResponse) {
+        // Show estimate in an alertDialog.
+        // If yes is selected, send API call for Borzo.
+        /*Toast.makeText(getApplicationContext(), "Estimated payment amount: "
+                + calculationResponse.getOrder().getPaymentAmount(), Toast.LENGTH_SHORT).show();*/
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailsActivity.this);
+        builder.setTitle("Do you want to book Borzo delivery?");
+        builder.setMessage("Estimated payment amount: "
+                + calculationResponse.getOrder().getPaymentAmount());
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Make API call for placing Borzo delivery
+                placeBorzoOrder();
+            }
+        });
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+        builder.show();
+    }
+
+    private void placeBorzoOrder() {
+        showProgress(true);
+        Call<BaseResponse<BorzoOrderPriceCalculationResponse>> placeBorzoOrderCall = Flytekart.getApiService().placeBorzoOrder(accessToken, clientId, orderResponse.getOrder().getId());
+        placeBorzoOrderCall.enqueue(new CustomCallback<BaseResponse<BorzoOrderPriceCalculationResponse>>() {
+            @Override
+            public void onFlytekartGenericErrorResponse(Call<BaseResponse<BorzoOrderPriceCalculationResponse>> call) {
+                Logger.e("Borzo estimate API call failure.");
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFlytekartSuccessResponse(Call<BaseResponse<BorzoOrderPriceCalculationResponse>> call, Response<BaseResponse<BorzoOrderPriceCalculationResponse>> response) {
+                Logger.e("Borzo estimate API success");
+                showProgress(false);
+                BorzoOrderPriceCalculationResponse calculationResponse = response.body().getBody();
+                showBorzoOrderStatus(calculationResponse);
+            }
+
+            @Override
+            public void onFlytekartErrorResponse(Call<BaseResponse<BorzoOrderPriceCalculationResponse>> call, APIError responseBody) {
+                Logger.e("Borzo estimate API call response status code : " + responseBody.getStatus());
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showBorzoOrderStatus(BorzoOrderPriceCalculationResponse calculationResponse) {
+        // TODO Update order status and Borzo orderId to UI.
+        AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailsActivity.this);
+        builder.setMessage("Borzo delivery order placed successfully");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+        builder.show();
     }
 
     private void acceptOrder() {
@@ -343,6 +501,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
                 Logger.e("Accept order API call response status code : " + responseBody.getStatus());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -372,6 +531,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
                 Logger.e("Accept order API call response status code : " + responseBody.getStatus());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -431,6 +591,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFlytekartErrorResponse(Call<BaseResponse<OrderResponse>> call, APIError responseBody) {
                 Logger.e("Accept order API call response status code : " + responseBody.getStatus());
+                showProgress(false);
                 Toast.makeText(getApplicationContext(), responseBody.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

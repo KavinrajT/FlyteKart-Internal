@@ -251,7 +251,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Constants.LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode == Constants.LOCATION_PERMISSION_REQUEST_CODE
+                || requestCode == 1001) {
             if (grantResults.length > 0) {
                 showCurrentLocation();
             }

@@ -13,6 +13,7 @@ import com.flytekart.models.Organisation;
 import com.flytekart.models.Product;
 import com.flytekart.models.ProductOrderReportItem;
 import com.flytekart.models.ProductStoreProductDTO;
+import com.flytekart.models.PushNotification;
 import com.flytekart.models.Store;
 import com.flytekart.models.StoreVariant;
 import com.flytekart.models.Variant;
@@ -36,6 +37,7 @@ import com.flytekart.models.request.VerifyOTPRequest;
 import com.flytekart.models.response.ApiCallResponse;
 import com.flytekart.models.response.AttributeResponse;
 import com.flytekart.models.response.BaseResponse;
+import com.flytekart.models.response.BorzoOrderPriceCalculationResponse;
 import com.flytekart.models.response.FileUploadResponse;
 import com.flytekart.models.response.LoginResponse;
 import com.flytekart.utils.Constants;
@@ -423,5 +425,24 @@ public interface ApiService {
     Call<BaseResponse<List<Discount>>> getDiscounts(
             @Header(Constants.API_TOKEN_TAG) String apiToken,
             @Query("clientId") String clientId);
+
+    @GET("/api/marketing/getPushNotifications/")
+    Call<BaseResponse<List<PushNotification>>> getPushNotifications(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize);
+
+    @GET("/api/orders/getBorzoEstimate/")
+    Call<BaseResponse<BorzoOrderPriceCalculationResponse>> getBorzoEstimate(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("orderId") String orderId);
+
+    @POST("/api/orders/placeBorzoOrder/")
+    Call<BaseResponse<BorzoOrderPriceCalculationResponse>> placeBorzoOrder(
+            @Header(Constants.API_TOKEN_TAG) String apiToken,
+            @Query("clientId") String clientId,
+            @Query("orderId") String orderId);
 }
 

@@ -161,6 +161,7 @@
     <string name="categories">Categories</string>
     <string name="discounts">Discounts</string>
     <string name="order_details">Order details</string>
+    <string name="push_notifications">Push Notifications</string>
     <string name="orders">Orders</string>
     <string name="products">Products</string>
     <string name="variants">Variants</string>
@@ -185,6 +186,7 @@
 
     <string name="collection_payment">COLLECT PAYMENT</string>
     <string name="update_order_status">UPDATE ORDER STATUS</string>
+    <string name="get_borzo_estimate">GET BORZO ESTIMATE</string>
     <string name="product_order_report">Product order report</string>
     <string name="orders_over_time_report">Orders over time report</string>
     <string name="customer_acquisition_report">Customer acquisition report</string>

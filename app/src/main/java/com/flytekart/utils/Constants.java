@@ -52,6 +52,7 @@ public class Constants {
     public static final String PRODUCT = "product";
     public static final String VARIANT = "variant";
     public static final String ORDER = "order";
+    public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final String ADDRESS = "address";
     public static final String CURRENCY_RUPEE_PREFIX = "Rs";
     public static final String CLIENT_ID = "clientId";
@@ -125,5 +126,11 @@ public class Constants {
     public static final class PaymentType {
         public static final String COD = "COD"; // Covers both cash on delivery and pay on delivery
         public static final String RAZORPAY = "RAZORPAY";
+    }
+
+    public static final class DeliveryPartner {
+        public static final String NONE = "NONE";
+        public static final String SELF = "SELF";
+        public static final String BORZO = "BORZO";
     }
 }

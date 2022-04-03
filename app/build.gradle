@@ -22,7 +22,7 @@ android {
     buildTypes {
         local {
             applicationIdSuffix ".local"
-            buildConfigField "String", "BASE_URL", '"https://8005-117-208-136-113.eu.ngrok.io/"'
+            buildConfigField "String", "BASE_URL", '"https://f7ed-2401-4900-4bd2-345f-902d-959c-34a-3854.eu.ngrok.io/"'
             //buildConfigField "String", "BASE_URL", '"https://flytekart-production.herokuapp.com/"'
             debuggable true
 

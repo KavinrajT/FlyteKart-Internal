@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ui.activity.OrderDetailsActivity">
 
@@ -58,8 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="16dp"
         android:drawablePadding="5dp"
+        android:padding="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="normal"
         app:drawableLeftCompat="@drawable/ic_home_work_" />
@@ -224,8 +224,8 @@
                 <TextView
                     android:id="@+id/tv_paid_label"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Paid:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -233,22 +233,22 @@
                     android:id="@+id/tv_paid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="2dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="2dp">
 
                 <TextView
                     android:id="@+id/tv_balance_label"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Balance:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -256,8 +256,8 @@
                     android:id="@+id/tv_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -271,6 +271,33 @@
         android:background="@color/dark_grey" />
 
     <!-- TODO Show refund details -->
+
+    <!-- Delivery partner options -->
+    <LinearLayout
+        android:id="@+id/ll_delivery_partner"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delivery partner"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/tv_delivery_partner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELF"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <!-- Button to change the status -->
     <TextView
