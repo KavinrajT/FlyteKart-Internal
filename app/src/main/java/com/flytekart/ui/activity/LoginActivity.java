@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 R.array.login_type_array, android.R.layout.simple_spinner_item);
         loginSpAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spLoginType.setAdapter(loginSpAdapter);
+
         spLoginType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
