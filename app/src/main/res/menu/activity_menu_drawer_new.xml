@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nv_stores"
+            android:icon="@drawable/ic_baseline_store_24"
+            android:title="@string/stores" />
+        <item
+            android:id="@+id/nav_category"
+            android:icon="@drawable/ic_baseline_category_24"
+            android:title="@string/categories_products" />
+        <item
+            android:id="@+id/nav_orders"
+            android:icon="@drawable/ic_baseline_order_24"
+            android:title="@string/orders" />
+
+        <item
+            android:id="@+id/nav_reports"
+            android:icon="@drawable/ic_baseline_report_24"
+            android:title="@string/reports" />
+        <item
+            android:id="@+id/nav_signout"
+            android:icon="@drawable/ic_baseline_exit_to_app_24"
+            android:title="@string/sign_out" />
+
+    </group>
+</menu>
