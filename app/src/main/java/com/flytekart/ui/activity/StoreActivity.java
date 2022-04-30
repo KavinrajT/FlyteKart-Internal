@@ -58,15 +58,12 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
     private void registerForActivityResults() {
         createStoreActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Store editedStore = result.getData().getParcelableExtra(Constants.STORE);
-                            if (editedStore != null) {
-                                store = editedStore;
-                                getSupportActionBar().setTitle(store.getName());
-                            }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Store editedStore = result.getData().getParcelableExtra(Constants.STORE);
+                        if (editedStore != null) {
+                            store = editedStore;
+                            getSupportActionBar().setTitle(store.getName());
                         }
                     }
                 });

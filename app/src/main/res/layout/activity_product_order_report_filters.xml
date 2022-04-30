@@ -19,12 +19,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/titleBar"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_above="@id/btn_apply_filters"
+        android:layout_below="@id/titleBar"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
 
@@ -39,6 +39,7 @@
                 android:id="@+id/btn_filter_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans_medium"
                 android:padding="4dp"
                 android:text="Category"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -48,6 +49,7 @@
                 android:id="@+id/btn_filter_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans_medium"
                 android:padding="4dp"
                 android:text="Product"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -57,6 +59,7 @@
                 android:id="@+id/btn_filter_variant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans_medium"
                 android:padding="4dp"
                 android:text="Product"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -66,6 +69,7 @@
                 android:id="@+id/btn_filter_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans_medium"
                 android:padding="4dp"
                 android:text="Store"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -76,7 +80,7 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/dark_grey"/>
+            android:background="@color/dark_grey" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -117,6 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/opensans_medium"
         android:text="@string/apply_filters"
         android:textColor="@color/white" />
 

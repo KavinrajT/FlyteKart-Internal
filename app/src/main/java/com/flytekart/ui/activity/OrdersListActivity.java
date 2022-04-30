@@ -101,28 +101,22 @@ public class OrdersListActivity extends AppCompatActivity {
     private void registerForActivityResults() {
         storeActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            // Do nothing for now
-                        }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        // Do nothing for now
                     }
                 });
 
         orderDetailsActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            Intent data = result.getData();
-                            int position = data.getIntExtra(Constants.POSITION, 0);
-                            OrderResponse orderResponse = data.getParcelableExtra(Constants.ORDER);
-                            orderResponses.remove(position);
-                            orderResponses.add(position, orderResponse);
-                            adapter.notifyItemChanged(position);
-                        }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        int position = data.getIntExtra(Constants.POSITION, 0);
+                        OrderResponse orderResponse = data.getParcelableExtra(Constants.ORDER);
+                        orderResponses.remove(position);
+                        orderResponses.add(position, orderResponse);
+                        adapter.notifyItemChanged(position);
                     }
                 });
     }

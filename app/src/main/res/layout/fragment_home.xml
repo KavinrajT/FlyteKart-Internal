@@ -16,6 +16,7 @@
         android:layout_marginBottom="30dp"
         android:background="@drawable/selector_red_button_num_1"
         android:paddingTop="50dp"
+        android:fontFamily="@font/opensans_medium"
         android:paddingBottom="10dp"
         android:text="@string/create_organisation"
         android:textColor="@color/white" />
@@ -23,6 +24,7 @@
     <Button
         android:id="@+id/btn_add_stores"
         android:layout_width="match_parent"
+        android:fontFamily="@font/opensans_medium"
         android:layout_height="100dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/selector_red_button_num_2"
@@ -35,6 +37,7 @@
         android:id="@+id/btn_add_products"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:fontFamily="@font/opensans_medium"
         android:layout_marginBottom="30dp"
         android:background="@drawable/selector_red_button_num_3"
         android:paddingTop="50dp"
@@ -46,6 +49,7 @@
         android:id="@+id/btn_clear_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/opensans_medium"
         android:layout_marginTop="50dp"
         android:background="@color/colorPrimary"
         android:text="@string/str_clear_all"

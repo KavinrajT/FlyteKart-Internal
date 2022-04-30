@@ -76,12 +76,9 @@ public class StoreListActivity extends AppCompatActivity {
     private void registerForActivityResults() {
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            updateStoresDataOnCreate(result.getData());
-                        }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        updateStoresDataOnCreate(result.getData());
                     }
                 });
     }
@@ -119,7 +116,7 @@ public class StoreListActivity extends AppCompatActivity {
         String clientId = sharedPreferences.getString(Constants.SHARED_PREF_KEY_CLIENT_ID, Constants.EMPTY);
         showProgress(true);
         Call<BaseResponse<List<Store>>> getStoresCall = Flytekart.getApiService().getStoresByOrg(accessToken, clientId);
-        getStoresCall.enqueue(new CustomCallback<BaseResponse<List<Store>>>() {
+        getStoresCall.enqueue(new CustomCallback<>() {
             @Override
             public void onFlytekartGenericErrorResponse(Call<BaseResponse<List<Store>>> call) {
                 Logger.i("Store List API call failure.");

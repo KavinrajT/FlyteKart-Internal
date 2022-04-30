@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:text="@string/str_variant_name"
+        android:fontFamily="@font/opensans_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/grey"
         android:text="@string/dummy_price"
+        android:fontFamily="@font/opensans_regular"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
 </LinearLayout>

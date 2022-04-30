@@ -13,6 +13,7 @@
         android:id="@+id/tv_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/opensans_medium"
         android:text="Stuffed Garlic Breadsticks"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:textColor="@color/black"
@@ -32,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_variant_name"
+        android:fontFamily="@font/opensans_regular"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:textStyle="normal" />
 
@@ -40,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_category_name"
+        android:fontFamily="@font/opensans_regular"
         android:text="@string/quantity_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/black" />
@@ -51,6 +54,7 @@
         android:layout_alignBottom="@id/tv_quantity_label"
         android:layout_toEndOf="@id/tv_quantity_label"
         android:layout_toRightOf="@id/tv_quantity_label"
+        android:fontFamily="@font/opensans_regular"
         android:text="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/black" />
@@ -60,6 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_quantity_label"
+        android:fontFamily="@font/opensans_medium"
         android:text="Rs 1050.00"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:textStyle="bold" />

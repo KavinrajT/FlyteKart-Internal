@@ -3,60 +3,76 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable-anydpi/ic_edit.xml" value="0.12291666666666666" />
-        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1259259259259259" />
-        <entry key="app/src/main/res/drawable/grey_add_circle.xml" value="0.23541666666666666" />
-        <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
-        <entry key="app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.13541666666666666" />
-        <entry key="app/src/main/res/drawable/ic_home_work_.xml" value="0.12291666666666666" />
-        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1259259259259259" />
-        <entry key="app/src/main/res/drawable/ic_my_location.xml" value="0.23541666666666666" />
-        <entry key="app/src/main/res/drawable/selector_my_location.xml" value="0.12291666666666666" />
-        <entry key="app/src/main/res/drawable/selector_red_button.xml" value="0.2845" />
-        <entry key="app/src/main/res/layout-land/activity_otp_verification.xml" value="0.10361552028218694" />
-        <entry key="app/src/main/res/layout/activity_base.xml" value="0.333786231884058" />
-        <entry key="app/src/main/res/layout/activity_category_list.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/activity_create_category.xml" value="0.10663627152988855" />
-        <entry key="app/src/main/res/layout/activity_create_product.xml" value="0.11372451699613893" />
-        <entry key="app/src/main/res/layout/activity_create_store.xml" value="0.11911231884057971" />
-        <entry key="app/src/main/res/layout/activity_create_variant.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.333786231884058" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/activity_order_details.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_orders_list.xml" value="0.10778985507246377" />
-        <entry key="app/src/main/res/layout/activity_otp_verification.xml" value="0.12239583333333333" />
-        <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.10663627152988855" />
-        <entry key="app/src/main/res/layout/activity_store.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_store_category_list.xml" value="0.2006340579710145" />
-        <entry key="app/src/main/res/layout/activity_store_product_list.xml" value="0.16614583333333333" />
-        <entry key="app/src/main/res/layout/activity_store_variant.xml" value="0.10833333333333334" />
-        <entry key="app/src/main/res/layout/activity_store_variant_list.xml" value="0.10833333333333334" />
-        <entry key="app/src/main/res/layout/activity_variant_list.xml" value="0.10677083333333333" />
-        <entry key="app/src/main/res/layout/dialog_attribute_value.xml" value="0.1421875" />
-        <entry key="app/src/main/res/layout/dialog_store_category.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_organisation_list.xml" value="0.10677083333333333" />
-        <entry key="app/src/main/res/layout/list_group_child.xml" value="0.333786231884058" />
-        <entry key="app/src/main/res/layout/list_group_header.xml" value="0.333786231884058" />
-        <entry key="app/src/main/res/layout/list_item_attribute_value.xml" value="0.33869346733668343" />
-        <entry key="app/src/main/res/layout/list_item_category.xml" value="0.10663627152988855" />
-        <entry key="app/src/main/res/layout/list_item_order.xml" value="0.10778985507246377" />
-        <entry key="app/src/main/res/layout/list_item_store.xml" value="0.11730072463768115" />
-        <entry key="app/src/main/res/layout/list_item_store_category.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/list_item_store_product.xml" value="0.19655797101449277" />
-        <entry key="app/src/main/res/layout/list_item_store_variant.xml" value="0.10833333333333334" />
-        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.5365602471678682" />
-        <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.35625" />
-        <entry key="app/src/main/res/menu/menu_common.xml" value="0.1" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1259259259259259" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.16111111111111112" />
+        <entry key="app/src/main/res/layout/activity_category_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_chage_password.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_category.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_discount.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_org.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_product.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_store.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_sub_category.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_create_variant.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_customer_acquisition_report.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_customer_details.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_customer_order_report.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_discount_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_main_new.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_order_details.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_orders_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_orders_over_time_report.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_otp_verification.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_product.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_product_order_report.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_product_order_report_filters.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_push_notifications_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_reports.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_store.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_store_category_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_store_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_store_product_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_store_variant.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_store_variant_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_sub_category_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/activity_variant_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/app_bar_main_new.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/dialog_attribute_value.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/dialog_store_category.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/fragment_organisation.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/fragment_organisation_list.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_group_child.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_group_header.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_attribute_value.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_category.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_customer_acquisition.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_customer_order.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_discount.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_order.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_order_item.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_orders_over_time.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_product.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_product_order.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_push_notification.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_store.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/list_item_store_category.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_store_product.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_store_variant.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/list_item_variant.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/title_bar_layout.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/layout/toolbar.xml" value="0.36041666666666666" />
+        <entry key="app/src/staging/res/font/opensans_regular.xml" value="0.390625" />
       </map>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/build/classes" />
-  </component>
-  <component name="ProjectType">
-    <option name="id" value="Android" />
+    <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

@@ -38,6 +38,7 @@
                     android:id="@+id/et_category_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/category_name"
                     android:imeOptions="actionNext"
                     android:inputType="text"
@@ -56,6 +57,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignTop="@id/sw_is_active"
                     android:layout_alignBottom="@id/sw_is_active"
+                    android:fontFamily="@font/opensans_medium"
                     android:gravity="center_vertical|left|start"
                     android:text="@string/is_active"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -79,6 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/opensans_medium"
                     android:gravity="center_vertical|start"
                     android:text="Category Image :"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -102,6 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/opensans_medium"
         android:text="@string/save_category"
         android:textColor="@color/white" />
 

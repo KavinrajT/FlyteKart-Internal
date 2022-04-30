@@ -17,6 +17,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:fontFamily="@font/opensans_medium"
             android:id="@+id/tv_category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/active"
+            android:fontFamily="@font/opensans_regular"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/grey" />
     </LinearLayout>

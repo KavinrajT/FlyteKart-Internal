@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:fontFamily="@font/opensans_medium"
         android:text="@string/str_organisation_info"
         android:textColor="@color/black"
         android:textSize="28sp" />

@@ -38,10 +38,11 @@
                     android:id="@+id/et_variant_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/str_variant_name"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:enabled="false"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -57,6 +58,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignTop="@id/sw_is_active"
                     android:layout_alignBottom="@id/sw_is_active"
+                    android:fontFamily="@font/opensans_medium"
                     android:gravity="center_vertical|left|start"
                     android:text="@string/is_available"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -80,9 +82,10 @@
                     android:id="@+id/et_sku"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/sku"
                     android:imeOptions="actionNext"
-                    android:enabled="false"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -104,6 +107,7 @@
                         android:id="@+id/et_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/opensans_medium"
                         android:hint="@string/str_price"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
@@ -123,6 +127,7 @@
                         android:id="@+id/et_original_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/opensans_medium"
                         android:hint="@string/str_original_price"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
@@ -141,10 +146,11 @@
                     android:id="@+id/et_tax"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="true"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/tax"
                     android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
-                    android:enabled="true"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -159,10 +165,11 @@
                     android:id="@+id/et_quantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="true"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/quantity"
                     android:imeOptions="actionDone"
                     android:inputType="number"
-                    android:enabled="true"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -175,6 +182,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/opensans_medium"
         android:text="@string/save_variant"
         android:textColor="@color/white" />
 

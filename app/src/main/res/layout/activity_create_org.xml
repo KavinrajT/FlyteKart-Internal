@@ -15,6 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_medium"
             android:text="@string/str_organisation_info"
             android:textColor="@color/black"
             android:textSize="26sp" />
@@ -28,6 +29,7 @@
                 android:id="@+id/et_org_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans_medium"
                 android:hint="@string/str_organisation_name"
                 android:imeOptions="actionNext"
                 android:inputType="text"
@@ -45,6 +47,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/opensans_regular"
                 android:text="@string/str_store_type"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -67,6 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/opensans_regular"
                 android:gravity="center_vertical"
                 android:text="@string/str_location"
                 android:textColor="@color/black"
@@ -78,6 +82,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/colorAccent"
+                android:fontFamily="@font/opensans_medium"
                 android:text="@string/str_locate_me"
                 android:textColor="@color/white" />
         </LinearLayout>
@@ -89,6 +94,7 @@
             android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/ic_home_work_"
             android:drawablePadding="5dp"
+            android:fontFamily="@font/opensans_regular"
             android:gravity="center_vertical"
             android:textSize="15sp"
             android:visibility="gone" />
@@ -103,6 +109,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/opensans_regular"
                 android:text="@string/str_business_type"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -123,6 +130,7 @@
                 android:id="@+id/et_gst_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/opensans_medium"
                 android:hint="@string/str_gst_number"
                 android:imeOptions="actionDone"
                 android:maxLines="1"
@@ -137,6 +145,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/opensans_medium"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/str_create_organisation"

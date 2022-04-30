@@ -29,6 +29,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_medium"
             android:text="Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/black" />
@@ -38,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="emailId"
+            android:fontFamily="@font/opensans_regular"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     </LinearLayout>
@@ -73,6 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:fontFamily="@font/opensans_medium"
             android:text="@string/str_no_records_found"
             android:textColor="@color/grey"
             android:textSize="30sp"

@@ -38,6 +38,7 @@
                     android:id="@+id/et_store_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/str_store_name"
                     android:imeOptions="actionNext"
                     android:inputType="text"
@@ -55,10 +56,11 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:fontFamily="@font/opensans_medium"
                     android:gravity="center_vertical"
                     android:text="@string/str_location"
-                    android:textColor="@color/black"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btn_locate_me"
@@ -66,6 +68,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/colorAccent"
+                    android:fontFamily="@font/opensans_medium"
                     android:text="@string/str_locate_me"
                     android:textColor="@color/white" />
             </LinearLayout>
@@ -77,6 +80,7 @@
                 android:layout_marginTop="20dp"
                 android:drawableLeft="@drawable/ic_home_work_"
                 android:drawablePadding="5dp"
+                android:fontFamily="@font/opensans_light"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:visibility="gone" />
@@ -90,6 +94,7 @@
                     android:id="@+id/et_gst_no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/str_gst_number"
                     android:imeOptions="actionDone"
                     android:inputType="text"
@@ -106,6 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/opensans_medium"
         android:text="@string/save_store"
         android:textColor="@color/white" />
 

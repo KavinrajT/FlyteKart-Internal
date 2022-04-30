@@ -23,6 +23,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_stores_list"
+        tools:listitem="@layout/list_item_store"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/titleBar"

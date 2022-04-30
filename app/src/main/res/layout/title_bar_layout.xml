@@ -24,6 +24,7 @@
             android:layout_height="65dp"
             android:layout_gravity="center_vertical"
             android:layout_toRightOf="@id/img_left"
+            android:fontFamily="@font/opensans_medium"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/padding_10"
             android:paddingRight="@dimen/padding_10"

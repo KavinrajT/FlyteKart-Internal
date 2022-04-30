@@ -34,8 +34,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -55,6 +55,7 @@
                     android:id="@+id/et_line_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/str_address_line_1"
                     android:imeOptions="actionNext"
                     android:inputType="text"
@@ -76,6 +77,7 @@
                     android:id="@+id/et_line_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_medium"
                     android:hint="@string/str_address_line_2"
                     android:imeOptions="actionNext"
                     android:inputType="text"
@@ -91,6 +93,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/opensans_medium"
                 android:textColor="@color/black" />
 
             <Button
@@ -102,6 +105,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@color/colorAccent"
+                android:fontFamily="@font/opensans_medium"
                 android:text="@string/str_add_address"
                 android:textColor="@color/white" />
         </RelativeLayout>
