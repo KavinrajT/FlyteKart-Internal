@@ -40,5 +40,7 @@
     <color name="default_text_color">#737373</color>
 
     <color name="black_transparent_image">#46000000</color>
+    <color name="dark_jungle_green">#1c1c1c</color>
+    <color name="onyx">#0d0d0d</color>
 
 </resources>

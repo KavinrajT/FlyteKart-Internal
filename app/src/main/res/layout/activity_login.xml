@@ -81,6 +81,8 @@
             android:id="@+id/til_client_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -88,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:fontFamily="@font/opensans_semibold"
                 android:hint="@string/client_code"
                 android:inputType="text"
                 android:paddingStart="@dimen/padding_15"
@@ -114,7 +117,10 @@
                 android:id="@+id/til_country_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -123,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:enabled="false"
+                    android:fontFamily="@font/opensans_semibold"
                     android:inputType="text"
                     android:paddingStart="@dimen/padding_15"
                     android:paddingTop="@dimen/padding_15"
@@ -136,8 +143,11 @@
                 android:id="@+id/til_phone_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:orientation="horizontal"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -146,6 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@null"
+                    android:fontFamily="@font/opensans_semibold"
                     android:hint="@string/phone_number"
                     android:inputType="number"
                     android:maxLength="10"
@@ -197,11 +208,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/til_password"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/selector_red_button"
             android:gravity="center"
             android:padding="@dimen/padding_15"
             android:text="@string/send_otp"
-            android:textColor="@color/white"
+            android:textColor="#FFF"
             android:textSize="16sp" />
 
         <TextView
@@ -217,7 +230,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
     </RelativeLayout>
 
